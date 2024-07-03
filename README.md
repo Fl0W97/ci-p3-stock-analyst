@@ -1,32 +1,150 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Stock analyst
 
-Welcome,
+Welcome to my third project, the stock analyst, it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet API. 
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **May 14, 2024**
+<img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
-## Reminders
+##Input/actions:
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+###Show my portfolio
+present all company names in the terminal (get info from first sheet, first row)
+first sheet contains company names and the number of stocks (in row two)
+second sheet contains names and daily updated stock values (in row two up to XXX)
+thrid sheet contains the profit/loss which was generated this year
 
-## Creating the Heroku app
+###Show the winner of the last day/week/month
+show all stocks with a positive result (get info from second sheet, substracting the value in row two (ever, of the week or month) from the last value (...) same for each column
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+###Show the losers of the last day/week/month
+show all stocks with a negative result (get info from second sheet, substracting the first value (ever, of the week or month) from the last value (...) same for each column
 
-1. `heroku/python`
-2. `heroku/nodejs`
+###Show stocks with signals
+show the top performer (get info from second sheet, 3 days in a row positive)
+show the flops (get info from second sheet, 3 days in a row negative)
+add more signs... i.e. 5 days negative, then 2 postive in a row (...) 
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+###Show stocks which brings me money when I sell and how much
+show the stocks (get info from first & second sheet, calculate difference from first day and last day, substract sales fee... and multiplicate with the number of stocks)
+show the stocks (get info from first & second sheet, calculate difference from first day and last day, substract taxes 25%, from those add church and "solidaritäts" taxes 13,50% again)
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+Keep in mind the 1000€ allowance (Freibetrag)
 
-Connect your GitHub repository and deploy as normal.
+###Buy a new stock (adjust sheet 1, 2 and 3)
+###Sell a stock (adjust sheet 1, 2 and 3)
 
-## Constraints
+store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag)
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
+###Show overview of profit and loss this year
+store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (sheet 3, add profit/loss for each sale)
 
----
 
-Happy coding!
+## Features
+
+
+
+### Features:
+
+| Feature | Description  | images |
+| --- |------------- | ------------- |
+
+
+
+### The Footer (delete)
+?
+
+## UX Design (delete)
+?
+
+### Color Scheme (delete)
+?
+
+### Typography (delete)
+?
+
+## User Stories
+
+### New Site Users
+
+- As a new user, I would like to ...
+
+
+
+### Returning Site Users
+
+- As a returning user, I would like to ...
+
+
+
+## Testing
+- Testing was done in small breaks during the development and at the end of the project
+- Validators have been used (see chapter below)
+- logic checks
+- using wrong input (format, ...)
+
+### Bugs (fixed)
+
+| Bug | Description  | images (optional) |
+| --- |------------- | ------------- |
+
+### Validator Testing
+Validator testing has been done on:
+?
+
+#### Accessability (delete)
+?
+
+### Unfixed Bugs
+(No unfixed bugs.)
+
+## Deployment
+
+The site was deployed to GitHub pages. The steps to deploy are as follows:
+
+- In the GitHub repository, navigate to the Settings tab
+- From the source section drop-down menu, select the Main Branch, then click "Save"
+- The page will be automatically refreshed with a detailed ribbon display to indicate the successful deployment.
+
+
+Here the live link:  ...
+
+<details>
+    <summary>Cloning repository</summary>
+
+1. Visit the GitHub repository.
+2. Find the Code button situated above the file list and give it a click.
+3. Choose your preferred cloning method — whether it's HTTPS, SSH, or GitHub and hit the copy button to copy the URL to your clipboard.
+4. Launch Git Bash or Terminal.
+5. Navigate to the directory where you want the cloned directory to reside.
+6. In your IDE Terminal, input the following command to clone the repository:
+ git clone https://github.com/Fl0W97/ci_p3_stock-analyst.git
+7. Press Enter to create your local clone.
+
+</details>
+
+
+## Tools & Technologies used
+
+- node.js
+- phython
+- Git used for version control (git status, git add, git commit)
+- GitHub used for secure online code storage
+- GitHub Pages used for hosting the deployed front-end site
+- Gitpod used for local IDE for development
+
+
+## Improvements and ideas for subsequent projects
+
+- add API from https://www.alphavantage.co/ and suing live stock data
+
+
+
+## Credits
+
+### Content
+
+
+### Code
+
+| No | Description  | Source | URL |
+| --- |------------- | ------------- | ------------- |
+
