@@ -1,6 +1,6 @@
 # Stock analyst
 
-Welcome to my third project, the stock analyst, it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet API. 
+Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet API. 
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
