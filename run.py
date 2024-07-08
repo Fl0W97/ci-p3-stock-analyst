@@ -75,28 +75,28 @@ def show_top_performers():
         print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values and they are all numeric
-        if len(column_values) >= 3 and column_values[-1].isdigit() and column_values[-2].isdigit() and column_values[-3].isdigit(): # If there are non-numeric values in the columns, isdigit() will fail
+        if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]: # If there are non-numeric values in the columns, isdigit() will fail
             last_value = column_values[-1]
             second_last_value = column_values[-2]
             third_last_value = column_values[-3]
 
-        # Check if the last three values are strictly increasing
+            # Check if the last three values are strictly increasing
             if third_last_value < second_last_value < last_value:
                 stocks_increasing.append(header[col_index - 1])
                 print(f"Stock {header[col_index - 1]} is increasing.")
     
+            else:
+                print(f"Last three values are not increasing: {header[col_index - 1]}")
         else:
-            print(f"Non-numeric values found in the last three entries of column: {header[col_index - 1]}")
-    else:
-        print(f"Not enough data in column: {header[col_index - 1]}")
+            print(f"Not enough data in column: {header[col_index - 1]}")
 
     return stocks_increasing
     
-
+#def show_low_performers(): similar to show_top_performer
 #def calculate_profit_loss():
 
 
-print('Welcome to Stock Analyst. Get an overview of your portoflio')
+print('Welcome to Stock Analyst. Get an overview of your portfolio')
 
 def main():
     show_portfolio()
@@ -121,9 +121,9 @@ def main():
         elif choice == '4':
             increasing_stocks = show_top_performers()
             if increasing_stocks:
-                print(data)
+                print("Top performers with increasing values:", increasing_stocks) # why the loop runs 2 times?!
             else:
-                print("No stocks with three times increasing values found.")
+                print("No stocks with three times increase availabe.")
         elif choice == '5':
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
@@ -136,6 +136,6 @@ def main():
             print("Invalid option. Please choose again.")
 
         stocks_increasing = show_top_performers()
-        print("Top performers with increasing values:", stocks_increasing)
+        #print("Top performers with increasing values:", stocks_increasing)
 
 main()
