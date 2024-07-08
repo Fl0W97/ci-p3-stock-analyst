@@ -164,3 +164,24 @@ def main():
 
 print('Welcome to Love Sandwiches Data Automation')
 main()
+
+
+
+def show_low_performers():
+    header = stock_daily_update.row_values(1)
+    stocks_decreasing = []
+    
+    for col_index in range(1, len(header) + 1):
+        column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
+
+        # Check if there are at least 3 values and they are all numeric
+        if len(column_values) >= 3 and column_values[-1].isdigit() and column_values[-2].isdigit() and column_values[-3].isdigit():
+            last_value = int(column_values[-1])
+            second_last_value = int(column_values[-2])
+            third_last_value = int(column_values[-3])
+
+        # Check if the last three values are strictly increasing
+            if third_last_value > second_last_value > last_value:
+                stocks_decreasing.append(header[col_index - 1])
+    
+    return stocks_decreasing

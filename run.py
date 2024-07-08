@@ -20,6 +20,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('stock_analyst')
 
 stock_portfolio = SHEET.worksheet('stock_portfolio')
+stock_daily_update = SHEET.worksheet('stock_daily_update')
 
 def show_portfolio():
     data = stock_portfolio.get_all_values()
@@ -63,11 +64,34 @@ def adjust_multiplicator():
     else:
         print(f"Stock '{stock_name}' not found.")
 
-#def show_low_performers():
 
+def show_top_performers():
+    header = stock_daily_update.row_values(1)
+    stocks_increasing = []
+    
+    for col_index in range(1, len(header) + 1):
+        column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
+        print(f"Processing column: {header[col_index - 1]}")
+        print(f"Column values: {column_values}")
 
-#def show_top_performers():
+        # Check if there are at least 3 values and they are all numeric
+        if len(column_values) >= 3 and column_values[-1].isdigit() and column_values[-2].isdigit() and column_values[-3].isdigit(): # If there are non-numeric values in the columns, isdigit() will fail
+            last_value = column_values[-1]
+            second_last_value = column_values[-2]
+            third_last_value = column_values[-3]
 
+        # Check if the last three values are strictly increasing
+            if third_last_value < second_last_value < last_value:
+                stocks_increasing.append(header[col_index - 1])
+                print(f"Stock {header[col_index - 1]} is increasing.")
+    
+        else:
+            print(f"Non-numeric values found in the last three entries of column: {header[col_index - 1]}")
+    else:
+        print(f"Not enough data in column: {header[col_index - 1]}")
+
+    return stocks_increasing
+    
 
 #def calculate_profit_loss():
 
@@ -82,9 +106,11 @@ def main():
         print("1: Delete a stock column")
         print("2: Add a new stock column")
         print("3: Adjust the multiplicator")
-        print("4: Exit")
+        print("4: Show top performer")
+        print("5: Show low performer")
+        print("6: Exit")
 
-        choice = input("Choose an option (1, 2, 3, 4): ")
+        choice = input("Choose an option (1, 2, 3, 4, 5, 6): ")
         
         if choice == '1':
             delete_stock_column()
@@ -93,8 +119,23 @@ def main():
         elif choice == '3':
             adjust_multiplicator()
         elif choice == '4':
+            increasing_stocks = show_top_performers()
+            if increasing_stocks:
+                print(data)
+            else:
+                print("No stocks with three times increasing values found.")
+        elif choice == '5':
+            decreasing_stocks = show_low_performers()
+            if decreasing_stocks:
+                print(data)
+            else:
+                print("No stocks with three times decreasing values found.")
+        elif choice == '6':
             break
         else:
             print("Invalid option. Please choose again.")
- 
+
+        stocks_increasing = show_top_performers()
+        print("Top performers with increasing values:", stocks_increasing)
+
 main()
