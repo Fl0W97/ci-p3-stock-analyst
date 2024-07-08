@@ -75,12 +75,12 @@ def show_top_performers():
         print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values and they are all numeric
-        if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]: # If there are non-numeric values in the columns, isdigit() will fail
+        if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
             last_value = column_values[-1]
             second_last_value = column_values[-2]
             third_last_value = column_values[-3]
 
-            # Check if the last three values are strictly increasing
+            # Check if the last three values
             if third_last_value < second_last_value < last_value:
                 stocks_increasing.append(header[col_index - 1])
                 print(f"Stock {header[col_index - 1]} is increasing.")
@@ -92,7 +92,33 @@ def show_top_performers():
 
     return stocks_increasing
     
-#def show_low_performers(): similar to show_top_performer
+def show_low_performers():
+    header = stock_daily_update.row_values(1)
+    stocks_decreasing = []
+    
+    for col_index in range(1, len(header) + 1):
+        column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
+        print(f"Processing column: {header[col_index - 1]}")
+        print(f"Column values: {column_values}")
+
+        # Check if there are at least 3 values
+        if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
+            last_value = column_values[-1]
+            second_last_value = column_values[-2]
+            third_last_value = column_values[-3]
+
+            # Check if the last three values are strictly increasing
+            if third_last_value > second_last_value > last_value:
+                stocks_decreasing.append(header[col_index - 1])
+                print(f"Stock {header[col_index - 1]} is decreasing.")
+    
+            else:
+                print(f"Last three values are not decreasing: {header[col_index - 1]}")
+        else:
+            print(f"Not enough data in column: {header[col_index - 1]}")
+
+    return stocks_decreasing    
+
 #def calculate_profit_loss():
 
 
@@ -111,7 +137,7 @@ def main():
         print("6: Show profit and loss")
         print("7: Exit")
 
-        choice = input("Choose an option (1, 2, 3, 4, 5, 6): ")
+        choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7): ")
         
         if choice == '1':
             delete_stock_column()
@@ -122,15 +148,15 @@ def main():
         elif choice == '4':
             increasing_stocks = show_top_performers()
             if increasing_stocks:
-                print("Top performers with increasing values:", increasing_stocks) # why the loop runs 2 times?!
+                print("Top performers with increasing values:", increasing_stocks)
             else:
                 print("No stocks with three times increase availabe.")
         elif choice == '5':
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
-                print(data)
+                print("Low performers with increasing values:", decreasing_stocks)
             else:
-                print("No stocks with three times decreasing values found.")
+                print("No stocks with three times decrease availabe.")
         elif choice == '6':
             calculate_profit_loss()
         elif choice == '7':
