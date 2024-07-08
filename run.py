@@ -108,7 +108,8 @@ def main():
         print("3: Adjust the multiplicator")
         print("4: Show top performer")
         print("5: Show low performer")
-        print("6: Exit")
+        print("6: Show profit and loss")
+        print("7: Exit")
 
         choice = input("Choose an option (1, 2, 3, 4, 5, 6): ")
         
@@ -131,11 +132,13 @@ def main():
             else:
                 print("No stocks with three times decreasing values found.")
         elif choice == '6':
+            calculate_profit_loss()
+        elif choice == '7':
             break
         else:
             print("Invalid option. Please choose again.")
 
-        stocks_increasing = show_top_performers()
+        #stocks_increasing = show_top_performers()
         #print("Top performers with increasing values:", stocks_increasing)
 
 main()
