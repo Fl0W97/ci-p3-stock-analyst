@@ -120,28 +120,33 @@ def show_low_performers():
 
     return stocks_decreasing    
 
-# def calculate_profit_loss(): # not working yet!
+def calculate_profit_loss(): # not working yet!
 # take the last value of a column and substract the first (-1) value of the column from sheet stock_daily_update
 # multiply the value with the multiplicator in the second row from sheet stock_portfolio
 # add the value to the second row of sheet profit_and_loss
-#    header = stock_daily_update.row_values(1)
+    header = stock_daily_update.row_values(1)
 
-#   for col_index in range(1, len(header) + 1):
-#        column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
-#        first_column_value = column_values[0]
-#        last_column_value = column_values[-1]
+    surplus_data = []
 
-        # profit_loss_value = last_column_value - first_column_value !! float, integr needed. Currently string format
+    for col_index in range(1, len(header) + 1):
+        column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
+        first_column_value = column_values[0]
+        last_column_value = column_values[-1]
+        profit_loss_value = float(last_column_value) - float(first_column_value)
+        rounded_profit_loss_value = round(profit_loss_value, 2)
 
-#        print(f"Processing column: ")
-#        print(f" First value in column {header[col_index - 1]} is:" + first_column_value)
-#        print(f" Last value in column {header[col_index - 1]} is:" + last_column_value)
-#        print(f" profit and loss for {header[col_index - 1]} is:" + profit_loss_value)
+        print(f" Processing column: {header[col_index - 1]}\n")
+        print(f" First value in column {header[col_index - 1]} is: + {first_column_value}")
+        print(f" Last value in column {header[col_index - 1]} is: + {last_column_value}")
 
-        #check zip function loveSandwich
-#        profit_loss_sheet.find {header[col_index - 1]}
-#        column_values_multiplicator = profit_loss_sheet.col_values(col_index)[1:]  # Exclude header
-#        profit_loss_total = profit_loss_value * column_values_multiplicator[-1] # Werte zweite Zeile * profit_loss
+        multiplicator_row = stock_portfolio.row_values(2) 
+
+        surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
+        print(f"profit_loss is in total: {surplus}\n")
+    
+    return surplus_data
+
+
 #        profit_loss_total_minus_brokerfee
 #        profit_loss_total_minus_brokerfee_minus_taxes #ignore free german allowance right now, maybe add later - only pay tax when surplus is positive
 
@@ -155,9 +160,6 @@ def show_low_performers():
 
 
 print('Welcome to Stock Analyst. Get an overview of your portfolio')
-
-
-
 def main():
     show_portfolio()
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
