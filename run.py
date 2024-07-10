@@ -137,10 +137,7 @@ def show_low_performers():
 
     return stocks_decreasing    
 
-def calculate_profit_loss(): # not working yet!
-# take the last value of a column and substract the first (-1) value of the column from sheet stock_daily_update
-# multiply the value with the multiplicator in the second row from sheet stock_portfolio
-# add the value to the second row of sheet profit_and_loss
+def calculate_profit_loss():
     header = stock_daily_update.row_values(1)
 
     surplus_data = [] # List to hold the profit and loss values to be added to the new worksheet
@@ -150,6 +147,8 @@ def calculate_profit_loss(): # not working yet!
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
         first_column_value = column_values[0]
         last_column_value = column_values[-1]
+
+        # take the last value of a column and substract the first value of the column from sheet stock_daily_update
         profit_loss_value = float(last_column_value) - float(first_column_value)
         rounded_profit_loss_value = round(profit_loss_value, 2)
         rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100
@@ -160,10 +159,12 @@ def calculate_profit_loss(): # not working yet!
 
         multiplicator_row = stock_portfolio.row_values(2) 
 
+        #validation in case there is a column or value missing
         if col_index - 1 >= len(multiplicator_row):
             print(f"Error: Multiplicator missing for column {header[col_index - 1]}")
             return
 
+        # multiply the value with the multiplicator in the second row from sheet stock_portfolio
         surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
         print(f"percentage of profit_loss is in total: {int(rounded_profit_loss_value_percentage)}%\n")
@@ -172,6 +173,7 @@ def calculate_profit_loss(): # not working yet!
         profit_loss_data.append(surplus)
         surplus_data.append(surplus)
 
+    # add/update the value to the second row of sheet profit_and_loss
     profit_loss_sheet.update(f'2:2', [surplus_data])  # Update the second row with the surplus_data
 
     return surplus_data
