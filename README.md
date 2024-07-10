@@ -53,7 +53,7 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 ?
 
 ## UX Design (delete)
-?
+? menu design, clear function, size of temrinal, assci-art
 
 ### Color Scheme (delete)
 ?
@@ -88,7 +88,7 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 
 ### Validator Testing
 Validator testing has been done on:
-?
+https://pep8ci.herokuapp.com/
 
 #### Accessability (delete)
 ?
@@ -130,6 +130,21 @@ Here the live link:  ...
 - GitHub used for secure online code storage
 - GitHub Pages used for hosting the deployed front-end site
 - Gitpod used for local IDE for development
+
+
+## API and Google spreadsheet add-on alpha vantage 
+https://www.alphavantage.co/
+
+
+### Description API
+Alpha vantage is a free proivder of stock information. IN addition, it provides google add-ons to directly isnert the stock information into a googel spread sheet.
+The documentation shows that all implemented function of the add-on. Those functions can be used simply in a spread sheet cell.
+
+Example (picture)
+
+ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
+https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html
+
 
 
 ## Improvements and ideas for subsequent projects

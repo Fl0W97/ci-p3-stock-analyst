@@ -2,6 +2,7 @@
 
 # imports the whole libary
 import gspread
+import os
 
 #make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials 
@@ -14,6 +15,8 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
 ]
 
+clear = lambda: os.system("clear")
+
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
@@ -24,6 +27,7 @@ stock_daily_update = SHEET.worksheet('stock_daily_update')
 profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 def show_portfolio():
+    #Show current stock portfolio and 
     data = stock_portfolio.get_all_values()
     print(data)
 
@@ -143,20 +147,21 @@ def calculate_profit_loss(): # not working yet!
 
         surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
-    
+        #add surplus percentage
+        #add profit_loss_total value to the sheet "profit_loss"
+        #profit_loss_sheet.append_row(data) 
+
     return surplus_data
 
 
 #        profit_loss_total_minus_brokerfee
 #        profit_loss_total_minus_brokerfee_minus_taxes #ignore free german allowance right now, maybe add later - only pay tax when surplus is positive
 
-        #add profit_loss_total value to the sheet "profit_loss"
-#        profit_loss_sheet.append_row(data)
-
 #        if profit_loss_total_minus_brokerfee_minus_taxes > 0:
 #            print(f"Profit!")
 #        else:
 #            print(f"Loss!")
+#       clear function each time the user selects an option / clear terminal
 
 
 print('Welcome to Stock Analyst. Get an overview of your portfolio')
@@ -165,6 +170,8 @@ def main():
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
 
     while True:
+        
+
         print("\nOptions:")
         print("1: Delete a stock column")
         print("2: Add a new stock column")
@@ -176,26 +183,32 @@ def main():
         #print("8: Show me a graphic from stock: ")
 
         choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7): ")
-        
+
         if choice == '1':
+            clear()
             delete_stock_column()
         elif choice == '2':
+            clear()
             add_stock_column()
         elif choice == '3':
+            clear()
             adjust_multiplicator()
         elif choice == '4':
+            clear()
             increasing_stocks = show_top_performers()
             if increasing_stocks:
                 print("Top performers with increasing values:", increasing_stocks)
             else:
                 print("No stocks with three times increase availabe.")
         elif choice == '5':
+            clear()
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
                 print("Low performers with increasing values:", decreasing_stocks)
             else:
                 print("No stocks with three times decrease availabe.")
         elif choice == '6':
+            clear()
             calculate_profit_loss()
         elif choice == '7':
             break
