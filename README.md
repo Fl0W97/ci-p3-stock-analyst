@@ -46,17 +46,12 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 
 | Feature | Description  | images |
 | --- |------------- | ------------- |
+| clear function |||
 
-
-
-### The Footer (delete)
-?
 
 ## UX Design (delete)
-? menu design, clear function, size of temrinal, assci-art
+? menu design, clear function, size of terminal, assci-art
 
-### Color Scheme (delete)
-?
 
 ### Typography (delete)
 ?
@@ -65,26 +60,32 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 
 ### New Site Users
 
-- As a new user, I would like to ...
-
-
+- As a new user, I would like to have to know what the tool is about
+- As a new user, I would like to have a good overview about the functionalities of the tool
+- As a new user, I would like to have a good overview in the terminal. It should be not overwhelmed with information
+- As a new user, I would like to have a tool that helps me managing my stock portfolio
 
 ### Returning Site Users
 
-- As a returning user, I would like to ...
-
+- As a returning user, I would like to have a tool that helps me managing my stock portfolio
+- As a returning user, I would like to have a tool that helps me managing my stock portfolio
+- As a returning user, I would like to have a tool that helps me managing my stock portfolio
 
 
 ## Testing
 - Testing was done in small breaks during the development and at the end of the project
 - Validators have been used (see chapter below)
 - logic checks
-- using wrong input (format, ...)
+- type in worng input, validation check
 
 ### Bugs (fixed)
 
-| Bug | Description  | images (optional) |
-| --- |------------- | ------------- |
+| Bug | Description  | images (optional) | Correction | 
+| --- |------------- | ----------------- | -----------|
+| Error_list_index_out_of_range | There is no reference in the worksheet. A new stock was added, but a value is missing in the column.  | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
+| TypeError_unsupported_operand_type_for_str | Using string values for calculation ends up in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
+
+
 
 ### Validator Testing
 Validator testing has been done on:

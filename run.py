@@ -29,7 +29,7 @@ profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 def show_portfolio():
     #Show current stock portfolio
-    
+    #add last update date
     header = stock_portfolio.row_values(1) # Get the column headers
     shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
     x = PrettyTable()
@@ -143,7 +143,8 @@ def calculate_profit_loss(): # not working yet!
 # add the value to the second row of sheet profit_and_loss
     header = stock_daily_update.row_values(1)
 
-    surplus_data = []
+    surplus_data = [] # List to hold the profit and loss values to be added to the new worksheet
+    profit_loss_data = [] 
 
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
@@ -151,7 +152,7 @@ def calculate_profit_loss(): # not working yet!
         last_column_value = column_values[-1]
         profit_loss_value = float(last_column_value) - float(first_column_value)
         rounded_profit_loss_value = round(profit_loss_value, 2)
-        rounded_profit_loss_value_percentage = ((first_column_value - last_column_value) / first_column_value)* 100
+        rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100
 
         print(f" Processing column: {header[col_index - 1]}\n")
         print(f" First value in column {header[col_index - 1]} is: + {first_column_value}")
@@ -159,11 +160,19 @@ def calculate_profit_loss(): # not working yet!
 
         multiplicator_row = stock_portfolio.row_values(2) 
 
+        if col_index - 1 >= len(multiplicator_row):
+            print(f"Error: Multiplicator missing for column {header[col_index - 1]}")
+            return
+
         surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
-        print(f"percentage of profit_loss is in total: {rounded_profit_loss_value_percentage}\n")
-        #add profit_loss_total value to the sheet "profit_loss"
-        #profit_loss_sheet.append_row(data) 
+        print(f"percentage of profit_loss is in total: {int(rounded_profit_loss_value_percentage)}%\n")
+        
+        # Add the profit_loss_value to the list above profit_loss_data
+        profit_loss_data.append(surplus)
+        surplus_data.append(surplus)
+
+    profit_loss_sheet.update(f'2:2', [surplus_data])  # Update the second row with the surplus_data
 
     return surplus_data
 
@@ -176,6 +185,13 @@ def calculate_profit_loss(): # not working yet!
 #        else:
 #            print(f"Loss!")
 #       clear function each time the user selects an option / clear terminal
+
+# def live_or_static():
+#       ask the user if he wants to use the static sheet or the API sheet with automatically updated data
+#       
+# def health_check
+#       if API sheet is accessable and working, then show the API data otherwise switch and use the static sheets
+#       () 
 
 
 print('Welcome to Stock Analyst. Get an overview and manage of your portfolio')
