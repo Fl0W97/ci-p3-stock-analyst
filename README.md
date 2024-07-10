@@ -155,8 +155,9 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_r
 
 ## Improvements and ideas for subsequent projects
 
-- add API from https://www.alphavantage.co/ and suing live stock data
-
+- add API from https://www.alphavantage.co/ and using live stock data
+- add more validations
+- adjust html and JavaSript files to improve the design
 
 
 ## Credits
@@ -172,5 +173,6 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_r
 
 clear()
 
-
+https://stackoverflow.com/questions/75459360/how-to-fix-the-typeerror-can-only-concatenate-str-not-float-to-str
+https://stackoverflow.com/questions/1343890/how-do-i-restrict-a-float-value-to-only-two-places-after-the-decimal-point-in-c
 
