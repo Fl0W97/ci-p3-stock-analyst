@@ -3,6 +3,7 @@
 # imports the whole libary
 import gspread
 import os
+from prettytable import PrettyTable
 
 #make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials 
@@ -27,10 +28,22 @@ stock_daily_update = SHEET.worksheet('stock_daily_update')
 profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 def show_portfolio():
-    #Show current stock portfolio and 
-    data = stock_portfolio.get_all_values()
-    print(data)
+    #Show current stock portfolio
+    
+    header = stock_portfolio.row_values(1) # Get the column headers
+    shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
+    x = PrettyTable()
+    
+    x.field_names = ["stock name", "shares"]
 
+
+    for col_index in range(len(header)):
+        stock_name = header[col_index -1] # Get the stock name from the header
+        shares = shares_row[col_index -1] # Get the corresponding number of shares
+        x.add_row([stock_name, shares])
+        #print(f"Stock: {stock_name}. No. of shares {shares}")
+
+    print(x)
 
 def delete_stock_column():
     stock_name = input("Enter the name of the stock to delete:\n ")
@@ -138,6 +151,7 @@ def calculate_profit_loss(): # not working yet!
         last_column_value = column_values[-1]
         profit_loss_value = float(last_column_value) - float(first_column_value)
         rounded_profit_loss_value = round(profit_loss_value, 2)
+        rounded_profit_loss_value_percentage = ((first_column_value - last_column_value) / first_column_value)* 100
 
         print(f" Processing column: {header[col_index - 1]}\n")
         print(f" First value in column {header[col_index - 1]} is: + {first_column_value}")
@@ -147,7 +161,7 @@ def calculate_profit_loss(): # not working yet!
 
         surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
-        #add surplus percentage
+        print(f"percentage of profit_loss is in total: {rounded_profit_loss_value_percentage}\n")
         #add profit_loss_total value to the sheet "profit_loss"
         #profit_loss_sheet.append_row(data) 
 
@@ -164,7 +178,7 @@ def calculate_profit_loss(): # not working yet!
 #       clear function each time the user selects an option / clear terminal
 
 
-print('Welcome to Stock Analyst. Get an overview of your portfolio')
+print('Welcome to Stock Analyst. Get an overview and manage of your portfolio')
 def main():
     show_portfolio()
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
@@ -214,5 +228,7 @@ def main():
             break
         else:
             print("Invalid option. Please choose again.")
+
+        show_portfolio()
 
 main()
