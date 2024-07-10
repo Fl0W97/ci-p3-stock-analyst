@@ -126,11 +126,16 @@ Here the live link:  ...
 ## Tools & Technologies used
 
 - node.js
-- phython
+- phython (import prettyTable, os, gspread)
 - Git used for version control (git status, git add, git commit)
 - GitHub used for secure online code storage
 - GitHub Pages used for hosting the deployed front-end site
 - Gitpod used for local IDE for development
+- heroku
+- JavaScript
+- Html
+- CSS
+- (template reused from love sandwiches)
 
 
 ## API and Google spreadsheet add-on alpha vantage 
@@ -162,5 +167,10 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_r
 ### Code
 
 | No | Description  | Source | URL |
-| --- |------------- | ------------- | ------------- |
+| -- | ------------ | ------ | --- |
+| 1 | using ascci tables to improve visualization of stock overview | Forum geeksforgeeks.org | https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/ |
+
+clear()
+
+
 
