@@ -5,6 +5,7 @@ import gspread
 import os
 from prettytable import PrettyTable
 import datetime
+import requests
 
 #make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials 
@@ -176,7 +177,7 @@ def show_low_performers():
 
     return stocks_decreasing    
 
-def calculate_profit_loss():
+def calculate_profit_loss(): # ERROR!
     header = stock_daily_update.row_values(1)
 
     surplus_data = [] # List to hold the profit and loss values to be added to the new worksheet
@@ -236,6 +237,13 @@ def calculate_profit_loss():
 #       if API sheet is accessable and working, then show the API data otherwise switch and use the static sheets
 #       () 
 
+
+# replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+#url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=AAPL&apikey=HULMNKWD3NVXSA0D'
+#r = requests.get(url)
+#data = r.json()
+
+#print(data)
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
