@@ -4,6 +4,7 @@
 import gspread
 import os
 from prettytable import PrettyTable
+import datetime
 
 #make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials 
@@ -45,6 +46,9 @@ def show_portfolio():
 
     print(x)
 
+    # Display the update time
+    update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"Update completed at: {update_time}\n")
 
 def add_stock_column():
     while True:
@@ -215,20 +219,19 @@ def calculate_profit_loss():
 #       () 
 
 
-print('Welcome to Stock Analyst. Get an overview and manage of your portfolio')
+print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 def main():
     show_portfolio()
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
 
     while True:
         
-
         print("\nOptions:")
         print("1: Add a new stock column")
         print("2: Delete a stock column")
         print("3: Adjust the multiplicator")
-        print("4: Show top performer")
-        print("5: Show low performer")
+        print("4: Show current top performer")
+        print("5: Show current low performer")
         print("6: Show profit and loss")
         print("7: Exit")
 
@@ -237,7 +240,6 @@ def main():
         if choice == '1':
             clear()
             add_stock_column()
-            
         elif choice == '2':
             clear()
             delete_stock_column()
