@@ -30,7 +30,7 @@ profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 def show_portfolio():
     #Show current stock portfolio
-    #add last update date
+    #Add furhter columns such as purchase price, current price, profit_loss
     header = stock_portfolio.row_values(1) # Get the column headers
     shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
     x = PrettyTable()
@@ -49,6 +49,7 @@ def show_portfolio():
     # Display the update time
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"Update completed at: {update_time}\n")
+
 
 def add_stock_column():
     while True:
@@ -69,7 +70,7 @@ def add_stock_column():
     profit_loss_sheet.update_cell(1, last_column + 1, new_stock_name)
     print(f"New column for stock '{new_stock_name}' added.")
 
-    new_multiplicator = input(f"Enter the new multiplicator for {new_stock_name} (integer): \n")
+    new_multiplicator = input(f"Enter the number of shares {new_stock_name} (integer): \n")
     try:
         new_multiplicator = int(new_multiplicator)
         stock_portfolio.update_cell(2, last_column + 1, new_multiplicator)
@@ -82,24 +83,28 @@ def add_stock_column():
 def delete_stock_column():
     # delete shares as well
     # delete header on other sheets
-    stock_name = input("Enter the name of the stock to delete:\n ")
+    stock_name = input("Enter the name of the stock you want to delete:\n ")
     cell = stock_portfolio.find(stock_name)
+    cell1 = stock_daily_update.find(stock_name)
+    cell2 = profit_loss_sheet.find(stock_name)
     if cell:
         stock_portfolio.delete_columns(cell.col)
+        stock_daily_update.delete_columns(cell1.col)
+        profit_loss_sheet.delete_columns(cell2.col)
         print(f"Column for stock '{stock_name}' deleted.")
     else:
         print(f"Stock '{stock_name}' not found. Please check your spelling. Otherwise the stock is not available in the list, have a look on the overview above.")
 
 
 def adjust_multiplicator():
-    stock_name = input("Enter the name of the stock to adjust the multiplicator:\n ")
+    stock_name = input("Enter the name of the stock to adjust the number of shares:\n ")
     cell = stock_portfolio.find(stock_name)
     if cell:
         new_multiplicator = input(f"Enter the new multiplicator for {stock_name} (integer):\n ")
         try:
             new_multiplicator = int(new_multiplicator)
             stock_portfolio.update_cell(2, cell.col, new_multiplicator)
-            print(f"Multiplicator for stock '{stock_name}' updated to {new_multiplicator}.")
+            print(f"Number of shares updated to {new_multiplicator} for {stock_name}.")
         except ValueError:
             print("Invalid input. Please enter a full number.")
     else:
@@ -201,15 +206,16 @@ def calculate_profit_loss():
 
     return surplus_data
 
+# Calculate your profit_loss when you want to sell your stocks
+#       tax_exemption = input("Enter the rest amount of your tax exemption this year (in Germany for a single its 1000€, for a couple household 2000€):\n ")
+#       tax_exemption_this_year = newWorksheet.cell_A1  
+#       stock_to_sell = input("Enter the name of the stock you want to sell: \n")
+#       number_of_shares = input("Enter the number of shares you want to sell: \n") // valdation number_of_shares =< relevant cell
+#       brokerfee = input("Enter the amount of brokerfee for a transaction: \n") // valdation number_of_shares =< relevant cell
+#       profit_loss = profit_loss (stock value * shares) - brokerfee
+#       if tax_exemption - profit_loss > 0, no tax payment needed, else: profit_loss * 0,75 
+#       print(f"When you sell your stock you earn {ernings} after taxes and brokerfees)
 
-#        profit_loss_total_minus_brokerfee
-#        profit_loss_total_minus_brokerfee_minus_taxes #ignore free german allowance right now, maybe add later - only pay tax when surplus is positive
-
-#        if profit_loss_total_minus_brokerfee_minus_taxes > 0:
-#            print(f"Profit!")
-#        else:
-#            print(f"Loss!")
-#       clear function each time the user selects an option / clear terminal
 
 # def live_or_static():
 #       ask the user if he wants to use the static sheet or the API sheet with automatically updated data
