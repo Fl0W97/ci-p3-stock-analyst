@@ -30,7 +30,8 @@ profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 def show_portfolio():
     #Show current stock portfolio
-    #Add furhter columns such as purchase price, current price, profit_loss
+    #Add live data incl health check
+    #Correct Audi profit_loss result is wrong, missing information, data might come from API
     header = stock_portfolio.row_values(1) # Get the column headers
     shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
     purchase_price = stock_daily_update.row_values(2)
@@ -41,7 +42,7 @@ def show_portfolio():
 
     x = PrettyTable()
     
-    x.field_names = ["stock name", "shares", "purchase price", "current price", "profit loss total"]
+    x.field_names = ["stock name", "shares", "purchase price", "current price", "surplus total"]
 
 
     for col_index in range(len(header)):
@@ -60,6 +61,7 @@ def show_portfolio():
 
 
 def add_stock_column():
+    #add date and purchase price
     while True:
         new_stock_name = input("Enter the name of the new stock:\n ")
 
@@ -89,8 +91,7 @@ def add_stock_column():
 
 
 def delete_stock_column():
-    # delete shares as well
-    # delete header on other sheets
+    # delete stock name, header and column on all sheets
     stock_name = input("Enter the name of the stock you want to delete:\n ")
     cell = stock_portfolio.find(stock_name)
     cell1 = stock_daily_update.find(stock_name)
@@ -120,6 +121,7 @@ def adjust_multiplicator():
 
 
 def show_top_performers():
+    #connect to API
     header = stock_daily_update.row_values(1)
     stocks_increasing = []
     
@@ -147,6 +149,7 @@ def show_top_performers():
     return stocks_increasing
     
 def show_low_performers():
+    #connect to API
     header = stock_daily_update.row_values(1)
     stocks_decreasing = []
     
@@ -227,10 +230,12 @@ def calculate_profit_loss():
 
 # def live_or_static():
 #       ask the user if he wants to use the static sheet or the API sheet with automatically updated data
-#       
+#       live data can be provided: The live prices, the last 3 prices, add function to cell to add stock name (difficult to know the correct abbr. i.e. AAPL) =AVGetCurrentEquityQuote("AAPL", "price")       
+#        
 # def health_check
 #       if API sheet is accessable and working, then show the API data otherwise switch and use the static sheets
 #       () 
+
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')

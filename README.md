@@ -177,9 +177,9 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_r
 | No | Description  | Source | URL |
 | -- | ------------ | ------ | --- |
 | 1 | using ascci tables to improve visualization of stock overview | Forum geeksforgeeks.org | https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/ |
-
+| 2 | clear terminal | portal stackoverflow.com | https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
 clear()
 
 https://stackoverflow.com/questions/75459360/how-to-fix-the-typeerror-can-only-concatenate-str-not-float-to-str
 https://stackoverflow.com/questions/1343890/how-do-i-restrict-a-float-value-to-only-two-places-after-the-decimal-point-in-c
-
+https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
