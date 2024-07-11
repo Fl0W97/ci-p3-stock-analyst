@@ -33,16 +33,24 @@ def show_portfolio():
     #Add furhter columns such as purchase price, current price, profit_loss
     header = stock_portfolio.row_values(1) # Get the column headers
     shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
+    purchase_price = stock_daily_update.row_values(2)
+    profit_loss = profit_loss_sheet.row_values(2)
+
+    total_rows = len(stock_daily_update.get_all_values())
+    current_price = stock_daily_update.row_values(total_rows)
+
     x = PrettyTable()
     
-    x.field_names = ["stock name", "shares"]
+    x.field_names = ["stock name", "shares", "purchase price", "current price", "profit loss total"]
 
 
     for col_index in range(len(header)):
         stock_name = header[col_index -1] # Get the stock name from the header
         shares = shares_row[col_index -1] # Get the corresponding number of shares
-        x.add_row([stock_name, shares])
-        #print(f"Stock: {stock_name}. No. of shares {shares}")
+        purchase = purchase_price[col_index -1]  # Get the purchase price
+        current = current_price[col_index -1]  # Get the current price
+        profloss = profit_loss[col_index -1] # Get the total profit or loss
+        x.add_row([stock_name, shares, purchase, current, profloss])
 
     print(x)
 
