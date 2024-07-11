@@ -45,16 +45,23 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 ### Features:
 
 | Feature | Description  | images |
-| --- |------------- | ------------- |
-| clear function |||
+| ------------- |------------- | ------------- |
+|show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature ||
+|delete stock |The feature identifies the relevant stock and deletes it, deletes number of shares and deletes ||
+|add stock |The feature adds the new stock name to the sheet and adds the number of shares ||
+|adjust number of shares |The feature enables the user to adjust the number of shares of existing stocks ||
+|show top performers | The feature analyzes the last three available data points and identifies stocks with rising values ||
+|show low performers | The feature analyzes the last three available data points and identifies stocks with decreasing values||
+|calculate profit loss | The feature calculates profit loss by substract the first stock values from the last one in a each column. ||
+|clear function| The feature clears the terminal to provide a better user experience ||
+
 
 
 ## UX Design (delete)
-? menu design, clear function, size of terminal, assci-art
+Since the program is acceable via a terminal the design is limited. However, the user experience is still importan. Therefore, some adjustment has been considered.
+The tool helps the user to manage his stock portfolio. Because of that the portfolio is displayed as often as possible at the top and it is structured by using a table import.
+The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid an infomration overflow and make the tooluse more convenient for users who are not dealing all day long with a terminal the terminal is cleared eac time a new function is used.
 
-
-### Typography (delete)
-?
 
 ## User Stories
 
@@ -84,7 +91,7 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 | --- |------------- | ----------------- | -----------|
 | Error_list_index_out_of_range | There is no reference in the worksheet. A new stock was added, but a value is missing in the column.  | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
 | TypeError_unsupported_operand_type_for_str | Using string values for calculation ends up in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
-
+| IndexError_list_index_out_of_range | The IndexError indicate a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa.|<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
 
 
 ### Validator Testing

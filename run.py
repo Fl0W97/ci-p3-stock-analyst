@@ -45,7 +45,39 @@ def show_portfolio():
 
     print(x)
 
+
+def add_stock_column():
+    while True:
+        new_stock_name = input("Enter the name of the new stock:\n ")
+
+        # Check if the stock already exists
+        cell = stock_portfolio.find(new_stock_name)
+        if cell is not None:
+            print(f"The stock '{new_stock_name}' already exists in the portfolio.")
+        else:
+            break
+
+    last_column = len(stock_portfolio.row_values(1))
+
+    # Add the new stock to all three sheets
+    stock_portfolio.update_cell(1, last_column + 1, new_stock_name)
+    stock_daily_update.update_cell(1, last_column + 1, new_stock_name)
+    profit_loss_sheet.update_cell(1, last_column + 1, new_stock_name)
+    print(f"New column for stock '{new_stock_name}' added.")
+
+    new_multiplicator = input(f"Enter the new multiplicator for {new_stock_name} (integer): \n")
+    try:
+        new_multiplicator = int(new_multiplicator)
+        stock_portfolio.update_cell(2, last_column + 1, new_multiplicator)
+        profit_loss_sheet.update_cell(2, last_column + 1, new_multiplicator)
+        print(f"Number of shares of '{new_stock_name}' updated to {new_multiplicator}.")
+    except ValueError:
+        print("Invalid input. Please enter a full number.")
+
+
 def delete_stock_column():
+    # delete shares as well
+    # delete header on other sheets
     stock_name = input("Enter the name of the stock to delete:\n ")
     cell = stock_portfolio.find(stock_name)
     if cell:
@@ -54,19 +86,6 @@ def delete_stock_column():
     else:
         print(f"Stock '{stock_name}' not found. Please check your spelling. Otherwise the stock is not available in the list, have a look on the overview above.")
 
-
-def add_stock_column():
-    new_stock_name = input("Enter the name of the new stock:\n ")
-    last_column = len(stock_portfolio.row_values(1))
-    stock_portfolio.update_cell(1, last_column + 1, new_stock_name)
-    print(f"New column for stock '{new_stock_name}' added.")
-    new_multiplicator = input(f"Enter the new multiplicator for {stock_name} (integer): \n")
-    try:
-        new_multiplicator = int(new_multiplicator)
-        stock_portfolio.update_cell(2, cell.col, new_multiplicator)
-        print(f"Multiplicator for stock '{stock_name}' updated to {new_multiplicator}.")
-    except ValueError:
-        print("Invalid input. Please enter a full number.")
 
 def adjust_multiplicator():
     stock_name = input("Enter the name of the stock to adjust the multiplicator:\n ")
@@ -205,23 +224,23 @@ def main():
         
 
         print("\nOptions:")
-        print("1: Delete a stock column")
-        print("2: Add a new stock column")
+        print("1: Add a new stock column")
+        print("2: Delete a stock column")
         print("3: Adjust the multiplicator")
         print("4: Show top performer")
         print("5: Show low performer")
         print("6: Show profit and loss")
         print("7: Exit")
-        #print("8: Show me a graphic from stock: ")
 
         choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7): ")
 
         if choice == '1':
             clear()
-            delete_stock_column()
+            add_stock_column()
+            
         elif choice == '2':
             clear()
-            add_stock_column()
+            delete_stock_column()
         elif choice == '3':
             clear()
             adjust_multiplicator()
