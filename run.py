@@ -42,7 +42,7 @@ def show_portfolio():
 
     x = PrettyTable()
     
-    x.field_names = ["stock name", "shares", "purchase price", "current price", "surplus total"]
+    x.field_names = ["stock name", "shares", "purch. price", "curr. price", "surplus total"]
 
 
     for col_index in range(len(header)):
@@ -127,8 +127,8 @@ def show_top_performers():
     
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
-        print(f"Processing column: {header[col_index - 1]}")
-        print(f"Column values: {column_values}")
+#        print(f"Processing column: {header[col_index - 1]}")
+#        print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values and they are all numeric
         if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
@@ -139,10 +139,10 @@ def show_top_performers():
             # Check if the last three values
             if third_last_value < second_last_value < last_value:
                 stocks_increasing.append(header[col_index - 1])
-                print(f"Stock {header[col_index - 1]} is increasing.")
+#                print(f"Stock {header[col_index - 1]} is increasing.")
     
-            else:
-                print(f"Last three values are not increasing: {header[col_index - 1]}")
+#            else:
+#                print(f"Last three values are not increasing: {header[col_index - 1]}")
         else:
             print(f"Not enough data in column: {header[col_index - 1]}")
 
@@ -258,35 +258,40 @@ def main():
 
         if choice == '1':
             clear()
+            show_portfolio()
             add_stock_column()
         elif choice == '2':
             clear()
+            show_portfolio()
             delete_stock_column()
         elif choice == '3':
             clear()
+            show_portfolio()
             adjust_multiplicator()
         elif choice == '4':
             clear()
+            show_portfolio()
             increasing_stocks = show_top_performers()
             if increasing_stocks:
-                print("Top performers with increasing values:", increasing_stocks)
+                print("Current top performers with last three days increasing values:", increasing_stocks)
             else:
                 print("No stocks with three times increase availabe.")
         elif choice == '5':
             clear()
+            show_portfolio()
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
-                print("Low performers with increasing values:", decreasing_stocks)
+                print("Current low performers with last three days decreasing values:", decreasing_stocks)
             else:
                 print("No stocks with three times decrease availabe.")
         elif choice == '6':
             clear()
+            show_portfolio()
             calculate_profit_loss()
         elif choice == '7':
             break
         else:
             print("Invalid option. Please choose again.")
 
-        show_portfolio()
 
 main()
