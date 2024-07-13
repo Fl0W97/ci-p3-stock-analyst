@@ -6,7 +6,6 @@ import os
 from prettytable import PrettyTable
 import datetime
 import requests
-import json
 
 #make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials 
@@ -88,7 +87,6 @@ def add_stock_column():
         stock_portfolio.update_cell(2, last_column + 1, new_multiplicator)
         profit_loss_sheet.update_cell(2, last_column + 1, new_multiplicator)
         print(f"Number of shares of '{new_stock_name}' updated to {new_multiplicator}.")
-        find_stock_symbol()
     except ValueError:
         print("Invalid input. Please enter a full number.")
 
@@ -231,40 +229,6 @@ def calculate_profit_loss(): # ERROR!
 #       print(f"When you sell your stock you earn {ernings} after taxes and brokerfees)
 
 
-# def live_or_static():
-#       ask the user if he wants to use the static sheet or the API sheet with automatically updated data
-#       live data can be provided: The live prices, the last 3 prices, add function to cell to add stock name (difficult to know the correct abbr. i.e. AAPL) =AVGetCurrentEquityQuote("AAPL", "price")       
-#        
-# def health_check
-#       if API sheet is accessable and working, then show the API data otherwise switch and use the static sheets
-#       () 
-
-# 1: add a new stock column - deletion of other sheets not needed: two sheets update_daily_manually OR use direct API call
-
-## Check if the request was successful
-#if r.status_code == 200:
-#    data = r.json()
-# (...)
-#else:
-#    print(f"Failed to retrieve data: {r.status_code}. Since the API don'T provides data sheet update_daily_manuall is now the source.")
-#
-def provide_updated_data():
-    symbol = stock_portfolio.row_values(2) # Get the abbrevation of the stock to add it to the API request
-    
-    for col_index in range(1, len(symbol) + 1):
-
-        stock_name_symbol = symbol[col_index] # Get the stock name from the header          
-        url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_name_symbol}&apikey=HULMNKWD3NVXSA0D'
-        r = requests.get(url)
-        data = r.json()
-        time_series = data['Time Series (Daily)']
-        dates = list(time_series.keys())
-        dates.sort(reverse=True)
-        second_date = dates[1]
-        second_date_data = time_series[second_date]
-        desired_value = second_date_data['4. close']
-        print(f"Value from the fifth column of the second row: {symbol[col_index]}")
-
 
 # API URL
 url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=HULMNKWD3NVXSA0D'
@@ -272,6 +236,9 @@ url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&a
 # Request data from the API
 r = requests.get(url)
 data = r.json()
+
+# Print the data to understand its structure
+# print(data)
 
 # Navigate to the 'Time Series (Daily)' data
 time_series = data['Time Series (Daily)']
@@ -292,30 +259,6 @@ desired_value = second_date_data['4. close']
 print(f"Value from the fifth column of the second row: {desired_value}")
 
 
-def find_stock_symbol():
-    # find a symbol for the stock name and use it for the API request
-    header = stock_portfolio.row_values(1)
-    new_stock_name = 'BMW'
-    
-    url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={new_stock_name}&apikey=HULMNKWD3NVXSA0D'
-    r = requests.get(url)
-    data = r.json()
- 
-    # Check if 'bestMatches' key exists in the JSON response
-    if 'bestMatches' in data:
-        best_matches = data['bestMatches']
-
-        # Extract symbols and names
-        symbols_and_names = [(match['1. symbol'], match['2. name']) for match in best_matches]
-
-        # Print the symbols and names
-        for symbol, name in symbols_and_names:
-            print(f"Symbol: {symbol}, Name: {name}")
-    else:
-        print("No 'bestMatches' found in the response.")
-
-    new_stock_name_symbol = input("Enter the symbol of the new stock:\n ")
-    stock_portfolio.update_cell(3, last_column, new_stock_name_symbol) # add to sheet stock_portfolio thrid row
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
