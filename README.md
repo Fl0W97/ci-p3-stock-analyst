@@ -47,12 +47,13 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 | Feature | Description  | images |
 | ------------- |------------- | ------------- |
 |show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature ||
-|delete stock |The feature identifies the relevant stock and deletes it, deletes number of shares and deletes ||
 |add stock |The feature adds the new stock name to the sheet and adds the number of shares ||
+|delete stock |The feature identifies the relevant stock and deletes it, deletes number of shares and deletes ||
 |adjust number of shares |The feature enables the user to adjust the number of shares of existing stocks ||
 |show top performers | The feature analyzes the last three available data points and identifies stocks with rising values ||
 |show low performers | The feature analyzes the last three available data points and identifies stocks with decreasing values||
 |calculate profit loss | The feature calculates profit loss by substract the first stock values from the last one in a each column. ||
+|
 |clear function| The feature clears the terminal to provide a better user experience ||
 
 
@@ -104,9 +105,37 @@ https://pep8ci.herokuapp.com/
 ### Unfixed Bugs
 (No unfixed bugs.)
 
-## Deployment
+## Deployment - https://github.com/discord/heroku-sample-app/blob/main/README.md
+The site was deployed to Heroku pages using a GitHub repository for data storage.
 
-The site was deployed to GitHub pages. The steps to deploy are as follows:
+### Configure Heroku 
+The steps to configure Heroku are as follows:
+
+Log in to your account, or set up a new one
+Create a new app on Heroku
+<img src="README.images/heroku_create_new_app.PNG" alt="image shows Error message"> 
+
+#### Connect to GitHub
+Next, you can configure deploys with Github. If you prefer to deploy without using Github, you can read Heroku's deployment documentation. https://devcenter.heroku.com/categories/deployment
+
+In the Deploy tab, select the option to Connect this app to GitHub
+<img src="README.images/heroku_connect_to_github1.PNG" alt="image shows Error message">
+
+Select the branch you want to deploy your app from
+<img src="README.images/heroku_manually_deployment.PNG" alt="image shows Error message">
+
+#### Add Discord credentials
+Before your app can go online, you'll have to configure your Heroku environment with your Discord bot's credentials:
+Add your bot’s TOKEN, GUILD_ID, CLIENT_ID, and any other credentials your bot might need. More details on credentials for Baker bot can be found in the tutorial.
+<img src="README.images/heroku_credentials.PNG" alt="image shows Error message">
+
+#### Add a buildpack
+Next, add a Heroku buildpack to your app. Click add a buildpack to your app and configure it for NodeJS.
+<img src="README.images/heroku_add_builpack.PNG" alt="image shows Error message">
+
+### GitHub
+
+The steps to set up your repository in GitHub are as follows:
 
 - In the GitHub repository, navigate to the Settings tab
 - From the source section drop-down menu, select the Main Branch, then click "Save"
@@ -133,16 +162,16 @@ Here the live link:  ...
 ## Tools & Technologies used
 
 - node.js
-- phython (import prettyTable, os, gspread)
+- phython (import prettyTable, os, gspread, datetime, requests, json)
 - Git used for version control (git status, git add, git commit)
 - GitHub used for secure online code storage
 - GitHub Pages used for hosting the deployed front-end site
+- GitHub- template reused from love sandwiches
 - Gitpod used for local IDE for development
-- heroku
+- Heroku
 - JavaScript
 - Html
 - CSS
-- (template reused from love sandwiches)
 
 
 ## API and Google spreadsheet add-on alpha vantage 
