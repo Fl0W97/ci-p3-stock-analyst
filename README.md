@@ -1,6 +1,6 @@
 # Stock analyst
 
-Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet API. 
+Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. 
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
@@ -113,25 +113,25 @@ The steps to configure Heroku are as follows:
 
 Log in to your account, or set up a new one
 Create a new app on Heroku
-<img src="README.images/heroku_create_new_app.PNG" alt="image shows Error message"> 
+<img src="README.images/heroku_create_new_app.PNG" alt="image shows infos about heroku set up"> 
 
 #### Connect to GitHub
 Next, you can configure deploys with Github. If you prefer to deploy without using Github, you can read Heroku's deployment documentation. https://devcenter.heroku.com/categories/deployment
 
 In the Deploy tab, select the option to Connect this app to GitHub
-<img src="README.images/heroku_connect_to_github1.PNG" alt="image shows Error message">
+<img src="README.images/heroku_connect_to_github1.PNG" alt="image shows infos about heroku set up">
 
 Select the branch you want to deploy your app from
-<img src="README.images/heroku_manually_deployment.PNG" alt="image shows Error message">
+<img src="README.images/heroku_manually_deployment.PNG" alt="image shows infos about heroku set up">
 
 #### Add Discord credentials
 Before your app can go online, you'll have to configure your Heroku environment with your Discord bot's credentials:
 Add your bot’s TOKEN, GUILD_ID, CLIENT_ID, and any other credentials your bot might need. More details on credentials for Baker bot can be found in the tutorial.
-<img src="README.images/heroku_credentials.PNG" alt="image shows Error message">
+<img src="README.images/heroku_credentials.PNG" alt="image shows infos about heroku set up">
 
 #### Add a buildpack
 Next, add a Heroku buildpack to your app. Click add a buildpack to your app and configure it for NodeJS.
-<img src="README.images/heroku_add_builpack.PNG" alt="image shows Error message">
+<img src="README.images/heroku_add_builpack.PNG" alt="image shows infos about heroku set up">
 
 ### GitHub
 
@@ -179,13 +179,35 @@ https://www.alphavantage.co/
 
 
 ### Description API
-Alpha vantage is a free proivder of stock information. IN addition, it provides google add-ons to directly isnert the stock information into a googel spread sheet.
-The documentation shows that all implemented function of the add-on. Those functions can be used simply in a spread sheet cell.
+Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. In addition, it provides google add-ons which can be integrated into google sheets. Due to better handling and the direct API is used wihtin this project.
 
-Example (picture)
+The documentation shows a standrad API documentation including request urls, parameter definition.
 
- https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
-https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html
+The API function TIME_SERIES_DAILY is used in this project.
+<img src="README.images/API_daily_time_series.PNG" alt="image shows example of data provided from time_series_daily function">
+
+It shows the stock price of one single stock of the last 100 days. This colums contain the parameters timestamp, open, high, low, close and volume
+
+<img src="README.images/API_daily_time_series_example.PNG" alt="image shows example of data provided from time_series_daily function">
+
+https://www.alphavantage.co/documentation/#time-series-data
+
+THe API function SYMBOL_SEARCH is used in this project.
+<img src="README.images/API_search_symbols.PNG" alt="image shows example of data provided from time_series_daily function">
+
+It enables the user to find the exact stock symbol as reference to get the correct stock price values. As search input usually the company name can be used. It provides a list of symbol codes which are used for the time_series_day function. This colums contain the parameters symbol, name, type, region, marketOpen, marketClose, timezone, currency, matchScore.
+
+<img src="README.images/API_search_symbols_example.PNG" alt="image shows example of data provided from time_series_daily function">
+
+https://www.alphavantage.co/documentation/#symbolsearch
+
+The google add-on has been tested successfully. It can be easily integrated into a google spreadsheet.
+However, due to better and more flexible handling of the data no add-on function is used. 
+
+
+Links for googlesheet add-on integration:
+https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.html#avsearchequitysymbol
+https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
 
 
 
