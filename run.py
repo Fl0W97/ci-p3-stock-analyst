@@ -1,6 +1,6 @@
-# Write your code to expect a terminal of 80 characters wide and 50 rows high
+# terminal of 80 characters wide and 50 rows high
 
-# imports the whole libary
+# imports the whole libaries
 import gspread
 import os
 from prettytable import PrettyTable
@@ -8,8 +8,8 @@ import datetime
 import requests
 import json
 
-#make sure just to import relevant parts of the libary
-from google.oauth2.service_account import Credentials 
+# make sure just to import relevant parts of the libary
+from google.oauth2.service_account import Credentials
 from pprint import pprint
 
 # IAM - list of google-APIs that the program should access in order to run
@@ -19,7 +19,7 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-clear = lambda: os.system("clear")
+# clear = lambda: os.system("clear")
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
@@ -30,28 +30,33 @@ stock_portfolio = SHEET.worksheet('stock_portfolio')
 stock_daily_update = SHEET.worksheet('stock_daily_update')
 profit_loss_sheet = SHEET.worksheet('profit_loss')
 
+
+def clear_terminal():
+    os.system("clear")
+
+
 def show_portfolio():
-    #Show current stock portfolio
-    #Correct profit_loss result
-    header = stock_portfolio.row_values(1) # Get the column headers
-    shares_row = stock_portfolio.row_values(2) # Get the second row which contains the number of shares
-    purchase_price = stock_daily_update.row_values(2)
-    profit_loss = profit_loss_sheet.row_values(2)
+    # Show current stock portfolio
+    # Correct profit_loss result
+    # add percentage to surplus
+    header = stock_portfolio.row_values(1)  # Get the column headers
+    shares_row = stock_portfolio.row_values(2)  # Get the second row which contains the number of shares
+    purchase_price = stock_daily_update.row_values(2)  # Get the second row which contains the purchase price
+    profit_loss = profit_loss_sheet.row_values(2)  # Get the second row which contains the profit-loss value
 
     total_rows = len(stock_daily_update.get_all_values())
     current_price = stock_daily_update.row_values(total_rows)
 
     x = PrettyTable()
-    
+
     x.field_names = ["stock name", "shares", "purch. price", "curr. price", "surplus total"]
 
-
     for col_index in range(len(header)):
-        stock_name = header[col_index -1] # Get the stock name from the header
-        shares = shares_row[col_index -1] # Get the corresponding number of shares
-        purchase = purchase_price[col_index -1]  # Get the purchase price
-        current = current_price[col_index -1]  # Get the current price
-        profloss = profit_loss[col_index -1] # Get the total profit or loss
+        stock_name = header[col_index -1 ]  # Get the stock name from the header
+        shares = shares_row[col_index -1 ]  # Get the corresponding number of shares
+        purchase = purchase_price[col_index -1 ]  # Get the purchase price
+        current = current_price[col_index -1 ]  # Get the current price
+        profloss = profit_loss[col_index -1 ]  # Get the total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
 
     print(x)
@@ -74,13 +79,13 @@ def add_stock_column():
 
     last_column = len(stock_portfolio.row_values(1))
 
-    # Add the new stock to all three sheets
+    # add the new stock to all three sheets
     stock_portfolio.update_cell(1, last_column + 1, new_stock_name)
     stock_daily_update.update_cell(1, last_column + 1, new_stock_name)
     profit_loss_sheet.update_cell(1, last_column + 1, new_stock_name)
     print(f"New column for stock '{new_stock_name}' added.")
 
-    # Add number of shares in row 2 in sheet stock portfolio
+    # add number of shares in row 2 in sheet stock portfolio
     new_multiplicator = input(f"Enter the number of shares {new_stock_name} (integer): \n")
     try:
         new_multiplicator = int(new_multiplicator)
@@ -91,7 +96,7 @@ def add_stock_column():
     except ValueError:
         print("Invalid input. Please enter a full number.")
 
-    #Add inital purchase price in row 2 in sheet stoy daily update
+    # add inital purchase price in row 2 in sheet stoy daily update
     purchase_price = input(f"Enter the stock purchase price of {new_stock_name} (float): \n")
     try:
         purchase_price = float(purchase_price)
@@ -136,7 +141,7 @@ def adjust_multiplicator():
 def show_top_performers():
     header = stock_daily_update.row_values(1)
     stocks_increasing = []
-    
+
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
 
@@ -174,20 +179,20 @@ def show_low_performers():
             # Check if the last three values are strictly increasing
             if third_last_value > second_last_value > last_value:
                 stocks_decreasing.append(header[col_index - 1])
-    
+
 #            else:
 #                print(f"Last three values are not decreasing: {header[col_index - 1]}")python3 run.py
         else:
             print(f"Not enough data in column: {header[col_index - 1]}")
 
-    return stocks_decreasing    
+    return stocks_decreasing
 
 
-def calculate_profit_loss(): # ERROR!
+def calculate_profit_loss():  # ERROR!
     header = stock_daily_update.row_values(1)
 
-    surplus_data = [] # List to hold the profit and loss values to be added to the new worksheet
-    profit_loss_data = [] 
+    surplus_data = []  # List to hold the profit and loss values to be added to the new worksheet
+    profit_loss_data = []
 
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
@@ -197,15 +202,15 @@ def calculate_profit_loss(): # ERROR!
         # take the last value of a column and substract the first value of the column from sheet stock_daily_update
         profit_loss_value = float(last_column_value) - float(first_column_value)
         rounded_profit_loss_value = round(profit_loss_value, 2)
-        rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100
+        rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value)) * 100
 
         print(f" Processing column: {header[col_index - 1]}\n")
-        print(f" First value in column {header[col_index - 1]} is: + {first_column_value}")
-        print(f" Last value in column {header[col_index - 1]} is: + {last_column_value}")
+#        print(f" First value in column {header[col_index - 1]} is: + {first_column_value}")
+#        print(f" Last value in column {header[col_index - 1]} is: + {last_column_value}")
 
-        multiplicator_row = stock_portfolio.row_values(2) 
+        multiplicator_row = stock_portfolio.row_values(2)
 
-        #validation in case there is a column or value missing
+        # validation in case there is a column or value missing
         if col_index - 1 >= len(multiplicator_row):
             print(f"Error: Multiplicator missing for column {header[col_index - 1]}")
             return
@@ -214,8 +219,8 @@ def calculate_profit_loss(): # ERROR!
         surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
         print(f"percentage of profit_loss is in total: {int(rounded_profit_loss_value_percentage)}%\n")
-        
-        # Add the profit_loss_value to the list above profit_loss_data
+
+        # add the profit_loss_value to the list above profit_loss_data
         profit_loss_data.append(surplus)
         surplus_data.append(surplus)
 
@@ -229,15 +234,15 @@ def column_check():
     #check stock_portfolio
     header = stock_portfolio.row_values(1)
     shares = stock_portfolio.row_values(2)
-    symbols = stock_portfolio.row_values(3)  
-    
+    symbols = stock_portfolio.row_values(3)
+
     if len(header) == len(shares) == len(symbols):
         print("stock_portfolio is correctly filled out.")
 
-    else: 
+    else:
         print(f"Check sheet stock_portfolio. The lenght of the rows are not equal.")
 
-    #check stock_daily_update
+    # check stock_daily_update
     header = stock_daily_update.row_values(1)
     purchase_price = stock_daily_update.row_values(2)
     price1 = stock_daily_update.row_values(3)
@@ -247,52 +252,52 @@ def column_check():
     if len(header) == len(shares) & len(symbols):
         print("stock_daily_update is correctly filled out.")
 
-    else: 
+    else:
         print(f"Check sheet stock_daily_update. The lenght of the rows are not equal.")
-    
-    #check profit_loss_sheet
+
+    # check profit_loss_sheet
     header = profit_loss_sheet.row_values(1)
     surplus = profit_loss_sheet.row_values(2)
 
     if len(header) == len(shares) == len(symbols):
         print("profit_loss_sheet is correctly filled out.")
 
-    else: 
+    else:
         print(f"Check sheet profit_loss. The lenght of the rows are not equal.")
 
-# work in progress
-def API_stock_daily_update():
+
+def API_stock_daily_update():  # work in progress
     # Update last three rows of sheet stock_daily_update
-    symbol = stock_portfolio.row_values(3) # Get the abbrevation of the stocks
+    symbol = stock_portfolio.row_values(3)  # Get the abbrevation of the stocks
 
     for col_index in range(len(symbol)):
-        stock_name_symbol = symbol[col_index] # Get one abbrevation for each column        
-        
+        stock_name_symbol = symbol[col_index]  # Get one abbrevation for each column 
+
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_name_symbol}&apikey=HULMNKWD3NVXSA0D'
 
-        # Request data from the API
+        # request data from the API
         r = requests.get(url)
-            
-        # Check if the request was successful
+
+        # check if the request was successful
         if r.status_code == 200:
             data = r.json()
 
-            # Check if 'Time Series (Daily)' key exists in the JSON response
+            # check if 'Time Series (Daily)' key exists in the JSON response
             if 'Time Series (Daily)' in data:
                 time_series = data['Time Series (Daily)']
 
-                # Get the relevant dates from the stock_daily_update sheet (column 5, rows 2-4)
+                # get the relevant dates from the stock_daily_update sheet (column 5, rows 2-4)
                 dates = stock_daily_update.col_values(5)[1:4]
-                
-                # Extract the close values for these dates
+
+                # extract the close values for these dates
                 close_values = []
                 for date in dates:
                     if date in time_series:
                         close_values.append(time_series[date]['4. close'])
                     else:
                         close_values.append('N/A')  # Handle the case where the date is not in the API response
-                
-                # Update the corresponding cells in stock_daily_update
+  
+                # update the corresponding cells in stock_daily_update
                 for i, value in enumerate(close_values):
                     stock_daily_update.update_cell(i + 2, col_index + 1, value)
                     print("Column updated.")
@@ -305,12 +310,12 @@ def API_stock_daily_update():
 
 
 def provide_updated_data():
-    #Show relevant data for stock_daily_update in the terminal
-    symbol = stock_portfolio.row_values(3) # Get the abbrevation of the stocks
-    
+    # show relevant data for stock_daily_update in the terminal
+    symbol = stock_portfolio.row_values(3)  # Get the abbrevation of the stocks
+
     for col_index in range(len(symbol)):
 
-        stock_name_symbol = symbol[col_index] # Get one abbrevation for each column        
+        stock_name_symbol = symbol[col_index]  # Get one abbrevation for each column
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_name_symbol}&apikey=HULMNKWD3NVXSA0D'
 
         r = requests.get(url)
@@ -328,9 +333,9 @@ def provide_updated_data():
                 desired_value = second_date_data['4. close']
 
                 print(f"The latest price from {stock_name_symbol} is: {desired_value}. You can add it to the last column of googlesheet 'stock_daily_update'.")
- 
+
             else:
-                print(f"Not enough data points for {stock_name_symbol}.")       
+                print(f"Not enough data points for {stock_name_symbol}.") 
 
         else:
             print(f" Currently, there are no live data available for {stock_name_symbol}. Standard API rate limit is 25 requests per day.")
@@ -349,12 +354,12 @@ def find_stock_symbol():
         header = stock_portfolio.row_values(1)
         new_stock_name = header[-1]
         print(f"Here are different stock symbols of {new_stock_name}. Choose one exact stock symbol to procced.")
-    
+
         # Use an f-string to insert the new_stock_name into the URL
         url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={new_stock_name}&apikey=HULMNKWD3NVXSA0D'
         r = requests.get(url)
         data = r.json()
- 
+
         # Check if 'bestMatches' key exists in the JSON response
         if 'bestMatches' in data:
             best_matches = data['bestMatches']
@@ -368,23 +373,23 @@ def find_stock_symbol():
         else:
             print("Conenction to the API was not successful. Enter the Smybol manually or wait until the connection is established again. ")
 
-        # Update the stock portfolio sheet
+        # update the stock portfolio sheet
         third_row = stock_portfolio.row_values(3)
-        last_column = len(third_row) +1
+        last_column = len(third_row) + 1
 
-        #input a new stock symbol from the user
+        # input a new stock symbol from the user
         new_stock_name_symbol = input("Enter the symbol of the new stock:\n ")
 
-        # Update the sheet with the new stock name and symbol in third row
+        # update the sheet with the new stock name and symbol in third row
         stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
-    
+
     else:
         print(f"Failed to retrieve data: {r.status_code}. Since the API don't provides data the sheet the stock symbol is not updated.")
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 def main():
-    
+
     show_portfolio()
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
 
@@ -392,7 +397,7 @@ def main():
     API_stock_daily_update()
 
     while True:
-        
+
         print("\nOptions:")
         print("1: Add a new stock")
         print("2: Delete a stock")
@@ -406,22 +411,22 @@ def main():
         choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7, 8): ")
 
         if choice == '1':
-            clear()
+            clear_terminal()
             show_portfolio()
             add_stock_column()
             show_portfolio()
         elif choice == '2':
-            clear()
+            clear_terminal()
             show_portfolio()
             delete_stock_column()
             show_portfolio()
         elif choice == '3':
-            clear()
+            clear_terminal()
             show_portfolio()
             adjust_multiplicator()
             show_portfolio()
         elif choice == '4':
-            clear()
+            clear_terminal()
             show_portfolio()
             increasing_stocks = show_top_performers()
             if increasing_stocks:
@@ -429,7 +434,7 @@ def main():
             else:
                 print("No stocks with three times increase availabe.")
         elif choice == '5':
-            clear()
+            clear_terminal()
             show_portfolio()
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
@@ -437,16 +442,17 @@ def main():
             else:
                 print("No stocks with three times decrease availabe.")
         elif choice == '6':
-            clear()
+            clear_terminal()
             show_portfolio()
             calculate_profit_loss()
         elif choice == '7':
-            clear()
+            clear_terminal()
             show_portfolio()
             provide_updated_data()
         elif choice == '8':
             break
         else:
             print("Invalid option. Please choose again.")
+
 
 main()
