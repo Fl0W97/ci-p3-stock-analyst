@@ -58,7 +58,7 @@ def show_portfolio():
 
     # Display the update time
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Update completed at: {update_time}\n")
+    print(f"Table update completed at: {update_time}\n")
 
 
 def add_stock_column():
@@ -134,14 +134,11 @@ def adjust_multiplicator():
 
 
 def show_top_performers():
-    #connect to API
     header = stock_daily_update.row_values(1)
     stocks_increasing = []
     
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
-#        print(f"Processing column: {header[col_index - 1]}")
-#        print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values and they are all numeric
         if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
@@ -152,8 +149,7 @@ def show_top_performers():
             # Check if the last three values
             if third_last_value < second_last_value < last_value:
                 stocks_increasing.append(header[col_index - 1])
-#                print(f"Stock {header[col_index - 1]} is increasing.")
-    
+
 #            else:
 #                print(f"Last three values are not increasing: {header[col_index - 1]}")
         else:
@@ -163,14 +159,11 @@ def show_top_performers():
 
 
 def show_low_performers():
-    #connect to API
     header = stock_daily_update.row_values(1)
     stocks_decreasing = []
     
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
-#        print(f"Processing column: {header[col_index - 1]}")
-#        print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values
         if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
@@ -181,10 +174,9 @@ def show_low_performers():
             # Check if the last three values are strictly increasing
             if third_last_value > second_last_value > last_value:
                 stocks_decreasing.append(header[col_index - 1])
-#                print(f"Stock {header[col_index - 1]} is decreasing.")
     
 #            else:
-#                print(f"Last three values are not decreasing: {header[col_index - 1]}")
+#                print(f"Last three values are not decreasing: {header[col_index - 1]}")python3 run.py
         else:
             print(f"Not enough data in column: {header[col_index - 1]}")
 
@@ -268,7 +260,7 @@ def column_check():
     else: 
         print(f"Check sheet profit_loss. The lenght of the rows are not equal.")
 
-# work in process
+# work in progress
 def API_stock_daily_update():
     # Update last three rows of sheet stock_daily_update
     symbol = stock_portfolio.row_values(3) # Get the abbrevation of the stocks
@@ -302,7 +294,9 @@ def API_stock_daily_update():
                 
                 # Update the corresponding cells in stock_daily_update
                 for i, value in enumerate(close_values):
-                        stock_daily_update.update_cell(i + 2, col_index + 1, value)
+                    stock_daily_update.update_cell(i + 2, col_index + 1, value)
+                    print("Column updated.")
+
             else:
                 print(f"Error: 'Time Series (Daily)' not found for {stock_name_symbol}")
 
@@ -327,12 +321,17 @@ def provide_updated_data():
             time_series = data['Time Series (Daily)']
             dates = list(time_series.keys())
             dates.sort(reverse=True)
-        
-            second_date = dates[1]
-            second_date_data = time_series[second_date]
-            desired_value = second_date_data['4. close']
 
-            print(f" The latest price from {stock_name_symbol} is: (desired_value). You can add it to the last column of googlesheet 'stock_daily_update'.") # (desired value, ist it the variable which is diplayed at the end? - TEST)
+            if len(dates) > 1:
+                second_date = dates[1]
+                second_date_data = time_series[second_date]
+                desired_value = second_date_data['4. close']
+
+                print(f"The latest price from {stock_name_symbol} is: {desired_value}. You can add it to the last column of googlesheet 'stock_daily_update'.")
+ 
+            else:
+                print(f"Not enough data points for {stock_name_symbol}.")       
+
         else:
             print(f" Currently, there are no live data available for {stock_name_symbol}. Standard API rate limit is 25 requests per day.")
 
@@ -367,7 +366,7 @@ def find_stock_symbol():
             for symbol, name in symbols_and_names:
                 print(f"Symbol: {symbol}, Name: {name}\n")
         else:
-            print("No 'bestMatches' found in the response.")
+            print("Conenction to the API was not successful. Enter the Smybol manually or wait until the connection is established again. ")
 
         # Update the stock portfolio sheet
         third_row = stock_portfolio.row_values(3)
@@ -380,7 +379,7 @@ def find_stock_symbol():
         stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
     
     else:
-        print(f"Failed to retrieve data: {r.status_code}. Since the API don't provides data sheet the stock symbol is not updated.")
+        print(f"Failed to retrieve data: {r.status_code}. Since the API don't provides data the sheet the stock symbol is not updated.")
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
@@ -390,6 +389,7 @@ def main():
     # add ascci art! https://www.youtube.com/watch?v=Y0QiBbI3MWs, https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/, https://github.com/ericm/stonks
 
     column_check()
+    API_stock_daily_update()
 
     while True:
         

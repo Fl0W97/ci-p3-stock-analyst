@@ -1,16 +1,16 @@
 # Stock analyst
 
-Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. 
+Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. 
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
-##Input/actions:
+The project provides an overview table for the user to see his portfolio - stock names and further details such as number of shares, stock prices and profit loss.
+The overview is displayed at the beginning together with all options such as 'add stock', 'delete stock', 'adjust number of shares', ... (see image).
+Once an option is chosed the display still appears together with further input requests for the user.
 
-###Show my portfolio
-present all company names in the terminal (get info from first sheet, first row)
-first sheet contains company names and the number of stocks (in row two)
-second sheet contains names and daily updated stock values (in row two up to XXX)
-thrid sheet contains the profit/loss which was generated this year
+<img src="README.images/start_view.PNG" alt="shows the start view">
+
+
 
 ###Show the winner of the last day/week/month
 show all stocks with a positive result (get info from second sheet, substracting the value in row two (ever, of the week or month) from the last value (...) same for each column
@@ -40,9 +40,7 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 
 ## Features
 
-
-
-### Features:
+### Feature overview:
 
 | Feature | Description  | images |
 | ------------- |------------- | ------------- |
@@ -53,15 +51,52 @@ store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (she
 |show top performers | The feature analyzes the last three available data points and identifies stocks with rising values ||
 |show low performers | The feature analyzes the last three available data points and identifies stocks with decreasing values||
 |calculate profit loss | The feature calculates profit loss by substract the first stock values from the last one in a each column. ||
-|
+|check columns |||
 |clear function| The feature clears the terminal to provide a better user experience ||
+|find stock symbol |||
+|provide updated data |||
 
+
+Here the main function in more detail:
+
+#### check columns
+Right at the beginning all three google worksheets are validated whether all tables have the same amount of columns. If not there is a note, so that the user can check it in the worksheets.
+
+#### show portfolio
+Displays the table of stocks. The information are pulled from the different googlesheets - SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and profit_loss_sheet = SHEET.worksheet('profit_loss'). 
+The relevant rows are pulled and than the single values of each cell are pulled by using a "loopwith an index".
+
+Pretty table is used to generate the table layout whcih is also used wihtin the loop fcuntion. In addition, the time of the table generation is mentioned below the table.
+
+The price values are depeending on the API connection. If the worksheets are updated, the current price is shown. Otherwise the data are those from the latest update.
+
+#### add stock
+Once a new stock is entered, a new column is added to the right of the existing table. It is crutial that the new stock name and it's parameters are added in all three google worksheets to enure the functionality of the other functions. SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and profit_loss_sheet = SHEET.worksheet('profit_loss').
+Therefore, there is a check function right at the beginning. A while-True loop, if-else and try-except functions are used.
+
+#### delete stock
+This function seaches for the user input and deletes the stock from all three google worksheets .SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and SHEET.worksheet('profit_loss'). One if-else function is used.
+
+#### adjust number of shares / adjust multiplicator
+Once the option is selected, an input is reqeustes to the user. After entering the new number of shares it will updated in the relevant google worksheet SHEET.worksheet('stock_portfolio'). A if-else and a try-except function are used.
+
+#### show top performers
+By using a for loop and if-else functions the values of the last 3 entries in SHEET.worksheet('stock_daily_update') for each relevant column is pulled and analyzed. When all three entires are increasing timewise the stock is identified as a current top-performer. All top-performer are displayed in the terminal.
+
+#### show low performers
+By using a for loop and if-else functions the values of the last 3 entries in SHEET.worksheet('stock_daily_update') for each relevant column is pulled and analyzed. When all three entires are decreasing timewise the stock is identified as a current low-performer. All top-performer are displayed in the terminal.All top-performer are displayed in the terminal.
+
+#### calculate profit loss
+The profit and loss function calculates the surplus of purchase price (row 2, SHEET.worksheet('stock_daily_update')) and the latest price value (row 5, SHEET.worksheet('stock_daily_update')).
+The result is saved in SHEET.worksheet('profit_loss'). The result is displayed in the overview table.
+
+When a new stock is added and teh API connection fails, the surplus is not correct. (BUG)
 
 
 ## UX Design (delete)
-Since the program is acceable via a terminal the design is limited. However, the user experience is still importan. Therefore, some adjustment has been considered.
+Since the program is acceable via a terminal the design is limited. However, the user experience is still important. Therefore, some adjustment has been considered.
 The tool helps the user to manage his stock portfolio. Because of that the portfolio is displayed as often as possible at the top and it is structured by using a table import.
-The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid an infomration overflow and make the tooluse more convenient for users who are not dealing all day long with a terminal the terminal is cleared eac time a new function is used.
+The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid an information overload and make the use of the tool more convenient for users who are not dealing with a terminal the terminal is cleared each time a new function is used. At the same time the overview is updated with the new input.
 
 
 ## User Stories
@@ -85,6 +120,10 @@ The size of the terminal is increased to 50 rows (in index.html and default.js).
 - Validators have been used (see chapter below)
 - logic checks
 - type in worng input, validation check
+
+### Bugs (not fixed)
+When a new stock is added and teh API connection fails, the surplus is not correct. (BUG)
+
 
 ### Bugs (fixed)
 
@@ -161,6 +200,8 @@ Here the live link:  ...
 
 ## Tools & Technologies used
 
+The main functions are generated with Python. However, to set up the whole project a standard template consits of files of json, js, txt, html and css.
+
 - node.js
 - phython (import prettyTable, os, gspread, datetime, requests, json)
 - Git used for version control (git status, git add, git commit)
@@ -221,7 +262,7 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
 ## Credits
 
 ### Content
-
+https://github.com/discord/heroku-sample-app/blob/main/README.md
 
 ### Code
 
