@@ -92,12 +92,11 @@ def add_stock_column():
         print("Invalid input. Please enter a full number.")
 
     #Add inital purchase price in row 2 in sheet stoy daily update
-    purchase_price = input(f"Enter the stock price of {new_stock_name} (integer): \n")
+    purchase_price = input(f"Enter the stock purchase price of {new_stock_name} (float): \n")
     try:
         purchase_price = float(purchase_price)
         stock_daily_update.update_cell(2, last_column + 1, purchase_price)
         print(f"Purchase price of '{new_stock_name}' added.")
-        find_stock_symbol()
     except ValueError:
         print("Invalid input. Please enter a float number.")
 
@@ -170,8 +169,8 @@ def show_low_performers():
     
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Exclude header
-        print(f"Processing column: {header[col_index - 1]}")
-        print(f"Column values: {column_values}")
+#        print(f"Processing column: {header[col_index - 1]}")
+#        print(f"Column values: {column_values}")
 
         # Check if there are at least 3 values
         if len(column_values) >= 3 and column_values[-1] and column_values[-2] and column_values[-3]:
@@ -182,10 +181,10 @@ def show_low_performers():
             # Check if the last three values are strictly increasing
             if third_last_value > second_last_value > last_value:
                 stocks_decreasing.append(header[col_index - 1])
-                print(f"Stock {header[col_index - 1]} is decreasing.")
+#                print(f"Stock {header[col_index - 1]} is decreasing.")
     
-            else:
-                print(f"Last three values are not decreasing: {header[col_index - 1]}")
+#            else:
+#                print(f"Last three values are not decreasing: {header[col_index - 1]}")
         else:
             print(f"Not enough data in column: {header[col_index - 1]}")
 
@@ -333,12 +332,15 @@ def provide_updated_data():
             second_date_data = time_series[second_date]
             desired_value = second_date_data['4. close']
 
-            print(f" The latest price from {stock_name_symbol} is: {symbol[col_index]}. You can add it to the last column of googlesheet 'stock_daily_update'.")
+            print(f" The latest price from {stock_name_symbol} is: (desired_value). You can add it to the last column of googlesheet 'stock_daily_update'.") # (desired value, ist it the variable which is diplayed at the end? - TEST)
         else:
             print(f" Currently, there are no live data available for {stock_name_symbol}. Standard API rate limit is 25 requests per day.")
 
 
 def find_stock_symbol():
+    # Use an f-string to insert the new_stock_name into the URL
+    url = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=IBM&apikey=HULMNKWD3NVXSA0D'
+    r = requests.get(url)
 
     # Check if the API request was successful
     if r.status_code == 200:
@@ -347,7 +349,7 @@ def find_stock_symbol():
         # find a symbol for the stock name and use it for the API request
         header = stock_portfolio.row_values(1)
         new_stock_name = header[-1]
-        print(f"Here is the new stock. Choose one exact stock symbol to procced: {new_stock_name}")
+        print(f"Here are different stock symbols of {new_stock_name}. Choose one exact stock symbol to procced.")
     
         # Use an f-string to insert the new_stock_name into the URL
         url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={new_stock_name}&apikey=HULMNKWD3NVXSA0D'
