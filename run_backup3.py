@@ -44,7 +44,7 @@ def show_portfolio():
     # Get 2. row of the sheet
     shares_row = stock_portfolio.row_values(2)
     # Get 2. row of the sheet
-    purchase_price = stock_portfolio.row_values(4)
+    purchase_price = stock_daily_update.row_values(2)
     # Get 2. row of the sheet
     profit_loss = profit_loss_sheet.row_values(2)
 
@@ -118,11 +118,13 @@ def add_stock_column():
         f"Enter the stock purchase price of {new_stock_name} "
         "(float): \n"
     )
-
+    current_price = purchase_price
     try:
         purchase_price = float(purchase_price)
-        stock_portfolio.update_cell(4, last_column + 1, purchase_price)
         stock_daily_update.update_cell(2, last_column + 1, purchase_price)
+        stock_daily_update.update_cell(3, last_column + 1, current_price)
+        stock_daily_update.update_cell(4, last_column + 1, current_price)
+        stock_daily_update.update_cell(5, last_column + 1, current_price)
         print(f"Purchase price of '{new_stock_name}' added.")
     except ValueError:
         print("Invalid input. Please enter a float number.")
@@ -191,17 +193,18 @@ def show_top_performers():
             second_last_value = column_values[-2]
             third_last_value = column_values[-3]
 
-            # Check if the last three values are strictly increasing
+            # Check if the last three values
             if (
                 third_last_value < second_last_value < last_value
             ):
                 stocks_increasing.append(header[col_index - 1])
 
+            else:
+                print(
+                    f"Last three values are not increasing: {header[col_index - 1]}"
+                )
         else:
-            print(
-                f"Not enough data provided for {header[col_index - 1]} "
-                "Please add those data in the sheet manually."    
-            )
+            print(f"Not enough data in column: {header[col_index - 1]}")
 
     return stocks_increasing
 
@@ -224,56 +227,41 @@ def show_low_performers():
             second_last_value = column_values[-2]
             third_last_value = column_values[-3]
 
-            # Check if the last three values are strictly decreasing
+            # Check if the last three values are strictly increasing
             if third_last_value > second_last_value > last_value:
                 stocks_decreasing.append(header[col_index - 1])
 
+            else:
+                print(
+                    f"Last three values are not decreasing: {header[col_index - 1]}"
+                )
         else:
-            print(
-                f"Not enough data provided for {header[col_index - 1]} "
-                "Please add those data in the sheet manually."     
-            )
+            print(f"Not enough data in column: {header[col_index - 1]}")
 
     return stocks_decreasing
 
 
 def calculate_profit_loss():
     header = stock_daily_update.row_values(1)
-    
 
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
 
     for col_index in range(1, len(header) + 1):
-        # Get the purchase price from row 4 of the stock_portfolio sheet
-        purchase_price_column = stock_portfolio.row_values(4)
+        column_values = stock_daily_update.col_values(col_index)[1:]  # Ex. header
 
-        # Validation in case there is a missing purchase price
-        if len(purchase_price_column) < 1:
-            print(f"Error: Missing purchase price for column {header[col_index - 1]}")
-            continue
-        
-        purchase_price = purchase_price_column[0]
-
-        # Get the column values from stock_daily_update
-        column_values = stock_daily_update.col_values(col_index)[1:]         
-
-        if len(column_values) < 1:
-            print(f"Error: Missing data for column {header[col_index - 1]}")
-            continue        
-
+        first_column_value = column_values[0]
         last_column_value = column_values[-1]
 
-        # Check if values are numeric
+        # Check if first and last values are numeric
         try:
-            first_value = float(purchase_price)
+            first_value = float(first_column_value)
             last_value = float(last_column_value)
-            print(f"first value: {first_value}, last value: {last_value}")
         except ValueError:
             print(f"Non-numeric data found in column: {header[col_index - 1]}")
             continue
 
-        # Subtract last value of a column from the purchase price
+        # Subtract last value of a column from the first value of the column
         profit_loss_value = last_value - first_value
         rounded_profit_loss_value = round(profit_loss_value, 2)
 
@@ -297,8 +285,8 @@ def calculate_profit_loss():
         
         surplus = multiplicator * rounded_profit_loss_value
         print(
-            f"Profit/loss {header[col_index - 1]}: {surplus:.2f}€, "
-            f"{int(rounded_profit_loss_value_percentage):.2f}% \n"
+            f"profit or loss {header[col_index - 1]}: {surplus}€, "
+            f"{int(rounded_profit_loss_value_percentage)}% \n"
         )
 
         # add the profit_loss_value to the list above profit_loss_data
@@ -315,10 +303,9 @@ def column_check():
     header = stock_portfolio.row_values(1)
     shares = stock_portfolio.row_values(2)
     symbols = stock_portfolio.row_values(3)
-    purchase_price = stock_portfolio.row_values(4)
 
-    if len(header) == len(shares) == len(symbols) == len(purchase_price):
-        return True
+    if len(header) == len(shares) == len(symbols):
+        print("stock_portfolio is correctly filled out.")
 
     else:
         print(
@@ -326,14 +313,16 @@ def column_check():
             "are not equal. Data is missing. "
             "Adjust it manually in the sheet stock_portfolio"
         )
-        return False
 
     # check stock_daily_update
     header = stock_daily_update.row_values(1)
     purchase_price = stock_daily_update.row_values(2)
+    price1 = stock_daily_update.row_values(3)
+    price2 = stock_daily_update.row_values(4)
+    price3 = stock_daily_update.row_values(5)
 
-    if len(header) == len(purchase_price):
-        return True
+    if len(header) == len(purchase_price) & len(price1) & len(price2) & len(price3):
+        print("stock_daily_update is correctly filled out.")
 
     else:
         print(
@@ -341,22 +330,19 @@ def column_check():
             "are not equal. Data is missing. "
             "Adjust it manually in the sheet stock_daily_update."
         )
-        return False
 
     # check profit_loss_sheet
     header = profit_loss_sheet.row_values(1)
     surplus = profit_loss_sheet.row_values(2)
 
     if len(header) == len(surplus):
-        return True
-
+        print("profit_loss_sheet is correctly filled out.")
     else:
         print(
             f"Check sheet profit_loss. The lenght of the rows "
             "are not equal. Data is missing. "
             "Adjust it manually in the sheet profit_loss."
         )
-        return False
 
 
 def API_stock_daily_update():  # work in progress
@@ -489,7 +475,7 @@ def find_stock_symbol():
 
             # Print the symbols and names
             for symbol, name in symbols_and_names:
-                print(f"Symbol: {symbol}, Name: {name}")
+                print(f"Symbol: {symbol}, Name: {name}\n")
         else:
             print(
                 "Conenction to the API was not successful. "
@@ -523,6 +509,7 @@ print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 def main():
 
     column_check()
+    show_portfolio()
 
     # function/ API causes error 500. It is deactivated
     # API_stock_daily_update()
@@ -545,20 +532,14 @@ def main():
             clear_terminal()
             show_portfolio()
             add_stock_column()
-            clear_terminal()
-            show_portfolio()
         elif choice == '2':
             clear_terminal()
             show_portfolio()
             delete_stock_column()
-            clear_terminal()
-            show_portfolio()
         elif choice == '3':
             clear_terminal()
             show_portfolio()
             adjust_multiplicator()
-            clear_terminal()
-            show_portfolio()
         elif choice == '4':
             clear_terminal()
             column_check()
@@ -566,8 +547,9 @@ def main():
             increasing_stocks = show_top_performers()
             if increasing_stocks:
                 print(
-                    "Current top performer(s) of the last three days: ",
-                    ", ".join(increasing_stocks)
+                    "Current top performers with last three days"
+                    "increasing values:",
+                    increasing_stocks
                 )
             else:
                 print("No stocks with three times increase availabe.")
@@ -578,8 +560,9 @@ def main():
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
                 print(
-                    "Current low performer(s) of last three days: ",
-                    ", ".join(decreasing_stocks)
+                    "Current low performers with last three days"
+                    "decreasing values:",
+                    decreasing_stocks
                 )
             else:
                 print("No stocks with three times decrease availabe.")
