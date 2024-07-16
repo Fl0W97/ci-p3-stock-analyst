@@ -37,7 +37,6 @@ def clear_terminal():
 
 def show_portfolio():
     # Show current stock portfolio
-    # Correct profit_loss result
 
     # Get the column headers
     header = stock_portfolio.row_values(1)
@@ -49,7 +48,7 @@ def show_portfolio():
     profit_loss = profit_loss_sheet.row_values(2)
 
     total_rows = len(stock_daily_update.get_all_values())
-    current_price = stock_daily_update.row_values(total_rows)
+    current_price = stock_daily_update.row_values(total_rows -1)
 
     x = PrettyTable()
 
@@ -66,6 +65,8 @@ def show_portfolio():
         shares = shares_row[col_index - 1]  # Get number of shares
         purchase = purchase_price[col_index - 1]  # Get purchase price
         current = current_price[col_index - 1]  # Get current price
+        # column_values_current_price = stock_daily_update.col_values(col_index)[1:] 
+        # current = column_values_current_price[-1]
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
 
@@ -240,7 +241,6 @@ def show_low_performers():
 def calculate_profit_loss():
     header = stock_daily_update.row_values(1)
     
-
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
 
@@ -249,11 +249,11 @@ def calculate_profit_loss():
         purchase_price_column = stock_portfolio.row_values(4)
 
         # Validation in case there is a missing purchase price
-        if len(purchase_price_column) < 1:
+        if len(purchase_price_column) < col_index:
             print(f"Error: Missing purchase price for column {header[col_index - 1]}")
             continue
         
-        purchase_price = purchase_price_column[0]
+        purchase_price = purchase_price_column[col_index - 1]
 
         # Get the column values from stock_daily_update
         column_values = stock_daily_update.col_values(col_index)[1:]         
@@ -528,7 +528,7 @@ def main():
     # API_stock_daily_update()
 
     while True:
-
+        show_portfolio()
         print("\nOptions:")
         print("1: Add a new stock")
         print("2: Delete a stock")
