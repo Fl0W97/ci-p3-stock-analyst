@@ -10,34 +10,6 @@ Once an option is chosed the display still appears together with further input r
 
 <img src="README.images/start_view.PNG" alt="shows the start view">
 
-
-
-###Show the winner of the last day/week/month
-show all stocks with a positive result (get info from second sheet, substracting the value in row two (ever, of the week or month) from the last value (...) same for each column
-
-###Show the losers of the last day/week/month
-show all stocks with a negative result (get info from second sheet, substracting the first value (ever, of the week or month) from the last value (...) same for each column
-
-###Show stocks with signals
-show the top performer (get info from second sheet, 3 days in a row positive)
-show the flops (get info from second sheet, 3 days in a row negative)
-add more signs... i.e. 5 days negative, then 2 postive in a row (...) 
-
-###Show stocks which brings me money when I sell and how much
-show the stocks (get info from first & second sheet, calculate difference from first day and last day, substract sales fee... and multiplicate with the number of stocks)
-show the stocks (get info from first & second sheet, calculate difference from first day and last day, substract taxes 25%, from those add church and "solidaritäts" taxes 13,50% again)
-
-Keep in mind the 1000€ allowance (Freibetrag)
-
-###Buy a new stock (adjust sheet 1, 2 and 3)
-###Sell a stock (adjust sheet 1, 2 and 3)
-
-store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag)
-
-###Show overview of profit and loss this year
-store when a sale was done. Keep in mind the 1000€ allowance (Freibetrag) (sheet 3, add profit/loss for each sale)
-
-
 ## Features
 
 ### Feature overview:
