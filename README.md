@@ -1,6 +1,6 @@
 # Stock analyst
 
-Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. 
+Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. Since there are curretnly just basic checks implemented this is a portfolio manager for leisure broker. However, by adding more functions based on the input data tool can be used for more extensive analyses of the stock information. 
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
