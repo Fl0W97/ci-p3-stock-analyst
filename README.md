@@ -108,7 +108,12 @@ When a new stock is added and teh API connection fails, the surplus is not corre
 
 ### Validator Testing
 Validator testing has been done on:
+
+CI Python Validator
 https://pep8ci.herokuapp.com/
+
+(add html and css validator as well)
+
 
 #### Accessability (delete)
 ?
