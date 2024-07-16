@@ -246,13 +246,12 @@ def calculate_profit_loss():
 
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
-    profit_loss_data = []
 
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Ex. header
 
         first_column_value = column_values[0]
-        last_column_value = column_values[- 1]
+        last_column_value = column_values[-1]
 
         # Check if first and last values are numeric
         try:
@@ -267,14 +266,12 @@ def calculate_profit_loss():
         rounded_profit_loss_value = round(profit_loss_value, 2)
 
         # Calculate percentage profit/loss
-        if first_value != 0:  # Avoid division by zero
+        if first_value !=0:  # Avoid division by zero
             rounded_profit_loss_value_percentage = (
-                (first_value - last_value) / first_value * 100
+                (last_value - first_value) / first_value * 100
             )
         else:
             rounded_profit_loss_value_percentage = 0
-
-        print(f" Processing column: {header[col_index - 1]}\n")
 
         multiplicator_row = stock_portfolio.row_values(2)
 
@@ -287,24 +284,21 @@ def calculate_profit_loss():
         multiplicator = float(multiplicator_row[col_index - 1])
         
         surplus = multiplicator * rounded_profit_loss_value
-        print(f"profit_loss is in total: {surplus}\n")
         print(
-            "percentage of profit_loss is in total: "
-            f"{int(rounded_profit_loss_value_percentage)}%\n"
+            f"profit or loss {header[col_index - 1]}: {surplus}€, "
+            f"{int(rounded_profit_loss_value_percentage)}% \n"
         )
 
         # add the profit_loss_value to the list above profit_loss_data
-        profit_loss_data.append(surplus)
         surplus_data.append(surplus)
 
     # add/update the value to the second row of sheet profit_and_loss
-    profit_loss_sheet.update(f'2:2', [surplus_data])
+    profit_loss_sheet.update(range_name='2:2', values=[surplus_data])
 
     return surplus_data
 
 
 def column_check():
-
     # check stock_portfolio
     header = stock_portfolio.row_values(1)
     shares = stock_portfolio.row_values(2)
