@@ -143,6 +143,9 @@ https://pep8ci.herokuapp.com/
 
 ### Unfixed Bugs
 (No unfixed bugs.)
+API_stock_daily_update()
+
+
 
 ## Deployment - https://github.com/discord/heroku-sample-app/blob/main/README.md
 The site was deployed to Heroku pages using a GitHub repository for data storage.

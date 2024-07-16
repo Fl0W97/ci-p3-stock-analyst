@@ -118,11 +118,9 @@ def add_stock_column():
         f"Enter the stock purchase price of {new_stock_name} "
         "(float): \n"
     )
-    current_price = purchase_price
     try:
         purchase_price = float(purchase_price)
         stock_daily_update.update_cell(2, last_column + 1, purchase_price)
-        stock_daily_update.update_cell(3, last_column + 1, current_price)
         print(f"Purchase price of '{new_stock_name}' added.")
     except ValueError:
         print("Invalid input. Please enter a float number.")
@@ -248,29 +246,18 @@ def calculate_profit_loss():
 
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]  # Ex. header
-
         first_column_value = column_values[0]
-        last_column_value = column_values[- 1]
+        last_column_value = column_values[-1]
 
-        # Check if first and last values are numeric
-        try:
-            first_value = float(first_column_value)
-            last_value = float(last_column_value)
-        except ValueError:
-            print(f"Non-numeric data found in column: {header[col_index - 1]}")
-            continue
-
-        # Subtract last value of a column from the first value of the column
-        profit_loss_value = last_value - first_value
+        # substract last value of a column from the first value of the column
+        # sheet stock_daily_update
+        profit_loss_value = (
+            float(last_column_value) - float(first_column_value)
+        )
         rounded_profit_loss_value = round(profit_loss_value, 2)
-
-        # Calculate percentage profit/loss
-        if first_value != 0:  # Avoid division by zero
-            rounded_profit_loss_value_percentage = (
-                (first_value - last_value) / first_value * 100
-            )
-        else:
-            rounded_profit_loss_value_percentage = 0
+        rounded_profit_loss_value_percentage = (
+            ((float(first_column_value) - float(last_column_value)) / float(first_column_value)) * 100
+        )
 
         print(f" Processing column: {header[col_index - 1]}\n")
 
@@ -282,9 +269,7 @@ def calculate_profit_loss():
             return
 
         # multiply the multiplicator in 2. row from sheet stock_portfolio
-        multiplicator = float(multiplicator_row[col_index - 1])
-        
-        surplus = multiplicator * rounded_profit_loss_value
+        surplus = float(multiplicator_row[col_index - 1]) * rounded_profit_loss_value
         print(f"profit_loss is in total: {surplus}\n")
         print(
             "percentage of profit_loss is in total: "
@@ -302,48 +287,52 @@ def calculate_profit_loss():
 
 
 def column_check():
+    while True:
+        # check stock_portfolio
+        header = stock_portfolio.row_values(1)
+        shares = stock_portfolio.row_values(2)
+        symbols = stock_portfolio.row_values(3)
 
-    # check stock_portfolio
-    header = stock_portfolio.row_values(1)
-    shares = stock_portfolio.row_values(2)
-    symbols = stock_portfolio.row_values(3)
+        if len(header) == len(shares) == len(symbols):
+            print("stock_portfolio is correctly filled out.")
 
-    if len(header) == len(shares) == len(symbols):
-        print("stock_portfolio is correctly filled out.")
+        else:
+            print(
+                "Check sheet stock_portfolio. The lenght of the rows "
+                "are not equal. Data is missing"
+            )
+            continue  # Restart the loop if the condition fails
 
-    else:
-        print(
-            "Check sheet stock_portfolio. The lenght of the rows "
-            "are not equal. Data is missing"
-        )
+        # check stock_daily_update
+        header = stock_daily_update.row_values(1)
+        purchase_price = stock_daily_update.row_values(2)
+        price1 = stock_daily_update.row_values(3)
+        price2 = stock_daily_update.row_values(4)
+        price3 = stock_daily_update.row_values(5)
 
-    # check stock_daily_update
-    header = stock_daily_update.row_values(1)
-    purchase_price = stock_daily_update.row_values(2)
-    price1 = stock_daily_update.row_values(3)
-    price2 = stock_daily_update.row_values(4)
-    price3 = stock_daily_update.row_values(5)
+        if len(header) == len(shares) & len(symbols):
+            print("stock_daily_update is correctly filled out.")
 
-    if len(header) == len(shares) & len(symbols):
-        print("stock_daily_update is correctly filled out.")
+        else:
+            print(
+                f"Check sheet stock_daily_update. The lenght of the rows "
+                "are not equal. Data is missing"
+            )
+            continue  # Restart the loop if the condition fails
 
-    else:
-        print(
-            f"Check sheet stock_daily_update. The lenght of the rows "
-            "are not equal. Data is missing"
-        )
+        # check profit_loss_sheet
+        header = profit_loss_sheet.row_values(1)
+        surplus = profit_loss_sheet.row_values(2)
 
-    # check profit_loss_sheet
-    header = profit_loss_sheet.row_values(1)
-    surplus = profit_loss_sheet.row_values(2)
-
-    if len(header) == len(shares) == len(symbols):
-        print("profit_loss_sheet is correctly filled out.")
-    else:
-        print(
-            f"Check sheet profit_loss. The lenght of the rows "
-            "are not equal. Data is missing"
-        )
+        if len(header) == len(shares) == len(symbols):
+            print("profit_loss_sheet is correctly filled out.")
+            break  # Exit the loop if all conditions are met
+        else:
+            print(
+                f"Check sheet profit_loss. The lenght of the rows "
+                "are not equal. Data is missing"
+            )
+            continue  # Restart the loop if the condition fails
 
 
 def API_stock_daily_update():  # work in progress
@@ -527,14 +516,17 @@ def main():
             clear_terminal()
             show_portfolio()
             add_stock_column()
+            show_portfolio()
         elif choice == '2':
             clear_terminal()
             show_portfolio()
             delete_stock_column()
+            show_portfolio()
         elif choice == '3':
             clear_terminal()
             show_portfolio()
             adjust_multiplicator()
+            show_portfolio()
         elif choice == '4':
             clear_terminal()
             column_check()
