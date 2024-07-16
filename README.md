@@ -255,3 +255,4 @@ clear()
 https://stackoverflow.com/questions/75459360/how-to-fix-the-typeerror-can-only-concatenate-str-not-float-to-str
 https://stackoverflow.com/questions/1343890/how-do-i-restrict-a-float-value-to-only-two-places-after-the-decimal-point-in-c
 https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
+https://stackoverflow.com/questions/1528724/converting-a-listint-to-a-comma-separated-string

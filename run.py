@@ -48,7 +48,7 @@ def show_portfolio():
     profit_loss = profit_loss_sheet.row_values(2)
 
     total_rows = len(stock_daily_update.get_all_values())
-    current_price = stock_daily_update.row_values(total_rows -1)
+    current_price = stock_daily_update.row_values(total_rows - 1)
 
     x = PrettyTable()
 
@@ -65,7 +65,7 @@ def show_portfolio():
         shares = shares_row[col_index - 1]  # Get number of shares
         purchase = purchase_price[col_index - 1]  # Get purchase price
         current = current_price[col_index - 1]  # Get current price
-        # column_values_current_price = stock_daily_update.col_values(col_index)[1:] 
+        # column_values_current_price = stock_daily_update.col_values(col_index)[1:]
         # current = column_values_current_price[-1]
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
@@ -201,7 +201,7 @@ def show_top_performers():
         else:
             print(
                 f"Not enough data provided for {header[col_index - 1]} "
-                "Please add those data in the sheet manually."    
+                "Please add those data in the sheet manually."
             )
 
     return stocks_increasing
@@ -232,7 +232,7 @@ def show_low_performers():
         else:
             print(
                 f"Not enough data provided for {header[col_index - 1]} "
-                "Please add those data in the sheet manually."     
+                "Please add those data in the sheet manually."  
             )
 
     return stocks_decreasing
@@ -240,7 +240,7 @@ def show_low_performers():
 
 def calculate_profit_loss():
     header = stock_daily_update.row_values(1)
-    
+
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
 
@@ -250,17 +250,19 @@ def calculate_profit_loss():
 
         # Validation in case there is a missing purchase price
         if len(purchase_price_column) < col_index:
-            print(f"Error: Missing purchase price for column {header[col_index - 1]}")
+            print(
+                f"Error: Missing purchase price for column {header[col_index - 1]}"
+            )
             continue
-        
+
         purchase_price = purchase_price_column[col_index - 1]
 
         # Get the column values from stock_daily_update
-        column_values = stock_daily_update.col_values(col_index)[1:]         
+        column_values = stock_daily_update.col_values(col_index)[1:]     
 
         if len(column_values) < 1:
             print(f"Error: Missing data for column {header[col_index - 1]}")
-            continue        
+            continue   
 
         last_column_value = column_values[-1]
 
@@ -278,7 +280,7 @@ def calculate_profit_loss():
         rounded_profit_loss_value = round(profit_loss_value, 2)
 
         # Calculate percentage profit/loss
-        if first_value !=0:  # Avoid division by zero
+        if first_value != 0:  # Avoid division by zero
             rounded_profit_loss_value_percentage = (
                 (last_value - first_value) / first_value * 100
             )
@@ -294,7 +296,7 @@ def calculate_profit_loss():
 
         # multiply the multiplicator in 2. row from sheet stock_portfolio
         multiplicator = float(multiplicator_row[col_index - 1])
-        
+
         surplus = multiplicator * rounded_profit_loss_value
         print(
             f"Profit/loss {header[col_index - 1]}: {surplus:.2f}€, "
@@ -439,8 +441,10 @@ def provide_updated_data():
                 desired_value = second_date_data['4. close']
 
                 print(
-                    f"The latest price from {stock_name_symbol} is: {desired_value}. "
-                    "You can add it to the last column of googlesheet 'stock_daily_update'."
+                    f"The latest price from {stock_name_symbol} is: "
+                    f"{desired_value}. "
+                    "You can add it to the last column of "
+                    "googlesheet 'stock_daily_update'."
                 )
 
             else:
@@ -448,7 +452,8 @@ def provide_updated_data():
 
         else:
             print(
-                f"Currently, there are no live data available for {stock_name_symbol}. "
+                "Currently, there are no live data available "
+                f"for {stock_name_symbol}. "
                 "Standard API rate limit is 25 requests per day."
             )
 
@@ -458,12 +463,12 @@ def find_stock_symbol():
     header = stock_portfolio.row_values(1)
     new_stock_name = header[-1]
 
-    # API request URL  
+    # API request URL
     url = (
         'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords='
         f'{new_stock_name}&apikey=HULMNKWD3NVXSA0D'
     )
-    
+
     r = requests.get(url)
     data = r.json()
 
@@ -511,9 +516,8 @@ def find_stock_symbol():
 
     else:
         print(
-            f"Failed to retrieve data: {r.status_code}. Since the API "
-            "doesn't provide data the stock symbol is not updated in the sheet. "
-            "Please do it manually."
+            f"Failed to retrieve data from API: {r.status_code}. Since the API "
+            "Please add it manually."
         )
 
 
