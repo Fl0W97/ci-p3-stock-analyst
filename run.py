@@ -113,7 +113,7 @@ def add_stock_column():
     except ValueError:
         print("Invalid input. Please enter a full number.")
 
-    # add inital purchase price in row 2 in sheet stoy daily update
+    # add inital purchase price in row 2 in sheet stock_daily_update
     purchase_price = input(
         f"Enter the stock purchase price of {new_stock_name} "
         "(float): \n"
@@ -123,6 +123,8 @@ def add_stock_column():
         purchase_price = float(purchase_price)
         stock_daily_update.update_cell(2, last_column + 1, purchase_price)
         stock_daily_update.update_cell(3, last_column + 1, current_price)
+        stock_daily_update.update_cell(4, last_column + 1, current_price)
+        stock_daily_update.update_cell(5, last_column + 1, current_price)
         print(f"Purchase price of '{new_stock_name}' added.")
     except ValueError:
         print("Invalid input. Please enter a float number.")
@@ -314,7 +316,8 @@ def column_check():
     else:
         print(
             "Check sheet stock_portfolio. The lenght of the rows "
-            "are not equal. Data is missing"
+            "are not equal. Data is missing. "
+            "Adjust it manually in the sheet stock_portfolio"
         )
 
     # check stock_daily_update
@@ -324,25 +327,27 @@ def column_check():
     price2 = stock_daily_update.row_values(4)
     price3 = stock_daily_update.row_values(5)
 
-    if len(header) == len(shares) & len(symbols):
+    if len(header) == len(purchase_price) & len(price1) & len(price2) & len(price3):
         print("stock_daily_update is correctly filled out.")
 
     else:
         print(
             f"Check sheet stock_daily_update. The lenght of the rows "
-            "are not equal. Data is missing"
+            "are not equal. Data is missing. "
+            "Adjust it manually in the sheet stock_daily_update."
         )
 
     # check profit_loss_sheet
     header = profit_loss_sheet.row_values(1)
     surplus = profit_loss_sheet.row_values(2)
 
-    if len(header) == len(shares) == len(symbols):
+    if len(header) == len(surplus):
         print("profit_loss_sheet is correctly filled out.")
     else:
         print(
             f"Check sheet profit_loss. The lenght of the rows "
-            "are not equal. Data is missing"
+            "are not equal. Data is missing. "
+            "Adjust it manually in the sheet profit_loss."
         )
 
 
@@ -441,11 +446,16 @@ def provide_updated_data():
 
 
 def find_stock_symbol():
-    # use IBM on purpose to have one specific test here  
+    # define stock name. Use it for the API request
+    header = stock_portfolio.row_values(1)
+    new_stock_name = header[-1]
+
+    # API request URL  
     url = (
         'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords='
         f'{new_stock_name}&apikey=HULMNKWD3NVXSA0D'
     )
+    
     r = requests.get(url)
     data = r.json()
 
@@ -453,9 +463,7 @@ def find_stock_symbol():
     if r.status_code == 200:
         print("Connection to the API was successful.")
 
-        # find a symbol for the stock name and use it for the API request
-        header = stock_portfolio.row_values(1)
-        new_stock_name = header[-1]
+        # inform the user
         print(
             f"Here are different stock symbols of {new_stock_name}. "
             "Choose one exact stock symbol to proceed."
@@ -491,10 +499,13 @@ def find_stock_symbol():
         # update the sheet with the new stock name and symbol in third row
         stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
 
+        print(f"Symbol for {new_stock_name} is added.")
+
     else:
         print(
             f"Failed to retrieve data: {r.status_code}. Since the API "
-            "doesn't provide data the sheet the stock symbol is not updated."
+            "doesn't provide data the stock symbol is not updated in the sheet. "
+            "Please do it manually."
         )
 
 
