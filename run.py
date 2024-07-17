@@ -232,7 +232,7 @@ def show_low_performers():
         else:
             print(
                 f"Not enough data provided for {header[col_index - 1]} "
-                "Please add those data in the sheet manually."  
+                "Please add those data in the sheet manually."
             )
 
     return stocks_decreasing
@@ -251,22 +251,23 @@ def calculate_profit_loss():
         # Validation in case there is a missing purchase price
         if len(purchase_price_column) < col_index:
             print(
-                f"Error: Missing purchase price for column {header[col_index - 1]}"
+                "Error: Missing purchase price for column "
+                f"{header[col_index - 1]}"
             )
             continue
 
         purchase_price = purchase_price_column[col_index - 1]
 
         # Get the column values from stock_daily_update
-        column_values = stock_daily_update.col_values(col_index)[1:]     
+        column_values = stock_daily_update.col_values(col_index)[1:]  
 
-        if len(column_values) < 1:
-            print(f"Error: Missing data for column {header[col_index - 1]}")
-            continue   
+        if len(column_values) < 0.1:
+            print(f"Error: Missing/wrong data for column {header[col_index - 1]}")
+            continue  
 
         last_column_value = column_values[-1]
 
-        # Check if values are numeric
+        # Check if  values are numeric
         try:
             first_value = float(purchase_price)
             last_value = float(last_column_value)
@@ -291,7 +292,10 @@ def calculate_profit_loss():
 
         # validation in case there is a column or value missing
         if col_index - 1 >= len(multiplicator_row):
-            print(f"Error: Multiplicator missing for column {header[col_index - 1]}")
+            print(
+                "Error: Multiplicator missing for column "
+                f"{header[col_index - 1]}"
+            )
             return
 
         # multiply the multiplicator in 2. row from sheet stock_portfolio
@@ -366,7 +370,7 @@ def API_stock_daily_update():  # work in progress
     symbol = stock_portfolio.row_values(3)  # Get the abbrevation of the stocks
 
     for col_index in range(len(symbol)):
-        stock_name_symbol = symbol[col_index]  # Get one abbrevation for each column
+        stock_name_symbol = symbol[col_index]  # Get 1 abbr for each col
 
         url = (
             f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&'
