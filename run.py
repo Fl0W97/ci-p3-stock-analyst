@@ -39,6 +39,7 @@ def show_portfolio():
     # Show current stock portfolio
 
     #calculate the surplus
+    calculate_profit_loss()
 
     # Get the column headers
     header = stock_portfolio.row_values(1)
@@ -251,6 +252,7 @@ def calculate_profit_loss():
 
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
+    percentage_data = [] 
 
     for col_index in range(1, len(header) + 1):
         # Get the purchase price from row 4 of the stock_portfolio sheet
@@ -275,11 +277,10 @@ def calculate_profit_loss():
 
         last_column_value = column_values[-1]
 
-        # Check if  values are numeric
+        # Check if values are numeric
         try:
             first_value = float(purchase_price)
             last_value = float(last_column_value)
-            print(f"first value: {first_value}, last value: {last_value}")
         except ValueError:
             print(f"Non-numeric data found in column: {header[col_index - 1]}")
             continue
@@ -310,17 +311,22 @@ def calculate_profit_loss():
         multiplicator = float(multiplicator_row[col_index - 1])
 
         surplus = multiplicator * rounded_profit_loss_value
-        print(
-            f"Profit/loss {header[col_index - 1]}: {surplus:.2f}€, "
-            f"{int(rounded_profit_loss_value_percentage):.2f}% \n"
-        )
+#        print(
+#            f"Profit/loss {header[col_index - 1]}: {surplus:.2f}€, "
+#            f"{int(rounded_profit_loss_value_percentage):.2f}% \n"
+#        )
 
         # add the profit_loss_value to the list above profit_loss_data
         surplus_data.append(surplus)
 
+        # add the percentage value to the list
+        percentage_data.append(round(rounded_profit_loss_value_percentage, 2))
+
     # add/update the value to the second row of sheet profit_and_loss
-    profit_loss_sheet.update(range_name='2:2', values=[surplus_data]) # correction
-    # profit_loss_sheet.update('A2', [surplus_data]) # wrong code
+    profit_loss_sheet.update(range_name='2:2', values=[surplus_data])
+
+    # add/update the percentage values to the third row of sheet profit_and_loss
+    profit_loss_sheet.update(range_name='3:3', values=[percentage_data])
 
     return surplus_data
 
@@ -456,7 +462,7 @@ def provide_updated_data():
 
                 print(
                     f"The latest price from {stock_name_symbol} is: "
-                    f"{desired_value}. "
+                    f"{desired_value:.2f}. "
                     "You can add it to the last column of "
                     "googlesheet 'stock_daily_update'."
                 )

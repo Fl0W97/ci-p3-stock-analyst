@@ -10,6 +10,11 @@ Once an option is chosed the display still appears together with further input r
 
 <img src="README.images/start_view.PNG" alt="shows the start view">
 
+
+## Remarks for handeling the program
+Since not all automatications are set the google worksheets has to be updated manually every day. That means each date the current price has to be added to the column by using option 7. The Alphaventage API is limited to 25 requets. That means after a few requests the limit is reached. This also depends on the number of stocks in the portfolio.
+
+
 ## Features
 
 ### Feature overview:
@@ -157,7 +162,6 @@ I confirm that the selected colors and fonts are easy to read and accessible by 
 ### Unfixed Bugs
 (No unfixed bugs.)
 API_stock_daily_update()
-
 
 
 ## Deployment
@@ -344,9 +348,11 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_sc
 
 ## Improvements and ideas for subsequent projects
 
-- add API from https://www.alphavantage.co/ for updating live data for google spreadsheet stock_daily_update
+- add profit_loss percentage to the table overview
+- buy premium version of Alphavantage API so that there is no limmitation of 25 requests
+- add an automatically update for google spreadsheet stock_daily_update. Using 'time series' from Alpha Vantage https://www.alphavantage.co/documentation/#time-series-data
 - add more validations by taking into account more input issues from the user
-- adjust html and JavaSript files to improve the design i.e. by suing html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
+- adjust html and JavaSript files to improve the design i.e. by using html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
 
 
 ## Credits
