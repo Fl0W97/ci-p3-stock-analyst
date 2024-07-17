@@ -512,9 +512,8 @@ def main():
         print("3: Adjust the number of shares")
         print("4: Show current top performer")
         print("5: Show current low performer")
-        print("6: Show profit and loss with percentage")
-        print("7: Show latest stock prices")
-        print("8: Exit")
+        print("6: Show latest stock prices")
+        print("7: Exit")
 
         choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7, 8): ")
 
@@ -562,14 +561,9 @@ def main():
                 print("No stocks with three times decrease availabe.")
         elif choice == '6':
             clear_terminal()
-            column_check()
-            show_portfolio()
-            calculate_profit_loss()
-        elif choice == '7':
-            clear_terminal()
             show_portfolio()
             provide_updated_data()
-        elif choice == '8':
+        elif choice == '7':
             break
         else:
             print("Invalid option. Please choose again.")

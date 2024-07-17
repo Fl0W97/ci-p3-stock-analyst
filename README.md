@@ -99,8 +99,10 @@ The size of the terminal is increased to 50 rows (in index.html and default.js).
 - type in worng input, validation check
 
 ### Bugs (not fixed)
-When a new stock is added and teh API connection fails, the surplus is not correct. (BUG)
 
+| Bug | Description  | images (optional) | Correction | 
+| --- |------------- | ----------------- | -----------|
+|Goolge API Error | The limit of Google spreadsheet usage is reached. No further request possible | <img src="README.images/Google_APIError.PNG" alt="image shows Error message"> | not defined yet |
 
 ### Bugs (fixed)
 
@@ -111,6 +113,8 @@ When a new stock is added and teh API connection fails, the surplus is not corre
 | IndexError_list_index_out_of_range | The IndexError indicate a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa.|<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
 | DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update() has changed | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading https://stackoverflow.com/questions/72562988/how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
 | NameError_name not defined | the variable was missing | <img src="README.images/NameError_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
+
+
 
 ### Validator Testing
 Validator testing has been done on:
