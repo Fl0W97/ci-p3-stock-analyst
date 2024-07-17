@@ -369,8 +369,8 @@ def API_stock_daily_update():  # work in progress
         stock_name_symbol = symbol[col_index]  # Get one abbrevation for each column
 
         url = (
-            f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_name_symbol}'
-            '&apikey=HULMNKWD3NVXSA0D'
+            f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&'
+            f'symbol={stock_name_symbol}&apikey=HULMNKWD3NVXSA0D'
         )
 
         # request data from the API
@@ -384,7 +384,7 @@ def API_stock_daily_update():  # work in progress
             if 'Time Series (Daily)' in data:
                 time_series = data['Time Series (Daily)']
 
-                # get dates from the stock_daily_update sheet (column 5, rows 2-4)
+                # get dates from stock_daily_update (column 5, rows 2-4)
                 dates = stock_daily_update.col_values(5)[1:4]
 
                 # extract the close values for these dates
@@ -393,7 +393,7 @@ def API_stock_daily_update():  # work in progress
                     if date in time_series:
                         close_values.append(time_series[date]['4. close'])
                     else:
-                        # Handle the case where the date is not in the API response
+                        # Handle if date is not in the API response
                         close_values.append('N/A')
 
                 # update the corresponding cells in stock_daily_update
@@ -409,9 +409,10 @@ def API_stock_daily_update():  # work in progress
 
         else:
             print(
-                f"Failed to retrieve data: {r.status_code}. Since the API doesn't provide data, "
-                "the sheet stock_daily_update is not updated. You have to do it manually. "
-                "The data are provided here: https://finance.yahoo.com/quote/MSFT/history/"
+                f"Failed to retrieve data: {r.status_code}. API doesn't provide data, "
+                "the sheet stock_daily_update is not updated. "
+                "You can do it manually. "
+                "Check: https://finance.yahoo.com/quote/MSFT/history/"
             )
 
 
@@ -423,8 +424,8 @@ def provide_updated_data():
 
         stock_name_symbol = symbol[col_index]  # Get one abbr. for each column
         url = (
-            f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={stock_name_symbol}'
-            '&apikey=HULMNKWD3NVXSA0D'
+            f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&'
+            f'symbol={stock_name_symbol}&apikey=HULMNKWD3NVXSA0D'
         )
         r = requests.get(url)
         data = r.json()
@@ -516,7 +517,7 @@ def find_stock_symbol():
 
     else:
         print(
-            f"Failed to retrieve data from API: {r.status_code}. Since the API "
+            f"Failed to retrieve data from API: {r.status_code}. "
             "Please add it manually."
         )
 
