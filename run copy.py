@@ -384,6 +384,9 @@ def provide_updated_data():
     # show relevant data for stock_daily_update in the terminal
     symbol = stock_portfolio.row_values(3)  # Get the abbrevation of the stocks
 
+    # List to store the desired values
+    desired_values = []
+
     for col_index in range(len(symbol)):
 
         stock_name_symbol = symbol[col_index]  # Get one abbr. for each column
@@ -404,6 +407,7 @@ def provide_updated_data():
                 second_date = dates[1]
                 second_date_data = time_series[second_date]
                 desired_value = second_date_data['4. close']
+                desired_values.append(desired_value)
 
                 print(
                     f"The latest price from {stock_name_symbol} is: "
@@ -423,6 +427,11 @@ def provide_updated_data():
                 "You can do it manually. "
                 "Check: https://finance.yahoo.com/quote/MSFT/history/"
             )
+
+     # Add the desired_values as a new column in stock_daily_update
+    last_column_index = len(stock_daily_update.row_values(1)) + 1
+    for row_index, value in enumerate(desired_values, start=2):  # Start from row 2 to skip the header
+        stock_daily_update.update_cell(row_index, last_column_index, value)
 
 
 def find_stock_symbol():

@@ -407,7 +407,7 @@ def provide_updated_data():
 
                 print(
                     f"The latest price from {stock_name_symbol} is: "
-                    f"{desired_value}. "
+                    f"{desired_value:.2f}. "
                     "You can add it to the last column of "
                     "googlesheet 'stock_daily_update'."
                 )
@@ -417,9 +417,10 @@ def provide_updated_data():
 
         else:
             print(
+                "Currently, there are no live data available "
                 f"for {stock_name_symbol}. "
-                "Standard API rate limit is 25 requests per day. "
-                "The sheet stock_daily_update is not updated. "
+                "Standard API rate limit is 25 requests per day."
+                "the sheet stock_daily_update is not updated. "
                 "You can do it manually. "
                 "Check: https://finance.yahoo.com/quote/MSFT/history/"
             )
@@ -494,6 +495,9 @@ print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 def main():
 
     column_check()
+
+    # function/ API causes error 500. It is deactivated
+    # API_stock_daily_update()
 
     while True:
         show_portfolio()

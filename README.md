@@ -353,6 +353,7 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_sc
 - add an automatically update for google spreadsheet stock_daily_update. Using 'time series' from Alpha Vantage https://www.alphavantage.co/documentation/#time-series-data
 - add more validations by taking into account more input issues from the user
 - adjust html and JavaSript files to improve the design i.e. by using html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
+- due to safety issues don't show the APIKey in the code. Hide it and set a parameter in creds.json
 
 
 ## Credits
