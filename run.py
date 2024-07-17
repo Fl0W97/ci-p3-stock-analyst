@@ -38,6 +38,8 @@ def clear_terminal():
 def show_portfolio():
     # Show current stock portfolio
 
+    #calculate the surplus
+
     # Get the column headers
     header = stock_portfolio.row_values(1)
     # Get 2. row of the sheet
@@ -46,9 +48,6 @@ def show_portfolio():
     purchase_price = stock_portfolio.row_values(4)
     # Get 2. row of the sheet
     profit_loss = profit_loss_sheet.row_values(2)
-
-    total_rows = len(stock_daily_update.get_all_values())
-    current_price = stock_daily_update.row_values(total_rows - 1)
 
     x = PrettyTable()
 
@@ -60,13 +59,22 @@ def show_portfolio():
         "surplus total"
     ]
 
-    for col_index in range(len(header)):
+    for col_index in range(1, len(header) +1):
         stock_name = header[col_index - 1]  # Get stock name from the header
         shares = shares_row[col_index - 1]  # Get number of shares
         purchase = purchase_price[col_index - 1]  # Get purchase price
-        current = current_price[col_index - 1]  # Get current price
-        # column_values_current_price = stock_daily_update.col_values(col_index)[1:]
-        # current = column_values_current_price[-1]
+
+        # Get the column values from stock_daily_update
+        column_values = stock_daily_update.col_values(col_index)[1:]
+
+        # Find the last non-empty value in the column
+        for value in reversed(column_values):
+            if value:
+                current = value
+                break
+        else:
+            current = purchase # no values, then purchase price is used
+
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
 
