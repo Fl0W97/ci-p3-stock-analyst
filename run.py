@@ -311,7 +311,8 @@ def calculate_profit_loss():
         surplus_data.append(surplus)
 
     # add/update the value to the second row of sheet profit_and_loss
-    profit_loss_sheet.update(range_name='2:2', values=[surplus_data])
+    profit_loss_sheet.update(range_name='2:2', values=[surplus_data]) # correction
+    # profit_loss_sheet.update('A2', [surplus_data]) # wrong code
 
     return surplus_data
 

@@ -104,19 +104,54 @@ When a new stock is added and teh API connection fails, the surplus is not corre
 | Error_list_index_out_of_range | There is no reference in the worksheet. A new stock was added, but a value is missing in the column.  | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
 | TypeError_unsupported_operand_type_for_str | Using string values for calculation ends up in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
 | IndexError_list_index_out_of_range | The IndexError indicate a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa.|<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
-
+| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update() has changed | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading https://stackoverflow.com/questions/72562988/how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
 
 ### Validator Testing
 Validator testing has been done on:
 
-CI Python Validator
-https://pep8ci.herokuapp.com/
+#### [CI Python validator](https://pep8ci.herokuapp.com/)
 
-(add html and css validator as well)
+No errors were returned for run.py
+
+IMAGE UPDATE NEEDED!
+<img src="README.images/PI_python_linter_validation.PNG" alt="image shows preview of validator results" width="500px">
+
+<details>
+    <summary>further results of HTML, CSS Validator</summary>
+
+<img src="" alt="image shows preview of validator results" width="500px">
+<img src=""_html_end.PNG alt="image shows preview of validator results" width="500px">
+
+#### [HTML validator](https://validator.w3.org/)
+
+No errors were returned
+
+<img src="README.images/HTML_validation.PNG" alt="image shows preview of validator results" width="500px">
+
+
+#### [CSS validator](https://jigsaw.w3.org/css-validator/)
+
+No errors were returned
+
+<img src="README.images/CSS_validation.PNG" alt="image shows preview of validator results" width="500px">
+
+
+#### [JS Validator] (https://jshint.com/)
+
+Errors occured. However, since I reused the suggested template from Code Institute and I haven't made any adjustments I keep the current status.
+
+Code from index.js and defaul.js checked. 
+
+Here an example of index.js
+<img src="README.images/JS_validation.PNG" alt="image shows preview of validator results" width="500px">
+
+</details>
 
 
 #### Accessability (delete)
-?
+I confirm that the selected colors and fonts are easy to read and accessible by using Lighthouse in devtools (Chrome).
+
+(screenshot)
 
 ### Unfixed Bugs
 (No unfixed bugs.)
@@ -124,8 +159,11 @@ API_stock_daily_update()
 
 
 
-## Deployment - https://github.com/discord/heroku-sample-app/blob/main/README.md
-The site was deployed to Heroku pages using a GitHub repository for data storage.
+## Deployment
+The site was deployed to a Heroku page using a GitHub repository for data storage.
+
+Heroku page: https://stock-analyst-390ed9b08457.herokuapp.com/
+GitHub repository: https://github.com/Fl0W97/ci-p3-stock-analyst
 
 ### Configure Heroku 
 The steps to configure Heroku are as follows:
@@ -195,14 +233,86 @@ The main functions are generated with Python. However, to set up the whole proje
 - CSS
 
 
-## API and Google spreadsheet add-on alpha vantage 
-https://www.alphavantage.co/
+## Set up (API) Google spreadsheet, add-on alphavantage 
 
+### Step 1: Create a Google Spreadsheet
+<details>
 
-### Description API
-Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. In addition, it provides google add-ons which can be integrated into google sheets. Due to better handling and the direct API is used wihtin this project.
+<summary>details</summary>
+First create a google account https://myaccount.google.com/
 
-The documentation shows a standrad API documentation including request urls, parameter definition.
+    Sign in to Google Account:
+        Go to Google Sheets and sign in with your Google account.
+
+    Create a New Spreadsheet:
+        On the Google Sheets homepage, click the + button labeled "Blank" to create a new spreadsheet.
+
+    Name Your Spreadsheet:
+        Click on "Untitled Spreadsheet" at the top left corner and enter a name for your spreadsheet.
+
+</details>
+
+### Step 2: Set Up Your Spreadsheet
+<details>
+
+<summary>details</summary>
+    Enter Data:
+        Enter your data in the cells of the spreadsheet. You can start with simple data entries, such as column headers and rows of data.
+
+    Format Cells (Optional):
+        You can format the cells by selecting them and using the toolbar options (e.g., bold, italic, text color, cell background color, etc.).
+
+    Save Your Work:
+        Google Sheets automatically saves your work as you go. However, it’s good practice to ensure your data is saved by checking the "Saved to Drive" message at the top.
+
+</details>
+
+### Step 3: Add alpha vantage Google Add-on
+<details>
+
+<summary>details</summary>
+    Open Add-ons Menu:
+        In your Google Spreadsheet, go to the top menu and click on Extensions, then select Add-ons.
+
+    Get Add-ons:
+        Click on Get add-ons from the drop-down menu. This will open the Google Workspace Marketplace.
+
+    Search for an Add-on:
+        In the Google Workspace Marketplace, use the search bar to find the add-on 'Alpha Vantage Market Data'
+
+    Install the Add-on:
+        Once you find the desired add-on, click on it to open its details page.
+        Click on the Install button. A pop-up window will appear asking for permissions.
+        Review the permissions and click Allow to proceed with the installation.
+
+</<details>
+
+### Step 4: Use the Add-on
+<details>
+
+<summary>details</summary>
+    Activate add-on alpha vantage with API-KEy
+
+        Get Alpha Vantage API Key:
+        Go on https://www.alphavantage.co/support/#api-key and request an API Key.
+        Go back in the Google spreadsheet to Extensions in the menu, go an Alpha Vantage and enter the API Key.
+        Now you can start using formulars of Alpha Vantage to enter those in the spreadsheet.
+
+Find more details on https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
+
+        
+        Find here an overview of possible add-on formulas and how they will be added.
+        https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.html
+        https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html
+
+</details>
+
+### Description Alpha Vantage API
+Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. you can find here an extensive API documentation: https://www.alphavantage.co/documentation/
+
+<details>
+<summary>details</summary>
+The documentation shows a standard API documentation including request urls, parameter definition.
 
 The API function TIME_SERIES_DAILY is used in this project.
 <img src="README.images/API_daily_time_series.PNG" alt="image shows example of data provided from time_series_daily function">
@@ -228,31 +338,38 @@ However, due to better and more flexible handling of the data no add-on function
 
 Links for googlesheet add-on integration:
 https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.html#avsearchequitysymbol
-https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
 
-
+</details>
 
 ## Improvements and ideas for subsequent projects
 
-- add API from https://www.alphavantage.co/ and using live stock data
-- add more validations
-- adjust html and JavaSript files to improve the design
+- add API from https://www.alphavantage.co/ for updating live data for google spreadsheet stock_daily_update
+- add more validations by taking into account more input issues from the user
+- adjust html and JavaSript files to improve the design i.e. by suing html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
 
 
 ## Credits
 
 ### Content
+By going through the API documentation and further examples of Alpha Vantage I decided which options will be added. Series update and smybol search seems a good start for providing stock information.
+
+https://www.alphavantage.co/documentation/#symbolsearch
+https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html
+
+Description of Heroku deployment is resused from github project
 https://github.com/discord/heroku-sample-app/blob/main/README.md
 
 ### Code
 
 | No | Description  | Source | URL |
 | -- | ------------ | ------ | --- |
-| 1 | using ascci tables to improve visualization of stock overview | Forum geeksforgeeks.org | https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/ |
-| 2 | clear terminal | portal stackoverflow.com | https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
-clear()
-
-https://stackoverflow.com/questions/75459360/how-to-fix-the-typeerror-can-only-concatenate-str-not-float-to-str
-https://stackoverflow.com/questions/1343890/how-do-i-restrict-a-float-value-to-only-two-places-after-the-decimal-point-in-c
-https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
-https://stackoverflow.com/questions/1528724/converting-a-listint-to-a-comma-separated-string
+| 1 | Python Specific core concepts | Code institute | i.e. https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+CPP_06_20+3/courseware/f780287e5c3f4e939cd0adb8de45c12a/8d9c1efb1864472bb682a0c233898a17/ |
+| 2 | clear terminal | portal stackoverflow.com | https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console |
+| 3 | datetime | Code Institute | https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+CPP_06_20+3/courseware/272f493b4d57445fbd634e7ceca3a98c/4ab3e01af44f4bf2828739c1d0591a45/|
+| 4 | restrict float value | Stackoverflow.com | https://stackoverflow.com/questions/75459360/how-to-fix-the-typeerror-can-only-concatenate-str-not-float-to-str, https://pythonhow.com/how/limit-floats-to-two-decimal-points/ |
+| 5 | converting a listint | Stackoverflow.com | https://stackoverflow.com/questions/1528724/converting-a-listint-to-a-comma-separated-string|
+| 6 | use request libary for API set up | Stackoverflow.com | https://realpython.com/python-requests/ |
+| 7 | working with spreadsheets via API | Code institute, Stackoverflow | https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+LS101+1/courseware/293ee9d8ff3542d3b877137ed81b9a5b/071036790a5642f9a6f004f9888b6a45/, https://stackoverflow.com/questions/59272851/python-gspread-changing-contents-of-a-cell-based-on-contents-of-another-cell, https://www.sitepoint.com/using-python-parse-spreadsheet-data/ |
+| 8 | using ascci tables to improve visualization of stock overview | Forum geeksforgeeks.org | https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/ |
+| 9 | f" print variable | Stackoverflow.com | https://stackoverflow.com/questions/17153779/how-can-i-print-variable-and-string-on-same-line-in-python
+| 10 | API request check, example | https://stackoverflow.com/questions/54087303/python-requests-how-to-check-for-200-ok
