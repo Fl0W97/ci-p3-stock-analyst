@@ -30,7 +30,7 @@ stock_daily_update = SHEET.worksheet('stock_daily_update')
 profit_loss_sheet = SHEET.worksheet('profit_loss')
 
 
-def clear_terminal():
+def clear():
     os.system("clear")
 
 
@@ -407,7 +407,7 @@ def provide_updated_data():
 
                 print(
                     f"The latest price from {stock_name_symbol} is: "
-                    f"{desired_value}. "
+                    f"{float(desired_value):.2f}. "
                     "You can add it to the last column of "
                     "googlesheet 'stock_daily_update'."
                 )
@@ -419,9 +419,7 @@ def provide_updated_data():
             print(
                 f"for {stock_name_symbol}. "
                 "Standard API rate limit is 25 requests per day. "
-                "The sheet stock_daily_update is not updated. "
-                "You can do it manually in the sheet. "
-                "Check: https://finance.yahoo.com/quote/MSFT/history/"
+                "Check the prices here: https://finance.yahoo.com/quote/MSFT/history/"
             )
 
 
@@ -504,23 +502,22 @@ def main():
         print("3: Adjust the number of shares")
         print("4: Show current top performer")
         print("5: Show current low performer")
-        print("6: Show profit and loss with percentage")
-        print("7: Show latest stock prices")
-        print("8: Exit")
+        print("6: Show latest stock prices")
+        print("7: Exit")
 
-        choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7, 8): ")
+        choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7): ")
 
         if choice == '1':
             add_stock_column()
-            time.sleep(20)
+            time.sleep(5)
             clear()
         elif choice == '2':
             delete_stock_column()
-            time.sleep(20)
+            time.sleep(5)
             clear()
         elif choice == '3':
             adjust_multiplicator()
-            time.sleep(20)
+            time.sleep(5)
             clear()
         elif choice == '4':
             increasing_stocks = show_top_performers()
@@ -531,7 +528,7 @@ def main():
                 )
             else:
                 print("No stocks with three times increase availabe.")
-            time.sleep(20)
+            time.sleep(10)
             clear()
         elif choice == '5':
             decreasing_stocks = show_low_performers()
@@ -542,17 +539,13 @@ def main():
                 )
             else:
                 print("No stocks with three times decrease availabe.")
-            time.sleep(20)
+            time.sleep(10)
             clear()
         elif choice == '6':
-            calculate_profit_loss()
-            time.sleep(30)
+            provide_updated_data()
+            time.sleep(20)
             clear()
         elif choice == '7':
-            provide_updated_data()
-            time.sleep(30)
-            clear()
-        elif choice == '8':
             break
         else:
             print("Invalid option. Please choose again.")
