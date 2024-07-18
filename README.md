@@ -104,7 +104,7 @@ The portfolio should be displayed as often as possible, nefore and afte reach fu
 | Error_list_index_out_of_range | The worksheet does not contain a reference. A new stock was added, but a value is missing in the column. | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
 | TypeError_unsupported_operand_type_for_str | Using string values for calculations results in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
 | IndexError_list_index_out_of_range | This IndexError indicates a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa. |<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
-| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update()` has changed. | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading https://stackoverflow.com/questions/72562988/how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
+| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update()` has changed. | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading  ([stackflow.com](https://stackoverflow.com/questions/72562988/))how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
 | NameError_name not defined | The variable was missing. | <img src="README.images/NameError_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
 
 
@@ -173,8 +173,9 @@ The main functions are generated with Python. However, to set up the whole proje
 ## Deployment
 The site was deployed to a Heroku page using a GitHub repository for data storage.
 
-Heroku page: https://stock-analyst-390ed9b08457.herokuapp.com/
-GitHub repository: https://github.com/Fl0W97/ci-p3-stock-analyst
+    Heroku page: https://stock-analyst-390ed9b08457.herokuapp.com/
+
+    GitHub repository: https://github.com/Fl0W97/ci-p3-stock-analyst
 
 ### GitHub
 
@@ -193,7 +194,7 @@ The steps to set up your repository in GitHub are as follows:
 4. Launch Git Bash or Terminal.
 5. Navigate to the directory where you want the cloned directory to reside.
 6. In your IDE Terminal, input the following command to clone the repository:
- git clone https://github.com/Code-Institute-Org/p3-template
+ git clone https://github.com/Code-Institute-Org/p3-template 
 7. Press Enter to create your local clone.
 
 </details>
@@ -208,7 +209,7 @@ Create a new app on Heroku
 <img src="README.images/heroku_create_new_app.PNG" alt="image shows infos about heroku set up"> 
 
 #### Connect to GitHub
-Next, you can configure deploys with Github. If you prefer to deploy without using Github, you can read Heroku's deployment documentation. https://devcenter.heroku.com/categories/deployment
+Next, you can configure deploys with Github. If you prefer to deploy without using Github, you can read Heroku's deployment ([documentation](https://devcenter.heroku.com/categories/deployment)). 
 
 In the Deploy tab, select the option to Connect this app to GitHub
 
@@ -236,7 +237,7 @@ Next, add a Heroku buildpack to your app. Click add a buildpack to your app and 
 <details>
 
 <summary>details</summary>
-First create a google account https://myaccount.google.com/
+First create a ([google account](https://myaccount.google.com/))
 
 Sign in to Google Account:
 Go to Google Sheets and sign in with your Google account.
@@ -295,11 +296,9 @@ Go on https://www.alphavantage.co/support/#api-key and request an API Key.
 Go back in the Google spreadsheet to Extensions in the menu, go an Alphavantage and enter the API Key.
 Now you can start using formulars of Alphavantage to enter those in the spreadsheet.
 
-Find more details on https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
+([more details](https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html))
   
-Find here an overview of possible add-on formulas and how they will be added.
-https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.htmlhttps://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html
-
+([add-on formulars](https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.htmlhttps://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_reference/index.html))
 
 The API Key shouldn't be accessable for the public. It is stored in Heroku in Config Vars. Path: Settings --> Config Vars.
 Here the variable **alphaventage-api** is defined.
@@ -367,7 +366,7 @@ Shows sheet profit_loss
 
 
 ### Description Alphavantage API
-Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. you can find here an extensive API documentation: https://www.alphavantage.co/documentation/
+Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. you can find here an extensive ([API documentation](https://www.alphavantage.co/documentation/)).
 
 <details>
 <summary>details</summary>
@@ -397,8 +396,8 @@ The google add-on has been tested successfully. It can be easily integrated into
 However, due to better and more flexible handling of the data no add-on function is used. 
 
 
-Links for googlesheet add-on integration:
-https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.html#avsearchequitysymbol
+:([Links for googlesheet add-on integration](https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_screens.html#avsearchequitysymbol)).
+
 
 
 
