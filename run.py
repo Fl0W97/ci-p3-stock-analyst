@@ -55,8 +55,8 @@ def show_portfolio():
         "curr. price",
         "surplus total"
     ]
-  
-    for col_index in range(1, len(header) +1):
+
+    for col_index in range(1, len(header) + 1):
         stock_name = header[col_index - 1]  # Get stock name from the header
         shares = shares_row[col_index - 1]  # Get number of shares
         purchase = purchase_price[col_index - 1]  # Get purchase price
@@ -70,7 +70,7 @@ def show_portfolio():
                 current = value
                 break
         else:
-            current = purchase # no values, then purchase price is used
+            current = purchase  # no values, then purchase price is used
 
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
@@ -248,7 +248,7 @@ def calculate_profit_loss():
 
     # List for profit and loss values added to SHEET.stock_daily_update
     surplus_data = []
-    percentage_data = [] 
+    percentage_data = []
 
     for col_index in range(1, len(header) + 1):
         # Get the purchase price from row 4 of the stock_portfolio sheet
@@ -265,11 +265,14 @@ def calculate_profit_loss():
         purchase_price = purchase_price_column[col_index - 1]
 
         # Get the column values from stock_daily_update
-        column_values = stock_daily_update.col_values(col_index)[1:]  
+        column_values = stock_daily_update.col_values(col_index)[1:]
 
         if len(column_values) < 0.1:
-            print(f"Error: Missing/wrong data for column {header[col_index - 1]}")
-            continue  
+            print(
+                f"Error: Missing/wrong data for "
+                f"column {header[col_index - 1]}"
+            )
+            continue
 
         last_column_value = column_values[-1]
 
@@ -318,10 +321,10 @@ def calculate_profit_loss():
         # add the percentage value to the list
         percentage_data.append(round(rounded_profit_loss_value_percentage, 2))
 
-    # add/update the value to the second row of sheet profit_and_loss
+    # update value to second row of sheet profit_and_loss
     profit_loss_sheet.update(range_name='2:2', values=[surplus_data])
 
-    # add/update the percentage values to the third row of sheet profit_and_loss
+    # update percentage values to third row of sheet profit_and_loss
     profit_loss_sheet.update(range_name='3:3', values=[percentage_data])
 
     return surplus_data
@@ -385,7 +388,8 @@ def provide_updated_data():
         stock_name_symbol = symbol[col_index]  # Get one abbr. for each column
         url = (
             f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&'
-            f'symbol={stock_name_symbol}&apikey={os.environ.get("alphaventage-api")}'
+            f'symbol={stock_name_symbol}&apikey='
+            f'{os.environ.get("alphaventage-api")}'
         )
         r = requests.get(url)
         data = r.json()
@@ -485,6 +489,7 @@ def find_stock_symbol():
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
+
 
 def main():
 
