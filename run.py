@@ -39,7 +39,7 @@ def show_portfolio():
     # Show current stock portfolio
 
     #calculate the surplus
-    calculate_profit_loss()
+    #calculate_profit_loss()
 
     # Get the column headers
     header = stock_portfolio.row_values(1)

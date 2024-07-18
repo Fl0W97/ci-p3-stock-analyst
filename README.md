@@ -21,17 +21,17 @@ Since not all automatications are set the google worksheets has to be updated ma
 
 | Feature | Description  | images |
 | ------------- |------------- | ------------- |
-|show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature ||
+|show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature. ||
 |add stock |The feature adds the new stock name to the sheet and adds the number of shares ||
 |delete stock |The feature identifies the relevant stock and deletes it, deletes number of shares and deletes ||
 |adjust number of shares |The feature enables the user to adjust the number of shares of existing stocks ||
 |show top performers | The feature analyzes the last three available data points and identifies stocks with rising values ||
 |show low performers | The feature analyzes the last three available data points and identifies stocks with decreasing values||
 |calculate profit loss | The feature calculates profit loss by substract the first stock values from the last one in a each column. ||
-|check columns |||
+|check columns | The feature validates the google spreadsheets with regards to the length of rows. In case all rows have the equal lenght it is partly ensured that there haven't been a mistake in the last update. However, it does not check each single column if the format type is wrong or if a single cell has been deleted.  ||
 |clear function| The feature clears the terminal to provide a better user experience ||
-|find stock symbol |||
-|provide updated data |||
+|find stock symbol | The feature provides a list of stock symbols which has to be selected form the user. This symbol is relevant to creat the correct API request url for further functions.||
+|provide updated data | The feature helps to update the current price. It provides the price together with the symbol. It can be copy paste to the google spreadsheet.||
 
 
 Here the main function in more detail:
@@ -69,8 +69,7 @@ The result is saved in SHEET.worksheet('profit_loss'). The result is displayed i
 
 When a new stock is added and teh API connection fails, the surplus is not correct. (BUG)
 
-
-## UX Design (delete)
+## UX Design
 Since the program is acceable via a terminal the design is limited. However, the user experience is still important. Therefore, some adjustment has been considered.
 The tool helps the user to manage his stock portfolio. Because of that the portfolio is displayed as often as possible at the top and it is structured by using a table import.
 The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid an information overload and make the use of the tool more convenient for users who are not dealing with a terminal the terminal is cleared each time a new function is used. At the same time the overview is updated with the new input.
@@ -316,6 +315,44 @@ Find more details on https://documentation.alphavantage.co/GoogleSheetsMarketDat
 
 </details>
 
+
+### Description Google API Set up
+
+Steps to get your credentials file for users with the "new" form UI:
+
+    1. From the "Which API are you using?" dropdown menu, choose Google Drive API
+    2. For the "What data will you be accessing?" question, select Application Data
+    3. For the "Are you planning to use this API with Compute Engine, Kubernetes Engine, App Engine, or Cloud Functions?" question, select No, I'm not using them
+    4. Click Next
+    5. Enter a Service Account name, you can call it anything you like - I will call mine "LoveSandwiches" - then click Create
+    6. In the Role Dropdown box choose Basic > Editor then press Continue
+    7. These options can be left blank, click Done
+    8. On the next page, click on the Service Account that has been created
+    9. On the next page, click on the Keys tab
+    10. Click on the Add Key dropdown and select Create New Key
+    11. Select JSON and then click Create. This will trigger the json file with your API credentials in it to download to your machine. 
+    12. You can now return to the video at timestamp 3:57 (transcript point "into our computer files. For most computers, this will automatically go in your downloads folder,")
+
+Connecting Google worksheet with Python via API
+
+
+
+### Description Google sheets 
+
+<img src="README.images/structure_of_google_sheets.PNG" alt="shows the document structure">
+
+The structure of the google worksheet is displayed in the image above. There are four sheets: "description", "stock_portfolio", "Stock_daily_update" and "profit_loss". The three last sheets have the same headers and different values such as number of shares, purchase price and daily prices.
+
+Shows sheet_stock_portfolio
+<img src="README.images/sheet_stock_portfolio.PNG" alt="shows sheet_stock_portfolio">
+
+Shows sheet stock_daily_update
+<img src="README.images/sheet2_daily stock values.PNG" alt="shows sheet stock_daily_update">
+
+Shows sheet profit_loss
+<img src="README.images/sheet3_profit_loss.PNG" alt="shows sheet profit_loss">
+
+
 ### Description Alpha Vantage API
 Alpha vantage is a free proivder of stock information. 25 requests per day are included in the free version. you can find here an extensive API documentation: https://www.alphavantage.co/documentation/
 
@@ -358,7 +395,7 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_sc
 - add more validations by taking into account more input issues from the user
 - adjust html and JavaSript files to improve the design i.e. by using html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
 - due to safety issues don't show the APIKey in the code. Hide it and set a parameter in creds.json
-
+- add failure handling with Googel API since this is appearently also limited
 
 ## Credits
 
@@ -385,3 +422,4 @@ https://github.com/discord/heroku-sample-app/blob/main/README.md
 | 8 | using ascci tables to improve visualization of stock overview | Forum geeksforgeeks.org | https://www.geeksforgeeks.org/generate-simple-ascii-tables-using-prettytable-in-python/ |
 | 9 | f" print variable | Stackoverflow.com | https://stackoverflow.com/questions/17153779/how-can-i-print-variable-and-string-on-same-line-in-python
 | 10 | API request check, example | https://stackoverflow.com/questions/54087303/python-requests-how-to-check-for-200-ok
+| 11 | Get the last non-empty cell in a column | Reddit.com, Hackernoon.com | https://www.reddit.com/r/googlesheets/comments/z1itez/get_the_last_nonempty_cell_in_a_column/?rdt=38792, https://hackernoon.com/how-to-find-the-last-non-empty-row-in-a-column-with-google-apps-script-accurately |
