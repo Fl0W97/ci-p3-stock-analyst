@@ -39,7 +39,7 @@ def show_portfolio():
     # Show current stock portfolio
 
     #calculate the surplus
-    #calculate_profit_loss()
+    calculate_profit_loss()
 
     # Get the column headers
     header = stock_portfolio.row_values(1)
@@ -496,6 +496,7 @@ def main():
     column_check()
 
     while True:
+        clear_terminal()
         show_portfolio()
         print("\nOptions:")
         print("1: Add a new stock")
@@ -511,13 +512,11 @@ def main():
 
         if choice == '1':
             clear_terminal()
-            show_portfolio()
             add_stock_column()
             clear_terminal()
             show_portfolio()
         elif choice == '2':
             clear_terminal()
-            show_portfolio()
             delete_stock_column()
             clear_terminal()
             show_portfolio()
@@ -526,7 +525,6 @@ def main():
             show_portfolio()
             adjust_multiplicator()
             clear_terminal()
-            show_portfolio()
         elif choice == '4':
             clear_terminal()
             column_check()

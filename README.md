@@ -1,18 +1,19 @@
 # Stock analyst
 
-Welcome to my third project, 'stock analyst', it is a script which supports people to analize their stock portfolio by using an Google Spreedsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. Since there are curretnly just basic checks implemented this is a portfolio manager for leisure broker. However, by adding more functions based on the input data tool can be used for more extensive analyses of the stock information. 
+Welcome to my third project, 'stock analyst'. It is a script that supports people in analyzing their stock portfolio by using a Google Spreadsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. Since there are currently just basic checks implemented, this is a portfolio manager for leisure brokers. However, by adding more functions based on the input data, the tool can be used for more extensive analyses of the stock information.
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
-The project provides an overview table for the user to see his portfolio - stock names and further details such as number of shares, stock prices and profit loss.
+The project provides an overview table for the user to see their portfolio - stock names and further details such as the number of shares, stock prices, and profit/loss.
 The overview is displayed at the beginning together with all options such as 'add stock', 'delete stock', 'adjust number of shares', ... (see image).
-Once an option is chosed the display still appears together with further input requests for the user.
+Once an option is chosen, the display still appears together with further input requests for the user.
 
 <img src="README.images/start_view.PNG" alt="shows the start view">
 
+Since the automatic update of the sheet stock_daily_update is not finalized, the surplus remains 0 as long as the values are added manually in the sheet itself. The price cannot be updated automatically. Therefore, the user needs daily access to the Google sheet so that they can manually add the current prices column by column every day.
 
 ## Remarks for handeling the program
-Since not all automatications are set the google worksheets has to be updated manually every day. That means each date the current price has to be added to the column by using option 7. The Alphaventage API is limited to 25 requets. That means after a few requests the limit is reached. This also depends on the number of stocks in the portfolio.
+Since not all automations are set, the Google worksheets have to be updated manually every day. That means each day the current price has to be added to the column by using option 7. The Alpha Vantage API is limited to 25 requests. That means after a few requests the limit is reached. This also depends on the number of stocks in the portfolio.
 
 
 ## Features
@@ -82,26 +83,28 @@ The size of the terminal is increased to 50 rows (in index.html and default.js).
 - As a new user, I would like to have to know what the tool is about
 - As a new user, I would like to have a good overview about the functionalities of the tool
 - As a new user, I would like to have a good overview in the terminal. It should be not overwhelmed with information
-- As a new user, I would like to have a tool that helps me managing my stock portfolio
+- As a new user, I would like to have a tool that helps me managing my stock portfolio adding, removing and adjusting the portfolio
+- As a new suer, I would like to get informed by the tool if an error occures and what I have to do to continue
 
 ### Returning Site Users
 
 - As a returning user, I would like to have a tool that helps me managing my stock portfolio
-- As a returning user, I would like to have a tool that helps me managing my stock portfolio
-- As a returning user, I would like to have a tool that helps me managing my stock portfolio
+- As a returning user, I would like to have a tool that provides me current stock prices
+- As a returning user, I would like to have a tool that shows me good and bad performing stocks form my portfolio
 
 
 ## Testing
 - Testing was done in small breaks during the development and at the end of the project
 - Validators have been used (see chapter below)
 - logic checks
-- type in worng input, validation check
+- type in wrong input, validation check
+
 
 ### Bugs (not fixed)
 
 | Bug | Description  | images (optional) | Correction | 
 | --- |------------- | ----------------- | -----------|
-|Goolge API Error | The limit of Google spreadsheet usage is reached. No further request possible | <img src="README.images/Google_APIError.PNG" alt="image shows Error message"> | not defined yet |
+|Goolge API Error | The limit of Google spreadsheet usage is reached. No further request possible. That seems the explanation for me. However, this issue appeared for around 14hours. 18.07.2024, 19.22 (CET) everything worked fine again for all options - just when I reached out to a tutor (Holly). I am not able to simulate the failure on my own. 18.07.2024, 19.28 failure occures again by choosing option 2,  (CET)  | <img src="README.images/Google_APIError.PNG" alt="image shows Error message"> | not defined yet |
 
 ### Bugs (fixed)
 
@@ -423,3 +426,4 @@ https://github.com/discord/heroku-sample-app/blob/main/README.md
 | 9 | f" print variable | Stackoverflow.com | https://stackoverflow.com/questions/17153779/how-can-i-print-variable-and-string-on-same-line-in-python
 | 10 | API request check, example | https://stackoverflow.com/questions/54087303/python-requests-how-to-check-for-200-ok
 | 11 | Get the last non-empty cell in a column | Reddit.com, Hackernoon.com | https://www.reddit.com/r/googlesheets/comments/z1itez/get_the_last_nonempty_cell_in_a_column/?rdt=38792, https://hackernoon.com/how-to-find-the-last-non-empty-row-in-a-column-with-google-apps-script-accurately |
+| 12 | Set up Google API for spreadsheets | Code Institute, Love Sandwiches Walkthrough Project Getting Set Up Connecting to our API with Python | https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+LS101+1/courseware/293ee9d8ff3542d3b877137ed81b9a5b/071036790a5642f9a6f004f9888b6a45/
