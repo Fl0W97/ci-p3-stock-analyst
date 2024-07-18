@@ -8,6 +8,7 @@ import datetime
 import requests
 import json
 import time
+from googleapiclient.errors import HttpError
 
 # make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials
@@ -19,6 +20,8 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
+
+# clear = lambda: os.system("clear")
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
@@ -36,6 +39,9 @@ def clear_terminal():
 
 def show_portfolio():
     # Show current stock portfolio
+
+    # Calculate the surplus
+    calculate_profit_loss()
 
     # Get the column headers
     header = stock_portfolio.row_values(1)
@@ -182,6 +188,18 @@ def adjust_multiplicator():
 def show_top_performers():
     header = stock_daily_update.row_values(1)
     stocks_increasing = []
+
+    def get_column_values_with_retry(col_index, retries=5):
+        for i in range(retries):
+            try:
+                return stock_daily_update.col_values(col_index)[1:]
+            except HttpError as e:
+                if e.resp.status == 429:
+                    wait_time = (2 ** i) + (i * 0.1)  # Exponential backoff
+                    print(f"Hit rate limit. Retrying in {wait_time:.1f} seconds...")
+                    time.sleep(wait_time)
+                else:
+                    raise
 
     for col_index in range(1, len(header) + 1):
         column_values = stock_daily_update.col_values(col_index)[1:]
@@ -486,12 +504,13 @@ def find_stock_symbol():
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 
+
 def main():
 
-    # column_check()
+    column_check()
 
     while True:
-
+        clear_terminal()
         show_portfolio()
         print("\nOptions:")
         print("1: Add a new stock")
@@ -506,18 +525,24 @@ def main():
         choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7, 8): ")
 
         if choice == '1':
+            clear_terminal()
             add_stock_column()
-            time.sleep(20)
-            clear()
+            clear_terminal()
+            show_portfolio()
         elif choice == '2':
+            clear_terminal()
             delete_stock_column()
-            time.sleep(20)
-            clear()
+            clear_terminal()
+            show_portfolio()
         elif choice == '3':
+            clear_terminal()
+            show_portfolio()
             adjust_multiplicator()
-            time.sleep(20)
-            clear()
+            clear_terminal()
         elif choice == '4':
+            clear_terminal()
+            column_check()
+            show_portfolio()
             increasing_stocks = show_top_performers()
             if increasing_stocks:
                 print(
@@ -526,9 +551,10 @@ def main():
                 )
             else:
                 print("No stocks with three times increase availabe.")
-            time.sleep(20)
-            clear()
         elif choice == '5':
+            clear_terminal()
+            column_check()
+            show_portfolio()
             decreasing_stocks = show_low_performers()
             if decreasing_stocks:
                 print(
@@ -537,16 +563,15 @@ def main():
                 )
             else:
                 print("No stocks with three times decrease availabe.")
-            time.sleep(20)
-            clear()
         elif choice == '6':
+            clear_terminal()
+            column_check()
+            show_portfolio()
             calculate_profit_loss()
-            time.sleep(30)
-            clear()
         elif choice == '7':
+            clear_terminal()
+            show_portfolio()
             provide_updated_data()
-            time.sleep(30)
-            clear()
         elif choice == '8':
             break
         else:

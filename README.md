@@ -1,6 +1,6 @@
 # Stock analyst
 
-Welcome to my third project, 'stock analyst'. It is a script that supports people in analyzing their stock portfolio by using a Google Spreadsheet to store stock information and an API to receive updated stock information. The focus is on the terminal screen. Since there are currently just basic checks implemented, this is a portfolio manager for leisure brokers. However, by adding more functions based on the input data, the tool can be used for more extensive analyses of the stock information.
+Welcome to my third project, 'stock analyst'. It is a script that supports people in analyzing their stock portfolio by using a Google Spreadsheet to store stock information and an additional API to receive updated stock information. The focus is on the terminal screen. Since there are currently just basic checks implemented, this is a portfolio manager tool for leisure brokers. However, by adding more functions based on the input data, the tool can be used for more extensive analyses of the stock information.
 
 <img src="images_README/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
@@ -10,10 +10,15 @@ Once an option is chosen, the display still appears together with further input 
 
 <img src="README.images/start_view.PNG" alt="shows the start view">
 
-Since the automatic update of the sheet stock_daily_update is not finalized, the surplus remains 0 as long as the values are added manually in the sheet itself. The price cannot be updated automatically. Therefore, the user needs daily access to the Google sheet so that they can manually add the current prices column by column every day.
 
 ## Remarks for handeling the program
-Since not all automations are set, the Google worksheets have to be updated manually every day. That means each day the current price has to be added to the column by using option 7. The Alpha Vantage API is limited to 25 requests. That means after a few requests the limit is reached. This also depends on the number of stocks in the portfolio.
+Since not all automations are set, the Google worksheets have to be updated manually every day. That means each day the current price has to be added to the column by using option 7. The Alpha Vantage API is limited to 25 requests. That means after a few requests the limit is reached. The Google API is limited by 350 requests per minute.
+
+Since the automatic update of the sheet stock_daily_update is not finalized, the surplus remains 0 as long as the values are added manually in the sheet itself. The sheet is shared, the access code is provided in the detail section of the project submission form. 
+
+The stock prices is not updated automatically in the sheet. This would cause additional requests. Therefore, the user needs daily access to the Google sheet so that he can manually add the current prices column by column every day which is provided in the tool.
+
+Since both APIs from Google and Alphaventage (free software) are limited the validation column_check() is deactivated. The error handling for API Alphaventage is in place, the error handling for Google API is not working accurate - a describtion is mentioned in the section 'BUGs (not fixed)'.
 
 
 ## Features
@@ -38,42 +43,42 @@ Since not all automations are set, the Google worksheets have to be updated manu
 Here the main function in more detail:
 
 #### check columns
-Right at the beginning all three google worksheets are validated whether all tables have the same amount of columns. If not there is a note, so that the user can check it in the worksheets.
+The function validates whether all tables have the same number of columns. If not, a note is provided so that the user can check the worksheets. Due to API request limitations, the function is currently deactivated.
 
 #### show portfolio
-Displays the table of stocks. The information are pulled from the different googlesheets - SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and profit_loss_sheet = SHEET.worksheet('profit_loss'). 
-The relevant rows are pulled and than the single values of each cell are pulled by using a "loopwith an index".
+Displays the table of stocks. The information is pulled from various Google Sheets: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and profit_loss_sheet = SHEET.worksheet('profit_loss'). The relevant rows are retrieved, and then the individual values of each cell are extracted using a loop with an index.
 
-Pretty table is used to generate the table layout whcih is also used wihtin the loop fcuntion. In addition, the time of the table generation is mentioned below the table.
+PrettyTable is used to generate the table layout, which is incorporated within the loop function. Additionally, the time of table generation is displayed below the table.
 
-The price values are depeending on the API connection. If the worksheets are updated, the current price is shown. Otherwise the data are those from the latest update.
+The price values depend on the API connection. If the worksheets are updated, the current price is shown. Otherwise, the data reflects the latest update.
 
 #### add stock
-Once a new stock is entered, a new column is added to the right of the existing table. It is crutial that the new stock name and it's parameters are added in all three google worksheets to enure the functionality of the other functions. SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and profit_loss_sheet = SHEET.worksheet('profit_loss').
-Therefore, there is a check function right at the beginning. A while-True loop, if-else and try-except functions are used.
+When a new stock is entered, a new column is added to the right of the existing table. It is crucial that the new stock name and its parameters are added to all three Google Sheets to ensure the functionality of the other functions: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and profit_loss_sheet = SHEET.worksheet('profit_loss'). A check function is implemented at the beginning. A while-True loop, if-else, and try-except functions are used as well.
 
 #### delete stock
-This function seaches for the user input and deletes the stock from all three google worksheets .SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update') and SHEET.worksheet('profit_loss'). One if-else function is used.
+This function searches for the user input and deletes the stock from all three Google Sheets: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and SHEET.worksheet('profit_loss'). An if-else function is used.
 
-#### adjust number of shares / adjust multiplicator
-Once the option is selected, an input is reqeustes to the user. After entering the new number of shares it will updated in the relevant google worksheet SHEET.worksheet('stock_portfolio'). A if-else and a try-except function are used.
+#### adjust adjust multiplicator (number of shares)
+Once the option is selected, an input is requested from the user. After entering the new number of shares, it will be updated in the relevant Google Sheet SHEET.worksheet('stock_portfolio'). An if-else and a try-except function are used.
 
 #### show top performers
-By using a for loop and if-else functions the values of the last 3 entries in SHEET.worksheet('stock_daily_update') for each relevant column is pulled and analyzed. When all three entires are increasing timewise the stock is identified as a current top-performer. All top-performer are displayed in the terminal.
+Using a for loop and if-else functions, the values of the last three entries in SHEET.worksheet('stock_daily_update') for each relevant column are pulled and analyzed. When all three entries show an increasing trend over time, the stock is identified as a current top performer. All top performers are displayed in the terminal.
 
 #### show low performers
-By using a for loop and if-else functions the values of the last 3 entries in SHEET.worksheet('stock_daily_update') for each relevant column is pulled and analyzed. When all three entires are decreasing timewise the stock is identified as a current low-performer. All top-performer are displayed in the terminal.All top-performer are displayed in the terminal.
+Using a for loop and if-else functions, the values of the last three entries in SHEET.worksheet('stock_daily_update') for each relevant column are pulled and analyzed. When all three entries show a decreasing trend over time, the stock is identified as a current low performer. All low performers are displayed in the terminal.
 
 #### calculate profit loss
-The profit and loss function calculates the surplus of purchase price (row 2, SHEET.worksheet('stock_daily_update')) and the latest price value (row 5, SHEET.worksheet('stock_daily_update')).
-The result is saved in SHEET.worksheet('profit_loss'). The result is displayed in the overview table.
-
-When a new stock is added and teh API connection fails, the surplus is not correct. (BUG)
+The profit and loss function calculates the surplus by comparing the purchase price (row 2, SHEET.worksheet('stock_daily_update')) and the latest price value (row 5, SHEET.worksheet('stock_daily_update')). The result is saved in SHEET.worksheet('profit_loss') and displayed in the overview table.
 
 ## UX Design
-Since the program is acceable via a terminal the design is limited. However, the user experience is still important. Therefore, some adjustment has been considered.
-The tool helps the user to manage his stock portfolio. Because of that the portfolio is displayed as often as possible at the top and it is structured by using a table import.
-The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid an information overload and make the use of the tool more convenient for users who are not dealing with a terminal the terminal is cleared each time a new function is used. At the same time the overview is updated with the new input.
+Since the program is accessible via a terminal, the design is limited. However, user experience remains important. Therefore, some adjustments have been made.
+
+The tool helps the user manage their stock portfolio.
+
+The size of the terminal is increased to 50 rows (in index.html and default.js). To avoid information overload and make the tool more convenient for users unfamiliar with a terminal, the terminal is cleared each time a new function is used, and the overview is updated with the new input.
+
+
+The portfolio should be displayed as often as possible, nefore and afte reach function at the top. However, due to API limitation the portfolio is shown, but not updated as much as it would be ideally for the user.
 
 
 ## User Stories
@@ -94,27 +99,30 @@ The size of the terminal is increased to 50 rows (in index.html and default.js).
 
 
 ## Testing
-- Testing was done in small breaks during the development and at the end of the project
-- Validators have been used (see chapter below)
-- logic checks
-- type in wrong input, validation check
+    
+    - Testing was conducted regularly in small intervals throughout the development process as well as at the end of the project to ensure functionality and identify any potential issues early on.
+    - Bugs that were encountered during testing have been thoroughly documented in the Bug section, detailing the nature of the issue and the steps taken to resolve it.
+    - Validators were used to ensure that the code meets all necessary standards and specifications. More details can be found in the Validators chapter.
+    - Logic checks were performed to verify that the program's operations and algorithms were working as intended. This included testing different scenarios and edge cases to ensure robustness.
+    - Manual input tests were carried out to simulate real-world usage of the application. This involved entering data manually into the system to ensure that all inputs were handled correctly and that the user interface responded appropriately.
 
 
 ### Bugs (not fixed)
 
 | Bug | Description  | images (optional) | Correction | 
 | --- |------------- | ----------------- | -----------|
-|Goolge API Error | The limit of Google spreadsheet usage is reached. No further request possible. That seems the explanation for me. However, this issue appeared for around 14hours. 18.07.2024, 19.22 (CET) everything worked fine again for all options - just when I reached out to a tutor (Holly). I am not able to simulate the failure on my own. 18.07.2024, 19.28 failure occures again by choosing option 2,  (CET)  | <img src="README.images/Google_APIError.PNG" alt="image shows Error message"> | not defined yet |
+| Google API Error | The limit for Google Spreadsheet usage has been reached, making further requests impossible. This appears to be the explanation for the issue. The number of API requests can be quite high due to the code interacting with multiple worksheets, update functions, and validation processes.  | <img src="README.images/Google_APIError.PNG" alt="image shows Error message"> | To maintain system functionality and improve user experience, a solution was implemented. However, it has not been successful; Google seems to ignore the error handling (See screenshot of code). As a result, the code has been adjusted to minimize unnecessary requests. The validation function check_column has been deactivated, and users need to be more cautious when managing the sheets. <img src="README.images/Google_APIError_fix_idea.PNG" alt="image shows fixing approach/idea">| 
+
 
 ### Bugs (fixed)
 
 | Bug | Description  | images (optional) | Correction | 
 | --- |------------- | ----------------- | -----------|
-| Error_list_index_out_of_range | There is no reference in the worksheet. A new stock was added, but a value is missing in the column.  | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
-| TypeError_unsupported_operand_type_for_str | Using string values for calculation ends up in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
-| IndexError_list_index_out_of_range | The IndexError indicate a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa.|<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
-| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update() has changed | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading https://stackoverflow.com/questions/72562988/how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
-| NameError_name not defined | the variable was missing | <img src="README.images/NameError_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
+| Error_list_index_out_of_range | The worksheet does not contain a reference. A new stock was added, but a value is missing in the column. | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
+| TypeError_unsupported_operand_type_for_str | Using string values for calculations results in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
+| IndexError_list_index_out_of_range | This IndexError indicates a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa. |<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
+| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update()` has changed. | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading https://stackoverflow.com/questions/72562988/how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
+| NameError_name not defined | The variable was missing. | <img src="README.images/NameError_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
 
 
 
@@ -163,11 +171,7 @@ Here an example of index.js
 #### Accessability (delete)
 I confirm that the selected colors and fonts are easy to read and accessible by using Lighthouse in devtools (Chrome).
 
-(screenshot)
-
-### Unfixed Bugs
-(No unfixed bugs.)
-API_stock_daily_update()
+<img src="README.images/GoogleLighthouse.PNG" alt="image shows GoogleLighthouse analysis"> 
 
 
 ## Deployment
@@ -210,7 +214,6 @@ The steps to set up your repository in GitHub are as follows:
 - The page will be automatically refreshed with a detailed ribbon display to indicate the successful deployment.
 
 
-Here the live link:  ...
 
 <details>
     <summary>Cloning repository</summary>
@@ -244,7 +247,7 @@ The main functions are generated with Python. However, to set up the whole proje
 - CSS
 
 
-## Set up (API) Google spreadsheet, add-on alphavantage 
+## Set up (API) Google spreadsheet, add-on Alphavantage 
 
 ### Step 1: Create a Google Spreadsheet
 <details>
@@ -278,7 +281,7 @@ First create a google account https://myaccount.google.com/
 
 </details>
 
-### Step 3: Add alpha vantage Google Add-on
+### Step 3: Add Alphavantage Google Add-on
 <details>
 
 <summary>details</summary>
@@ -289,7 +292,7 @@ First create a google account https://myaccount.google.com/
         Click on Get add-ons from the drop-down menu. This will open the Google Workspace Marketplace.
 
     Search for an Add-on:
-        In the Google Workspace Marketplace, use the search bar to find the add-on 'Alpha Vantage Market Data'
+        In the Google Workspace Marketplace, use the search bar to find the add-on 'Alphavantage Market Data'
 
     Install the Add-on:
         Once you find the desired add-on, click on it to open its details page.
@@ -302,12 +305,12 @@ First create a google account https://myaccount.google.com/
 <details>
 
 <summary>details</summary>
-    Activate add-on alpha vantage with API-KEy
+    Activate add-on Alphavantage with API-KEy
 
-        Get Alpha Vantage API Key:
+        Get Alphavantage API Key:
         Go on https://www.alphavantage.co/support/#api-key and request an API Key.
-        Go back in the Google spreadsheet to Extensions in the menu, go an Alpha Vantage and enter the API Key.
-        Now you can start using formulars of Alpha Vantage to enter those in the spreadsheet.
+        Go back in the Google spreadsheet to Extensions in the menu, go an Alphavantage and enter the API Key.
+        Now you can start using formulars of Alphavantage to enter those in the spreadsheet.
 
 Find more details on https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/index.html
 
@@ -392,13 +395,13 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/example_sc
 
 ## Improvements and ideas for subsequent projects
 
-- add profit_loss percentage to the table overview
-- buy premium version of Alphavantage API so that there is no limmitation of 25 requests
-- add an automatically update for google spreadsheet stock_daily_update. Using 'time series' from Alpha Vantage https://www.alphavantage.co/documentation/#time-series-data
-- add more validations by taking into account more input issues from the user
-- adjust html and JavaSript files to improve the design i.e. by using html and css the terminal can be centered, attractive images wiht a link to finance can be added. Links or snippets to news about stocks could be implemented.
-- due to safety issues don't show the APIKey in the code. Hide it and set a parameter in creds.json
-- add failure handling with Googel API since this is appearently also limited
+- **Purchase Premium API Version**: Buy the premium version of the Alpha Vantage API to remove the limitation of 25 requests per day.
+- **Reactivate and Enhance Validations**: Reactivate the `check_column` function and add additional validations to ensure data integrity.
+- **Update Table Overview**: Include the profit and loss percentage in the table overview for better financial insights.
+- **Automate Google Spreadsheet Updates**: Implement automatic updates for the `stock_daily_update` Google Spreadsheet. Use the 'Time Series' data from Alpha Vantage ([documentation](https://www.alphavantage.co/documentation/#time-series-data)). Each day, add a new value for each existing stock to the last column. Display the surplus after two days and analyze stock performance as a low or top performer after three days. Additional rules and chart techniques can be incorporated for more comprehensive analysis.
+- **Improve HTML and JavaScript Design**: Enhance the HTML and JavaScript files to improve design aesthetics. Center the terminal, add attractive images with links to financial resources, and implement news snippets or links related to stocks.
+- **Secure API Key**: Due to security concerns, avoid exposing the API key in the code. Instead, hide it and configure it as a parameter in `creds.json`.
+- **Add Failure Handling for Google API**: Implement failure handling for Google API usage, as it is subject to its own set of limitations.
 
 ## Credits
 
@@ -410,6 +413,9 @@ https://documentation.alphavantage.co/GoogleSheetsMarketDataAddon/V_1/function_r
 
 Description of Heroku deployment is resused from github project
 https://github.com/discord/heroku-sample-app/blob/main/README.md
+
+Ideas and the API documentation of The walkthrough Project Love Sandwiches was reused and adjusted.
+
 
 ### Code
 
