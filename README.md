@@ -443,6 +443,8 @@ Ideas and the API documentation of The walkthrough Project Love Sandwiches was r
 | 10 | API request check, example | Stackflow.com | https://stackoverflow.com/questions/54087303/python-requests-how-to-check-for-200-ok |
 | 11 | Get the last non-empty cell in a column | Reddit.com, Hackernoon.com | https://www.reddit.com/r/googlesheets/comments/z1itez/get_the_last_nonempty_cell_in_a_column/?rdt=38792, https://hackernoon.com/how-to-find-the-last-non-empty-row-in-a-column-with-google-apps-script-accurately |
 | 12 | Set up Google API for spreadsheets | Code Institute, Love Sandwiches Walkthrough Project Getting Set Up Connecting to our API with Python | https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+LS101+1/courseware/293ee9d8ff3542d3b877137ed81b9a5b/071036790a5642f9a6f004f9888b6a45/
+| 13 | Fixation of Google API issue | Code suggestion by Mentor Chris Quinn ||
+| 14 | hide API-Key via Heroku and code adjustment | Code suggestion by Mentor Chris Quinn ||
 
 ### Template
 
