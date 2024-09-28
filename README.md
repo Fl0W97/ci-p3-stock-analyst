@@ -2,7 +2,7 @@
 
 Welcome to my third project, 'stock analyst'. It is a script that supports people in analyzing their stock portfolio by using a Google Spreadsheet to store stock information and an additional API to receive updated stock information. The focus is on the terminal screen. Since there are currently just basic checks implemented, this is a portfolio manager tool for leisure brokers. However, by adding more functions based on the input data, the tool can be used for more extensive analyses of the stock information.
 
-<img src="README,images/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
+<img src="README.images/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
 The project provides an overview table for the user to see their portfolio - stock names and further details such as the number of shares, stock prices, and profit/loss.
 The overview is displayed at the beginning together with all options such as 'add stock', 'delete stock', 'adjust number of shares', ... (see image).
