@@ -58,7 +58,13 @@ def show_portfolio():
 
     for col_index in range(1, len(header) + 1):
         stock_name = header[col_index - 1]  # Get stock name from the header
-        shares = shares_row[col_index - 1]  # Get number of shares
+
+        # Check if col_index - 1 is within the bounds of shares_row
+        if col_index - 1 < len(shares_row):
+            shares = shares_row[col_index - 1]  # Get number of shares
+        else:
+            shares = 0  # Default value if the share data is missing
+
         purchase = purchase_price[col_index - 1]  # Get purchase price
 
         # Get the column values from stock_daily_update
@@ -484,6 +490,27 @@ def find_stock_symbol():
             f"Failed to retrieve data from API: {r.status_code}. "
             "Please add it manually."
         )
+
+# check row length
+def check_row_length(sheet, expected_length):
+    row_length = len(sheet.row_values(1))  # Assuming header row exists
+    if row_length != expected_length:
+        print(f"Error: Row lengths are inconsistent! Expected {expected_length}, but found {row_length}.")
+        return False
+    return True
+
+# validate data and 
+def validate_and_fix_data():
+    header_length = len(stock_portfolio.row_values(1))
+    
+    # Check that all rows have equal length
+    if not check_row_length(stock_portfolio, header_length) or \
+       not check_row_length(stock_daily_update, header_length) or \
+       not check_row_length(profit_loss_sheet, header_length):
+           return False
+    
+    return True
+
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
