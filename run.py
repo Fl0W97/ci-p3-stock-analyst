@@ -78,6 +78,7 @@ def show_portfolio():
         else:
             current = purchase  # no values, then purchase price is used
 
+        calculate_profit_loss()
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
         x.add_row([stock_name, shares, purchase, current, profloss])
 
@@ -85,7 +86,7 @@ def show_portfolio():
 
     # Display the update time
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Table update completed at: {update_time}\n")
+    print(f"Table values based on the latest manual update. \n")
 
 
 def add_stock_column():
@@ -490,27 +491,6 @@ def find_stock_symbol():
             f"Failed to retrieve data from API: {r.status_code}. "
             "Please add it manually."
         )
-
-# check row length
-def check_row_length(sheet, expected_length):
-    row_length = len(sheet.row_values(1))  # Assuming header row exists
-    if row_length != expected_length:
-        print(f"Error: Row lengths are inconsistent! Expected {expected_length}, but found {row_length}.")
-        return False
-    return True
-
-# validate data and 
-def validate_and_fix_data():
-    header_length = len(stock_portfolio.row_values(1))
-    
-    # Check that all rows have equal length
-    if not check_row_length(stock_portfolio, header_length) or \
-       not check_row_length(stock_daily_update, header_length) or \
-       not check_row_length(profit_loss_sheet, header_length):
-           return False
-    
-    return True
-
 
 
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
