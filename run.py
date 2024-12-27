@@ -89,7 +89,7 @@ def show_portfolio():
 
 def add_stock_column():
     while True:
-        new_stock_name = input("Enter the name of the new stock:\n ")
+        new_stock_name = get_valid_input("Enter the name of the new stock:\n ", input_type=str)
 
         # Check if the stock already exists
         header = stock_portfolio.row_values(1)  # Get all headers in one call
@@ -107,8 +107,8 @@ def add_stock_column():
     print(f"New column for stock '{new_stock_name}' added.")
 
     # add number of shares in row 2 in sheet stock portfolio
-    new_multiplicator = input(
-        f"Enter the number of shares {new_stock_name} (integer): \n"
+    new_multiplicator = get_valid_input(
+        f"Enter the number of shares {new_stock_name} (integer): \n", input_type=int
     )
     try:
         new_multiplicator = int(new_multiplicator)
@@ -122,9 +122,9 @@ def add_stock_column():
         print("Invalid input. Please enter a full number.")
 
     # add inital purchase price in row 2 in sheet stock_daily_update
-    purchase_price = input(
+    purchase_price = get_valid_input(
         f"Enter the stock purchase price of {new_stock_name} "
-        "(float): \n"
+        "(float): \n", input_type=float
     )
 
     try:
@@ -305,8 +305,6 @@ def provide_updated_data():
                 print(
                     f"The latest price from {stock_name_symbol} is: "
                     f"{float(desired_value):.2f}. "
-                    "You can add it to the last column of "
-                    "googlesheet 'stock_portfolio'."
                 )
 
             else:
@@ -465,6 +463,47 @@ def api_call_with_retry(api_method, *args, **kwargs):
     raise Exception("API call failed after multiple attempts.")
 
 
+def get_valid_input(prompt, input_type=str, valid_range=None):
+    """
+    Repeatedly requests input from the user until valid input is provided.
+    :param prompt: The message to display to the user
+    :param input_type: The type of input expected (str, int, float)
+    :param valid_range: Optional tuple (min, max) for numerical inputs to check against
+    :return: Valid user input of the requested type
+    """
+    while True:
+        user_input = input(prompt).strip()  # Strip to avoid issues with leading/trailing spaces
+
+        if input_type == str:
+            if user_input:  # Check if the string is not empty
+                return user_input
+            else:
+                print("Input cannot be empty. Please try again.")
+
+        elif input_type == int:
+            try:
+                value = int(user_input)
+                if valid_range and (value < valid_range[0] or value > valid_range[1]):
+                    print(f"Please enter an integer between {valid_range[0]} and {valid_range[1]}.")
+                else:
+                    return value
+            except ValueError:
+                print("Invalid input. Please enter an integer.")
+
+        elif input_type == float:
+            try:
+                value = float(user_input)
+                if valid_range and (value < valid_range[0] or value > valid_range[1]):
+                    print(f"Please enter a float between {valid_range[0]} and {valid_range[1]}.")
+                else:
+                    return value
+            except ValueError:
+                print("Invalid input. Please enter a float.")
+
+        else:
+            print(f"Unsupported input type {input_type}.")
+
+
 print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 
 
@@ -500,6 +539,7 @@ def main():
         elif choice == '4':
             provide_updated_data()
             time.sleep(15)
+            clear()
         elif choice == '5':
             add_updated_data()
             time.sleep(5)
