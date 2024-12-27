@@ -142,9 +142,14 @@ def add_stock_column():
 
 def delete_stock_column():
     # delete stock name, header and column on all sheets
-    stock_name = input("Enter the name of the stock you want to delete:\n ")
+    stock_name = get_valid_input("Enter the name of the stock you want to delete:\n ", input_type=str)
+
+    # find content in both sheets
     cell = stock_portfolio.find(stock_name)
     cell2 = profit_loss_sheet.find(stock_name)
+
+
+     # If stock is found in both sheets, delete columns
     if cell:
         stock_portfolio.delete_columns(cell.col)
         profit_loss_sheet.delete_columns(cell2.col)
@@ -153,28 +158,26 @@ def delete_stock_column():
         print(
             f"Stock '{stock_name}' not found."
             "Please check your spelling. Otherwise the stock is not available"
-            ", have a look on the overview above."
         )
 
 
 def adjust_multiplicator():
-    stock_name = input(
-        "Enter the name of the stock to adjust the number of shares:\n "
+    stock_name = get_valid_input(
+        "Enter the name of the stock to adjust the number of shares:\n ", input_type=str
     )
     cell = stock_portfolio.find(stock_name)
     if cell:
-        new_multiplicator = input(
-            f"Enter the no. of shares for {stock_name} (integer):\n "
+        new_multiplicator = get_valid_input(
+            f"Enter the no. of shares for {stock_name} (integer):\n ", input_type=int
         )
-        try:
-            new_multiplicator = int(new_multiplicator)
-            stock_portfolio.update_cell(2, cell.col, new_multiplicator)
-            print(
+
+        # Update the stock portfolio with the new multiplicator
+        stock_portfolio.update_cell(2, cell.col, new_multiplicator)
+        
+        print(
                 f"Number of shares updated to {new_multiplicator} "
                 f"for {stock_name}."
             )
-        except ValueError:
-            print("Invalid input. Please enter a full number.")
     else:
         print(f"Stock '{stock_name}' not found.")
 
@@ -365,7 +368,7 @@ def add_updated_data():
 
 
 def find_stock_symbol():
-    # define stock name. Use it for the API request
+    # Define stock name. Use it for the API request
     header = stock_portfolio.row_values(1)
     new_stock_name = header[-1]
 
@@ -382,9 +385,9 @@ def find_stock_symbol():
     if r.status_code == 200:
         print("Connection to the API was successful.")
 
-        # inform the user
+        # Inform the user
         print(
-            f"Here are different stock symbols of {new_stock_name}. "
+            f"Here are mostly different stock symbols of {new_stock_name}. "
             "Choose one exact stock symbol to proceed."
         )
 
@@ -393,32 +396,35 @@ def find_stock_symbol():
             best_matches = data['bestMatches']
 
             # Extract symbols and names
+            # Store both in a list for validation
             symbols_and_names = [
-                (match['1. symbol'], match['2. name'])
-                for match in best_matches
+                (match['1. symbol'], match['2. name']) for match in best_matches
             ]
 
             # Print the symbols and names
             for symbol, name in symbols_and_names:
                 print(f"Symbol: {symbol}, Name: {name}")
+
+            # Loop until the user provides a valid symbol
+            while True:
+                new_stock_name_symbol = input("Enter the symbol of the new stock:\n ").strip()
+
+                # Validate the input against the list of valid symbols
+                if new_stock_name_symbol in [symbol for symbol, _ in symbols_and_names]:
+                    # Update the stock portfolio sheet with the new symbol
+                    last_column = len(header) + 1
+                    stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
+                    print(f"Symbol for {new_stock_name} is added.")
+                    break  # Exit the loop once a valid symbol is entered
+                else:
+                    print(f"Invalid symbol '{new_stock_name_symbol}'. Please choose a valid symbol from the list.")
+
         else:
             print(
-                "Conenction to the API was not successful. "
+                "Connection to the API was not successful. "
                 "Enter the symbol manually or wait "
-                "until the connection is established again. "
+                "until the connection is established again."
             )
-
-        # update the stock portfolio sheet
-        third_row = stock_portfolio.row_values(3)
-        last_column = len(third_row) + 1
-
-        # input a new stock symbol from the user
-        new_stock_name_symbol = input("Enter the symbol of the new stock:\n ")
-
-        # update the sheet with the new stock name and symbol in third row
-        stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
-
-        print(f"Symbol for {new_stock_name} is added.")
 
     else:
         print(
