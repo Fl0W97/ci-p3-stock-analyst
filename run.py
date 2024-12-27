@@ -76,7 +76,13 @@ def show_portfolio():
 
         calculate_profit_loss()
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
-        profloss_percentage = profit_loss_percentage[col_index - 1]  # Get profit or loss percentage
+
+        # Check if col_index - 1 is within the bounds of profit_loss_percentage
+        if col_index - 1 < len(profit_loss_percentage):
+            profloss_percentage = profit_loss_percentage[col_index - 1]  # Get profit or loss percentage
+        else:
+            profloss_percentage = "N/A"  # Default value if percentage data is missing
+
 
         x.add_row([stock_name, shares, purchase, current, profloss_percentage, profloss])
 
@@ -84,7 +90,7 @@ def show_portfolio():
 
     # Display the update time
     update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Table values based on the latest manual update. \n")
+    print(f"Table values based on the data in google spreadsheet. \n")
 
 
 def add_stock_column():
@@ -100,7 +106,7 @@ def add_stock_column():
 
     last_column = len(header)
 
-    # add the new stock to all three sheets
+    # add the new stock to both sheets
     # Use api_call_with_retry for all update operations
     api_call_with_retry(stock_portfolio.update_cell, 1, last_column + 1, new_stock_name)
     api_call_with_retry(profit_loss_sheet.update_cell, 1, last_column + 1, new_stock_name)
@@ -136,6 +142,12 @@ def add_stock_column():
 
     # add current price
     api_call_with_retry(stock_portfolio.update_cell, 5, last_column + 1, purchase_price)
+
+    # Ensure that the calculation is done
+    time.sleep(2)
+
+    # Now calculate profit/loss (this ensures data is fully updated)
+    calculate_profit_loss()
 
     find_stock_symbol()
 
@@ -412,7 +424,7 @@ def find_stock_symbol():
                 # Validate the input against the list of valid symbols
                 if new_stock_name_symbol in [symbol for symbol, _ in symbols_and_names]:
                     # Update the stock portfolio sheet with the new symbol
-                    last_column = len(header) + 1
+                    last_column = len(header)
                     stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
                     print(f"Symbol for {new_stock_name} is added.")
                     break  # Exit the loop once a valid symbol is entered
