@@ -33,9 +33,10 @@ profit_loss_sheet = SHEET.worksheet('profit_loss')
 def clear():
     os.system("clear")
 
-
+# Show current stock portfolio
 def show_portfolio():
-    # Show current stock portfolio
+    # calculate surplus
+    calculate_profit_loss()
 
     # Get the column headers
     header = stock_portfolio.row_values(1)
@@ -57,7 +58,7 @@ def show_portfolio():
         "shares",
         "purch. price",
         "current price",
-        "surplus p.",
+        "surplus %",
         "surplus total"
     ]
 
@@ -74,7 +75,6 @@ def show_portfolio():
 
         current = current_price[col_index - 1]  # Get current price
 
-        calculate_profit_loss()
         profloss = profit_loss[col_index - 1]  # Get total profit or loss
 
         # Check if col_index - 1 is within the bounds of profit_loss_percentage
@@ -104,6 +104,16 @@ def add_stock_column():
         else:
             break
 
+    # Check the current number of columns in the sheet
+    num_columns = len(header)
+    if num_columns >= 1000:
+        print(
+            "The maximum number of columns in the googlesheet"
+            "has been reached. Cannot add more stocks."
+            "Please contact support."
+            )
+        return
+
     last_column = len(header)
 
     # add the new stock to both sheets
@@ -114,8 +124,8 @@ def add_stock_column():
 
     # add number of shares in row 2 in sheet stock portfolio
     new_multiplicator = get_valid_input(
-        f"Enter the number of shares {new_stock_name} (integer): \n", input_type=int
-    )
+        f"Enter the number of shares {new_stock_name} (integer): \n", input_type=int)
+
     try:
         new_multiplicator = int(new_multiplicator)
         api_call_with_retry(stock_portfolio.update_cell, 2, last_column + 1, new_multiplicator)
@@ -184,7 +194,7 @@ def adjust_multiplicator():
         )
 
         # Update the stock portfolio with the new multiplicator
-        stock_portfolio.update_cell(2, cell.col, new_multiplicator)
+        api_call_with_retry(stock_portfolio.update_cell, 2, cell.col, new_multiplicator)
         
         print(
                 f"Number of shares updated to {new_multiplicator} "
@@ -399,8 +409,8 @@ def find_stock_symbol():
 
         # Inform the user
         print(
-            f"Here are mostly different stock symbols of {new_stock_name}. "
-            "Choose one exact stock symbol to proceed."
+            f"There might be different stock symbols of {new_stock_name}. "
+            "Choose one exact stock symbol to proceed with."
         )
 
         # Check if 'bestMatches' key exists in the JSON response
@@ -425,7 +435,7 @@ def find_stock_symbol():
                 if new_stock_name_symbol in [symbol for symbol, _ in symbols_and_names]:
                     # Update the stock portfolio sheet with the new symbol
                     last_column = len(header)
-                    stock_portfolio.update_cell(3, last_column, new_stock_name_symbol)
+                    api_call_with_retry(stock_portfolio.update_cell, 3, last_column, new_stock_name_symbol)
                     print(f"Symbol for {new_stock_name} is added.")
                     break  # Exit the loop once a valid symbol is entered
                 else:
@@ -527,7 +537,7 @@ print('Welcome to Stock Analyst. Get an overview and manage your portfolio\n')
 
 def main():
 
-    # column_check()
+    column_check()
 
     while True:
 
@@ -552,7 +562,7 @@ def main():
             clear()
         elif choice == '3':
             adjust_multiplicator()
-            time.sleep(2)
+            time.sleep(5)
             clear()
         elif choice == '4':
             provide_updated_data()
