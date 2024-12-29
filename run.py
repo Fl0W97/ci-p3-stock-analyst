@@ -56,10 +56,10 @@ def show_portfolio():
     x.field_names = [
         "stock name",
         "shares",
-        "purch. price",
-        "current price",
+        "purch. price $",
+        "current price $",
         "surplus %",
-        "surplus total"
+        "surplus total $"
     ]
 
     for col_index in range(1, len(header) + 1):
@@ -182,8 +182,75 @@ def delete_stock_column():
             "Please check your spelling. Otherwise the stock is not available"
         )
 
+    """
+    A generalized function to update stock values such as shares, purchase price, or current price.
+    A string indicating the type of action ('number_of_shares', 'purchase_price', or 'current_price')
+    """
+def update_stock_value(action: str):
+    stock_name = get_valid_input(
+        f"Enter the name of the stock to adjust the {action}:\n ", input_type=str)
 
+    cell = stock_portfolio.find(stock_name)
+    if cell:
+        # Get the appropriate input based on the action
+        if action == 'number_of_shares':
+            input = get_valid_input(
+                f"Enter the no. of shares for {stock_name} (integer):\n ", input_type=int
+                )
+
+            # Update the stock portfolio with the new number_of_shares
+            api_call_with_retry(stock_portfolio.update_cell, 2, cell.col, input)
+        
+            print(
+                    f"Number of shares updated to {input} "
+                    f"for {stock_name}."
+                )
+
+        elif action == 'purchase_price':
+            input = get_valid_input(
+                f"Enter the purchase stock price of {stock_name} (float):\n ", input_type=float
+                )
+
+            # Update the stock portfolio with the new purchase_price
+            api_call_with_retry(stock_portfolio.update_cell, 4, cell.col, input)
+        
+            print(
+                f"Purchase price updated to {input} "
+                f"for {stock_name}."
+            )
+
+        elif action == 'current_price':
+            input = get_valid_input(
+            f"Enter the current stock price of {stock_name} (float):\n ", input_type=float
+            )
+
+            # Update the stock portfolio with the current_price
+            api_call_with_retry(stock_portfolio.update_cell, 5, cell.col, input)
+        
+            print(
+                f"Current price updated to {input} "
+                f"for {stock_name}."
+            )
+
+        else:
+            print("Invalid action specified. Contact support")
+
+    else:
+        print(f"Stock '{stock_name}' not found.")
+
+
+# Use the generic function with different actions 'multiplicator', 'purchase' or 'current'
 def adjust_multiplicator():
+    update_stock_value('number_of_shares')
+
+def add_purchase_price():
+    update_stock_value('purchase_price')
+
+def add_current_price():
+    update_stock_value('current_price')
+
+
+""" def adjust_multiplicator():
     stock_name = get_valid_input(
         "Enter the name of the stock to adjust the number of shares:\n ", input_type=str)
 
@@ -197,7 +264,7 @@ def adjust_multiplicator():
         api_call_with_retry(stock_portfolio.update_cell, 2, cell.col, new_multiplicator)
         
         print(
-                f"Number of shares updated to {new_multiplicator} "
+                f"Current price updated to {input} "
                 f"for {stock_name}."
             )
     else:
@@ -241,7 +308,7 @@ def add_current_price():
                 f"for {stock_name}."
             )
     else:
-        print(f"Stock '{stock_name}' not found.")
+        print(f"Stock '{stock_name}' not found.") """
 
 
 def calculate_profit_loss():
