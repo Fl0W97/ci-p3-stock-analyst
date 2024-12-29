@@ -124,7 +124,7 @@ def add_stock_column():
 
     # add number of shares in row 2 in sheet stock portfolio
     new_multiplicator = get_valid_input(
-        f"Enter the number of shares {new_stock_name} (integer): \n", input_type=int)
+        f"Enter the number of shares for {new_stock_name} (integer): \n", input_type=int)
 
     try:
         new_multiplicator = int(new_multiplicator)
@@ -185,8 +185,8 @@ def delete_stock_column():
 
 def adjust_multiplicator():
     stock_name = get_valid_input(
-        "Enter the name of the stock to adjust the number of shares:\n ", input_type=str
-    )
+        "Enter the name of the stock to adjust the number of shares:\n ", input_type=str)
+
     cell = stock_portfolio.find(stock_name)
     if cell:
         new_multiplicator = get_valid_input(
@@ -198,6 +198,46 @@ def adjust_multiplicator():
         
         print(
                 f"Number of shares updated to {new_multiplicator} "
+                f"for {stock_name}."
+            )
+    else:
+        print(f"Stock '{stock_name}' not found.")
+
+
+def add_purchase_price():
+    stock_name = get_valid_input(
+        "Enter the name of the stock to adjust the purchase stock price:\n ", input_type=str)
+
+    cell = stock_portfolio.find(stock_name)
+    if cell:
+        purchase_price = get_valid_input(
+            f"Enter the purchase stock price of {stock_name} (integer):\n ", input_type=float)
+
+        # Update the stock portfolio with the new current price
+        api_call_with_retry(stock_portfolio.update_cell, 4, cell.col, purchase_price)
+        
+        print(
+                f"Price updated to {purchase_price} "
+                f"for {stock_name}."
+            )
+    else:
+        print(f"Stock '{stock_name}' not found.")
+
+
+def add_current_price():
+    stock_name = get_valid_input(
+        "Enter the name of the stock to adjust the current stock price:\n ", input_type=str)
+
+    cell = stock_portfolio.find(stock_name)
+    if cell:
+        current_price = get_valid_input(
+            f"Enter the current stock price of {stock_name} (integer):\n ", input_type=float)
+
+        # Update the stock portfolio with the new current price
+        api_call_with_retry(stock_portfolio.update_cell, 5, cell.col, current_price)
+        
+        print(
+                f"Price updated to {current_price} "
                 f"for {stock_name}."
             )
     else:
@@ -340,7 +380,7 @@ def provide_updated_data():
                 f"for {stock_name_symbol}. "
                 "Standard API rate limit is 25 requests per day. "
                 "Check the prices here: https://finance.yahoo.com/quote/MSFT/history/"
-            )
+            ) 
 
 
 def add_updated_data():
@@ -385,7 +425,7 @@ def add_updated_data():
             print(
                 f"for {stock_name_symbol}. "
                 "Standard API rate limit is 25 requests per day. "
-                "Check the prices here: https://finance.yahoo.com/quote/MSFT/history/"
+                "Check the prices here: https://finance.yahoo.com/quote/"
             )
 
 
@@ -547,10 +587,12 @@ def main():
         print("2: Delete a stock")
         print("3: Adjust the number of shares")
         print("4: Show latest stock prices")
-        print("5: Add latest stock prices")
-        print("6: Exit")
+        print("5: Add/ adjust current stock price manually")
+        print("6: Add/ adjust purchase stock price manually")
+        print("7: Add current stock prices automatically")
+        print("8: Exit")
 
-        choice = input("Choose an option (1, 2, 3, 4, 5, 6): ")
+        choice = input("Choose an option (1, 2, 3, 4, 5, 6, 7, 8): ")
 
         if choice == '1':
             add_stock_column()
@@ -569,10 +611,18 @@ def main():
             time.sleep(15)
             clear()
         elif choice == '5':
-            add_updated_data()
+            add_current_price()
             time.sleep(5)
             clear()
         elif choice == '6':
+            add_purchase_price()
+            time.sleep(5)
+            clear()
+        elif choice == '7':
+            add_updated_data()
+            time.sleep(5)
+            clear()
+        elif choice == '8':
             break
         else:
             print("Invalid option. Please choose again.")
