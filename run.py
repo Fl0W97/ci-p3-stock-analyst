@@ -33,6 +33,7 @@ profit_loss_sheet = SHEET.worksheet('profit_loss')
 def clear():
     os.system("clear")
 
+
 # Show current stock portfolio
 def show_portfolio():
     # calculate surplus
@@ -79,12 +80,14 @@ def show_portfolio():
 
         # Check if col_index - 1 is within the bounds of profit_loss_percentage
         if col_index - 1 < len(profit_loss_percentage):
-            profloss_percentage = profit_loss_percentage[col_index - 1]  # Get profit or loss percentage
+            # Get profit or loss percentage
+            profloss_percentage = profit_loss_percentage[col_index - 1]
         else:
-            profloss_percentage = "N/A"  # Default value if percentage data is missing
+            # Default value if percentage data is missing
+            profloss_percentage = "N/A"
 
-
-        x.add_row([stock_name, shares, purchase, current, profloss_percentage, profloss])
+        x.add_row([stock_name, shares, purchase, current,
+                   profloss_percentage, profloss])
 
     print(x)
 
@@ -95,12 +98,16 @@ def show_portfolio():
 
 def add_stock_column():
     while True:
-        new_stock_name = get_valid_input("Enter the name of the new stock:\n ", input_type=str)
+        new_stock_name = get_valid_input(
+            "Enter the name of the new stock:\n ", input_type=str
+        )
 
         # Check if the stock already exists
         header = stock_portfolio.row_values(1)  # Get all headers in one call
         if new_stock_name in header:
-            print(f"The stock '{new_stock_name}' already exists in the portfolio.")
+            print(
+                f"The stock '{new_stock_name}' already exists in portfolio."
+            )
         else:
             break
 
@@ -118,18 +125,28 @@ def add_stock_column():
 
     # add the new stock to both sheets
     # Use api_call_with_retry for all update operations
-    api_call_with_retry(stock_portfolio.update_cell, 1, last_column + 1, new_stock_name)
-    api_call_with_retry(profit_loss_sheet.update_cell, 1, last_column + 1, new_stock_name)
+    api_call_with_retry(
+        stock_portfolio.update_cell, 1, last_column + 1, new_stock_name
+    )
+    api_call_with_retry(
+        profit_loss_sheet.update_cell, 1, last_column + 1, new_stock_name
+    )
     print(f"New column for stock '{new_stock_name}' added.")
 
     # add number of shares in row 2 in sheet stock portfolio
     new_multiplicator = get_valid_input(
-        f"Enter the number of shares for {new_stock_name} (integer): \n", input_type=int)
+        f"Enter the number of shares for {new_stock_name}"
+        "(integer): \n", input_type=int)
 
     try:
         new_multiplicator = int(new_multiplicator)
-        api_call_with_retry(stock_portfolio.update_cell, 2, last_column + 1, new_multiplicator)
-        api_call_with_retry(profit_loss_sheet.update_cell, 2, last_column + 1, new_multiplicator)
+        api_call_with_retry(
+            stock_portfolio.update_cell, 2, last_column + 1, new_multiplicator
+        )
+        api_call_with_retry(
+            profit_loss_sheet.update_cell, 2, last_column + 1,
+            new_multiplicator
+        )
         print(
             f"Number of shares of {new_stock_name} "
             f"updated to {new_multiplicator}."
@@ -145,13 +162,17 @@ def add_stock_column():
 
     try:
         purchase_price = float(purchase_price)
-        api_call_with_retry(stock_portfolio.update_cell, 4, last_column + 1, purchase_price)
+        api_call_with_retry(
+            stock_portfolio.update_cell, 4, last_column + 1, purchase_price
+        )
         print(f"Purchase price of '{new_stock_name}' added.")
     except ValueError:
         print("Invalid input. Please enter a float number.")
 
     # add current price
-    api_call_with_retry(stock_portfolio.update_cell, 5, last_column + 1, purchase_price)
+    api_call_with_retry(
+        stock_portfolio.update_cell, 5, last_column + 1, purchase_price
+    )
 
     # Ensure that the calculation is done
     time.sleep(2)
@@ -164,14 +185,15 @@ def add_stock_column():
 
 def delete_stock_column():
     # delete stock name, header and column on all sheets
-    stock_name = get_valid_input("Enter the name of the stock you want to delete:\n ", input_type=str)
+    stock_name = get_valid_input(
+        "Enter the name of the stock you want to delete:\n ", input_type=str
+    )
 
     # find content in both sheets
     cell = stock_portfolio.find(stock_name)
     cell2 = profit_loss_sheet.find(stock_name)
 
-
-     # If stock is found in both sheets, delete columns
+    # If stock is found in both sheets, delete columns
     if cell:
         stock_portfolio.delete_columns(cell.col)
         profit_loss_sheet.delete_columns(cell2.col)
@@ -182,51 +204,65 @@ def delete_stock_column():
             "Please check your spelling. Otherwise the stock is not available"
         )
 
-    """
-    A generalized function to update stock values such as shares, purchase price, or current price.
-    A string indicating the type of action ('number_of_shares', 'purchase_price', or 'current_price')
-    """
+
 def update_stock_value(action: str):
+    """
+    A generalized function to update stock values such as shares, purchase
+    price, or current price. A string indicating the type of action
+    ('number_of_shares', 'purchase_price', or 'current_price')
+    """
     stock_name = get_valid_input(
-        f"Enter the name of the stock to adjust the {action}:\n ", input_type=str)
+        f"Enter the name of the stock to adjust the {action}:\n ",
+        input_type=str
+    )
 
     cell = stock_portfolio.find(stock_name)
     if cell:
         # Get the appropriate input based on the action
         if action == 'number_of_shares':
             input = get_valid_input(
-                f"Enter the no. of shares for {stock_name} (integer):\n ", input_type=int
-                )
+                f"Enter the no. of shares for {stock_name} (integer):\n ",
+                input_type=int
+            )
 
             # Update the stock portfolio with the new number_of_shares
-            api_call_with_retry(stock_portfolio.update_cell, 2, cell.col, input)
-        
+            api_call_with_retry(
+                stock_portfolio.update_cell, 2, cell.col, input
+            )
+
             print(
                     f"Number of shares updated to {input} "
                     f"for {stock_name}."
-                )
+                    )
 
         elif action == 'purchase_price':
             input = get_valid_input(
-                f"Enter the purchase stock price of {stock_name} (float):\n ", input_type=float
+                f"Enter the purchase stock price of {stock_name} (float):\n ",
+                input_type=float
                 )
 
             # Update the stock portfolio with the new purchase_price
-            api_call_with_retry(stock_portfolio.update_cell, 4, cell.col, input)
-        
+            api_call_with_retry(
+                stock_portfolio.update_cell, 4, cell.col, input
+                )
+
             print(
                 f"Purchase price updated to {input} "
                 f"for {stock_name}."
-            )
+                )
 
         elif action == 'current_price':
             input = get_valid_input(
-            f"Enter the current stock price of {stock_name} (float):\n ", input_type=float
-            )
+                f"Enter the current stock price of {stock_name} (float):\n ",
+                input_type=float
+                )
 
             # Update the stock portfolio with the current_price
-            api_call_with_retry(stock_portfolio.update_cell, 5, cell.col, input)
-        
+            api_call_with_retry(
+                stock_portfolio.update_cell, 5, cell.col,
+                input
+                )
+
             print(
                 f"Current price updated to {input} "
                 f"for {stock_name}."
@@ -239,12 +275,17 @@ def update_stock_value(action: str):
         print(f"Stock '{stock_name}' not found.")
 
 
-# Use the generic function with different actions 'multiplicator', 'purchase' or 'current'
+""" Use the generic function with different actions
+    'multiplicator', 'purchase' or 'current' """
+
+
 def adjust_multiplicator():
     update_stock_value('number_of_shares')
 
+
 def add_purchase_price():
     update_stock_value('purchase_price')
+
 
 def add_current_price():
     update_stock_value('current_price')
@@ -315,9 +356,9 @@ def calculate_profit_loss():
     header = stock_portfolio.row_values(1)  # Get the column headers
     rows = stock_portfolio.get_all_values()  # Fetch all rows in one call
     purchase_price_column = rows[3]  # Row for purchase prices
-    current_price_column = rows[4] # Row for current prices
+    current_price_column = rows[4]  # Row for current prices
     multiplicator_row = rows[1]  # Row for shares
-    
+
     # List for profit and loss values
     surplus_data = []
     percentage_data = []
@@ -327,22 +368,29 @@ def calculate_profit_loss():
         try:
             purchase_price = purchase_price_column[col_index - 1]
         except IndexError:
-            print(f"Error: Purchase price missing for column {header[col_index - 1]}")
+            print(
+                f"Error: Purchase price missing "
+                "for column {header[col_index - 1]}"
+                )
             continue
 
         # Access the current price safely
         try:
             current_price = current_price_column[col_index - 1]
         except IndexError:
-            print(f"Error: Purchase price missing for column {header[col_index - 1]}")
+            print(
+                f"Error: Purchase price missing "
+                "for column {header[col_index - 1]}"
+                )
             continue
-
 
         try:
             first_value = float(purchase_price)
             last_value = float(current_price)
         except ValueError:
-            print(f"Non-numeric data found in column: {header[col_index - 1]}")
+            print(
+                f"Non-numeric data found in column: {header[col_index - 1]}"
+                )
             continue
 
         # Calculate profit/loss
@@ -350,15 +398,18 @@ def calculate_profit_loss():
         rounded_profit_loss_value = round(profit_loss_value, 2)
 
         if first_value != 0:
-            rounded_profit_loss_value_percentage = (last_value - first_value) / first_value * 100
+            rounded_profit_loss_value_p = (last_value - first_value) / first_value * 100
         else:
-            rounded_profit_loss_value_percentage = 0
+            rounded_profit_loss_value_p = 0
 
         # Fetch multiplicator safely
         try:
             multiplicator = float(multiplicator_row[col_index - 1])
         except IndexError:
-            print(f"Error: Number of shares missing for column {header[col_index - 1]}")
+            print(
+                f"Error: Number of shares missing for"
+                "column {header[col_index - 1]}"
+                )
             continue
 
         # Calculate surplus based on multiplicator
@@ -366,10 +417,11 @@ def calculate_profit_loss():
 
         # Append results
         surplus_data.append(surplus)
-        percentage_data.append(round(rounded_profit_loss_value_percentage, 2))
+        percentage_data.append(round(rounded_profit_loss_value_p, 2))
 
         # Update Google Sheets in a single call
-        profit_loss_sheet.update(range_name='2:3', values=[surplus_data, percentage_data])
+        profit_loss_sheet.update(range_name='2:3', values=[surplus_data,
+                                                           percentage_data])
 
     return surplus_data
 
@@ -446,8 +498,8 @@ def provide_updated_data():
             print(
                 f"for {stock_name_symbol}. "
                 "Standard API rate limit is 25 requests per day. "
-                "Check the prices here: https://finance.yahoo.com/quote/MSFT/history/"
-            ) 
+                "Check the prices here: https://finance.yahoo.com/quote/"
+            )
 
 
 def add_updated_data():
@@ -475,10 +527,12 @@ def add_updated_data():
                 second_date_data = time_series[second_date]
                 desired_value = second_date_data['4. close']
 
-
                 # Update the sheet with the new stock price
                 # Adjust col_index to 1-based index for update_cell
-                api_call_with_retry(stock_portfolio.update_cell, 5, col_index + 1, desired_value)
+                api_call_with_retry(
+                    stock_portfolio.update_cell, 5, col_index + 1,
+                    desired_value
+                    )
                 print(
                     f"The latest price from {stock_name_symbol} is updated."
                     f"{float(desired_value):.2f}. "
@@ -527,7 +581,8 @@ def find_stock_symbol():
             # Extract symbols and names
             # Store both in a list for validation
             symbols_and_names = [
-                (match['1. symbol'], match['2. name']) for match in best_matches
+                (match['1. symbol'], match['2. name'])
+                for match in best_matches
             ]
 
             # Print the symbols and names
@@ -536,17 +591,26 @@ def find_stock_symbol():
 
             # Loop until the user provides a valid symbol
             while True:
-                new_stock_name_symbol = input("Enter the symbol of the new stock:\n ").strip()
+                new_stock_name_symbol = input(
+                    "Enter the symbol of the new stock:\n "
+                    ).strip()
 
                 # Validate the input against the list of valid symbols
-                if new_stock_name_symbol in [symbol for symbol, _ in symbols_and_names]:
+                if new_stock_name_symbol in [symbol for symbol,
+                _ in symbols_and_names]:
                     # Update the stock portfolio sheet with the new symbol
                     last_column = len(header)
-                    api_call_with_retry(stock_portfolio.update_cell, 3, last_column, new_stock_name_symbol)
+                    api_call_with_retry(
+                        stock_portfolio.update_cell, 3,
+                        last_column, new_stock_name_symbol
+                        )
                     print(f"Symbol for {new_stock_name} is added.")
                     break  # Exit the loop once a valid symbol is entered
                 else:
-                    print(f"Invalid symbol '{new_stock_name_symbol}'. Please choose a valid symbol from the list.")
+                    print(
+                        f"Invalid symbol '{new_stock_name_symbol}'."
+                        "Please choose a valid symbol from the list."
+                        )
 
         else:
             print(
@@ -571,28 +635,31 @@ def api_call_with_retry(api_method, *args, **kwargs):
     max_retries = 5
     backoff_factor = 2  # Exponential backoff factor
     attempt = 0
-    
+
     while attempt < max_retries:
         try:
             # Call the actual Google API method
             return api_method(*args, **kwargs)
-        
+
         except HttpError as error:
             # Retry only on certain HTTP errors (500 and 503)
             if error.resp.status in [500, 503]:
                 attempt += 1
                 wait_time = backoff_factor ** attempt  # Exponential backoff
-                print(f"Retrying... Attempt {attempt}/{max_retries}. Waiting {wait_time} seconds.")
+                print(
+                    f"Retrying... Attempt {attempt}/{max_retries}. "
+                    "Waiting {wait_time} seconds."
+                    )
                 time.sleep(wait_time)
             else:
-                # If the error is not recoverable (other status codes), raise it
+                # If the error is not recoverable (other status) raise it
                 print(f"API call failed with error: {error}")
                 raise
         except Exception as e:
             # Catch any other exceptions (e.g., network-related errors)
             print(f"An unexpected error occurred: {e}")
             raise
-        
+
     # If we reached here, all attempts failed
     print(f"Failed after {max_retries} attempts.")
     raise Exception("API call failed after multiple attempts.")
@@ -603,11 +670,13 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
     Repeatedly requests input from the user until valid input is provided.
     :param prompt: The message to display to the user
     :param input_type: The type of input expected (str, int, float)
-    :param valid_range: Optional tuple (min, max) for numerical inputs to check against
+    :param valid_range: Optional tuple (min, max) for
+    numerical inputs to check against
     :return: Valid user input of the requested type
     """
     while True:
-        user_input = input(prompt).strip()  # Strip to avoid issues with leading/trailing spaces
+        # Strip to avoid issues with leading/trailing spaces
+        user_input = input(prompt).strip()
 
         if input_type == str:
             if user_input:  # Check if the string is not empty
@@ -618,8 +687,12 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
         elif input_type == int:
             try:
                 value = int(user_input)
-                if valid_range and (value < valid_range[0] or value > valid_range[1]):
-                    print(f"Please enter an integer between {valid_range[0]} and {valid_range[1]}.")
+                if valid_range and (value < valid_range[0]
+                or value > valid_range[1]):
+                    print(
+                        f"Please enter an integer between {valid_range[0]} "
+                        "and {valid_range[1]}."
+                        )
                 else:
                     return value
             except ValueError:
@@ -628,8 +701,12 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
         elif input_type == float:
             try:
                 value = float(user_input)
-                if valid_range and (value < valid_range[0] or value > valid_range[1]):
-                    print(f"Please enter a float between {valid_range[0]} and {valid_range[1]}.")
+                if valid_range and (value < valid_range[0]
+                or value > valid_range[1]):
+                    print(
+                        f"Please enter a float between {valid_range[0]} "
+                        "and {valid_range[1]}."
+                        )
                 else:
                     return value
             except ValueError:

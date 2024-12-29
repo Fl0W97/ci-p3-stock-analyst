@@ -12,34 +12,38 @@ Once an option is chosen, the display still appears together with further input 
 
 
 ## Remarks for handeling the program
-Since not all automations are set, the Google worksheets have to be updated manually every day. That means the current price has to be added to the last column of spreadsheet stock_daily_update. The current price is provided by selecting option 7.
+Due to limited requests on the free APIs of Google and Alpha Vantage the user might not be able to store all his data or request certain stock information completely. The ideal usage for this app is for managing 2 up to 10 stocks.
 
 The Alpha Vantage API is limited to 25 requests. That means after a few requests the limit is reached. The Google API is limited by 350 requests per minute.
 
-Since the automatic update of the sheet stock_daily_update is not finalized, the surplus remains 0 as long as the values are added manually in the sheet itself. The sheet is shared, the access code is provided in the detail section of the project submission form. 
-
-The stock prices is not updated automatically in the sheet. This would cause additional requests. Therefore, the user needs daily access to the Google sheet so that he can manually add the current prices column by column every day which is provided in the tool.
-
-Since both APIs from Google and Alphaventage (free software) are limited the validation column_check() is deactivated. The error handling for API Alphaventage is in place, the error handling for Google API is not working accurate - a describtion is mentioned in the section 'BUGs (not fixed)'.
+Due to the limitation it is possible to add the stock prices manually.
 
 
 ## Features
 
 ### Feature overview:
 
-| Feature | Description  |
+| Feature | Description  | function name(s) |
 | ------------- |------------- |
-|show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature. The information is pulled from various Google Sheets: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and profit_loss_sheet = SHEET.worksheet('profit_loss'). The relevant rows are retrieved, and then the individual values of each cell are extracted using a loop with an index. PrettyTable is used to generate the table layout, which is incorporated within the loop function. Additionally, the time of table generation is displayed below the table. The price values depend on the API connection. If the worksheets are updated, the current price is shown. Otherwise, the data reflects the latest update.|
-|add stock |The feature adds the new stock name to the sheet and adds the number of shares. When a new stock is entered, a new column is added to the right of the existing table. It is crucial that the new stock name and its parameters are added to all three Google Sheets to ensure the functionality of the other functions: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and profit_loss_sheet = SHEET.worksheet('profit_loss'). A check function is implemented at the beginning. A while-True loop, if-else, and try-except functions are used as well. |
-|delete stock |The feature identifies the relevant stock and deletes it, deletes number of shares and deletes. This function searches for the user input and deletes the stock from all three Google Sheets: SHEET.worksheet('stock_portfolio'), SHEET.worksheet('stock_daily_update'), and SHEET.worksheet('profit_loss'). An if-else function is used. |
-|adjust number of shares |The feature enables the user to adjust the number of shares of existing stocks. Once the option is selected, an input is requested from the user. After entering the new number of shares, it will be updated in the relevant Google Sheet SHEET.worksheet('stock_portfolio'). An if-else and a try-except function are used. |
+|show portfolio | The feature displays the current status of the portfolio in a table: stock names and number of shares by using a assci feature. The information is pulled from Google Sheets: SHEET.worksheet('stock_portfolio') and profit_loss_sheet = SHEET.worksheet('profit_loss'). The relevant rows are retrieved, and then the individual values of each cell are extracted using a loop with an index. PrettyTable is used to generate the table layout, which is incorporated within the loop function. Additionally, the time of table generation is displayed below the table. The price values depend on the API connection or on the manual input. If the worksheets are updated, the updated current price is shown. Otherwise, the data reflects the latest update.| def show_portfolio() |
+|add stock |The feature adds the new stock name to the sheet and adds the number of shares. When a new stock is entered, a new column is added to the right of the existing table. It is crucial that the new stock name and its parameters are added to both Google Sheets to ensure the functionality of the other functions: SHEET.worksheet('stock_portfolio') and profit_loss_sheet = SHEET.worksheet('profit_loss'). A check function is implemented at the beginning. A while-True loop, if-else, and try-except functions are used as well. | def add_stock_column() |
+|delete stock |The feature identifies the relevant stock and deletes it and deletes number of shares. This function searches for the user input and deletes the stock from all three Google Sheets: SHEET.worksheet('stock_portfolio') and SHEET.worksheet('profit_loss'). An if-else function is used. | def delete_stock_column() |
+|adjust number of shares |The feature enables the user to adjust the number of shares of existing stocks. Once the option is selected, an input is requested from the user. After entering the new number of shares, it will be updated in the relevant Google Sheet SHEET.worksheet('stock_portfolio'). An if-else and a try-except function are used and further validations. | def update_stock_value(action: str), def adjust_multiplicator() |
+|add, update purchase price  |The feature enables the user to add a new purchase price. Once the option is selected, an input is requested from the user. After she provides input, it will be updated in the relevant Google Sheet SHEET.worksheet('stock_portfolio'). An if-else and a try-except function are used and further validations. The automatically update via Alpha Vantage API is removed since otherwise the limit of API requests is reached very soon | def update_stock_value(action: str), def add_purchase_price() |
+|add, update current price  |The feature enables the user to add a new current price. Once the option is selected, an input is requested from the user. After she provides input, it will be updated in the relevant Google Sheet SHEET.worksheet('stock_portfolio'). An if-else and a try-except function are used and further validations. The automatically update via Alpha Vantage API is decoupled otherwise the limit of API requests is reached very soon | def update_stock_value(action: str), def add_current_price()|
+|calculate profit loss | The feature calculates profit loss by substract the purchase stock prices (row 4, SHEET.worksheet('stock_portfolio')) from the current prices (row 5, SHEET.worksheet('stock_portfolio')) in a each column. The result is saved in SHEET.worksheet('profit_loss') and displayed in the overview table. The calculation also returns the percentage. | def calculate_profit_loss() |
+|check columns | The feature validates the google spreadsheets with regards to the length of rows. In case all rows have the equal lenght it is partly ensured that there haven't been a mistake in the last update. However, it does not check each single column if the format type is wrong or if a single cell has been deleted. The function validates whether all tables have the same number of columns. If not, a note is provided so that the user or admin can check the worksheets. | def column_check() |
+|clear function| The feature clears the terminal to provide a better user experience | def clear() |
+|find stock symbol | The feature provides a list of stock symbols which has to be selected form the user. This symbol is relevant to creat the correct API request url for further functions.|
+|provide updated data | The feature helps to update the current price. It provides the price together with the symbol. It can be copy paste to the google spreadsheet.| def find_stock_symbol() |
+| Show latest stock prices | Alpha Vantage API is requested to get the correct price by suing the stock symbol and shows the current prices in the terminal. It doesn't add those in the googlesheet. |def provide_updated_data()|
+| Add current stock prices automatically | Alpha Vantage API is requested to get the correct price by using the stock symbol and adds the relevant updated prices in google spreadsheet. |def add_updated_data()|
+| API request logic | This function is used to deal with API reqeusts. It wraps an API call with retry logic. It will retry up to  times in case of a 500 or 503 error or any other recoverable error. |def api_call_with_retry(api_method, *args, **kwargs)|
+| Validation for the correct input | Repeatedly requests input from the user until valid input is provided. |def get_valid_input(prompt, input_type=str, valid_range=None)|
+
+## Additional improvements (not implemented)
 |show top performers | The feature analyzes the last three available data points and identifies stocks with rising values. Using a for loop and if-else functions, the values of the last three entries in SHEET.worksheet('stock_daily_update') for each relevant column are pulled and analyzed. When all three entries show an increasing trend over time, the stock is identified as a current top performer. All top performers are displayed in the terminal. |
 |show low performers | The feature analyzes the last three available data points and identifies stocks with decreasing values. Using a for loop and if-else functions, the values of the last three entries in SHEET.worksheet('stock_daily_update') for each relevant column are pulled and analyzed. When all three entries show a decreasing trend over time, the stock is identified as a current low performer. All low performers are displayed in the terminal. |
-|calculate profit loss | The feature calculates profit loss by substract the first stock values from the last one in a each column. The profit and loss function calculates the surplus by comparing the purchase price (row 2, SHEET.worksheet('stock_daily_update')) and the latest price value (row 5, SHEET.worksheet('stock_daily_update')). The result is saved in SHEET.worksheet('profit_loss') and displayed in the overview table. The calculation also returns the percentage, however it is not implemented in the table yet. Here again additional requests to Googel speadsheet are avoided.|
-|check columns | The feature validates the google spreadsheets with regards to the length of rows. In case all rows have the equal lenght it is partly ensured that there haven't been a mistake in the last update. However, it does not check each single column if the format type is wrong or if a single cell has been deleted. The function validates whether all tables have the same number of columns. If not, a note is provided so that the user can check the worksheets. Due to API request limitations, the function is currently deactivated. |
-|clear function| The feature clears the terminal to provide a better user experience |
-|find stock symbol | The feature provides a list of stock symbols which has to be selected form the user. This symbol is relevant to creat the correct API request url for further functions.|
-|provide updated data | The feature helps to update the current price. It provides the price together with the symbol. It can be copy paste to the google spreadsheet.|
 
 
 ## UX Design
@@ -66,7 +70,7 @@ The portfolio should be displayed as often as possible, nefore and afte reach fu
 
 - As a returning user, I would like to have a tool that helps me managing my stock portfolio
 - As a returning user, I would like to have a tool that provides me current stock prices
-- As a returning user, I would like to have a tool that shows me good and bad performing stocks form my portfolio
+- As a returning user, I would like to have a tool that shows me good and bad performing stocks by providing surplus information
 
 ## Testing
 
