@@ -438,9 +438,9 @@ def column_check():
 
     else:
         print(
-            "Check sheet stock_portfolio. The lenght of the rows "
-            "are not equal. Data is missing. "
-            "Adjust it manually in the sheet stock_portfolio"
+            "Check sheet stock_portfolio. Data are missing. "
+            "Adjust it manually in the sheet stock_portfolio ."
+            "If you haven't defined a symbol for a stock that might be the reason. "
         )
         return False
 
@@ -570,7 +570,7 @@ def find_stock_symbol():
 
         # Inform the user
         print(
-            f"There might be different stock symbols of {new_stock_name}. "
+            f"There might be different stock symbols. "
             "Choose one exact stock symbol to proceed with."
         )
 
@@ -578,39 +578,70 @@ def find_stock_symbol():
         if 'bestMatches' in data:
             best_matches = data['bestMatches']
 
-            # Extract symbols and names
-            # Store both in a list for validation
-            symbols_and_names = [
-                (match['1. symbol'], match['2. name'])
-                for match in best_matches
-            ]
-
-            # Print the symbols and names
-            for symbol, name in symbols_and_names:
-                print(f"Symbol: {symbol}, Name: {name}")
-
-            # Loop until the user provides a valid symbol
-            while True:
-                new_stock_name_symbol = input(
-                    "Enter the symbol of the new stock:\n "
-                    ).strip()
-
-                # Validate the input against the list of valid symbols
-                if new_stock_name_symbol in [symbol for symbol,
-                _ in symbols_and_names]:
+            # Check if there are no matches
+            if not best_matches:
+                print(
+                    "No matching stock symbols were found. "
+                    "We cannot provide you this stock information. "
+                    "However, you can add stock details manually."
+                )
+                time.sleep(5)
+                # Ask the user if they want to keep the stock information
+                user_input = input(
+                    "Would you like to mange the stock information manually? "
+                    "If not the data is deleted. (y/n): ").strip().lower()
+                if user_input == 'y':
+                    new_stock_name_symbol = f"{new_stock_name}_no_symbol"
                     # Update the stock portfolio sheet with the new symbol
                     last_column = len(header)
                     api_call_with_retry(
                         stock_portfolio.update_cell, 3,
                         last_column, new_stock_name_symbol
-                        )
+                    )
                     print(f"Symbol for {new_stock_name} is added.")
-                    break  # Exit the loop once a valid symbol is entered
                 else:
-                    print(
-                        f"Invalid symbol '{new_stock_name_symbol}'."
-                        "Please choose a valid symbol from the list."
-                        )
+                    # Find the column to delete based on the `new_stock_name`
+                    column_to_delete = header.index(new_stock_name) + 1  # +1 because columns are 1-based
+                    api_call_with_retry(
+                        stock_portfolio.delete_columns, column_to_delete
+                    )
+                    print(f"Column for stock '{new_stock_name}' deleted.")
+                return  # Exit the function as the process is complete
+
+            else:
+                # Extract symbols and names
+                # Store both in a list for validation
+                symbols_and_names = [
+                    (match['1. symbol'], match['2. name'])
+                    for match in best_matches
+                ]
+
+                # Print the symbols and names
+                for symbol, name in symbols_and_names:
+                    print(f"Symbol: {symbol}, Name: {name}")
+
+                # Loop until the user provides a valid symbol
+                while True:
+                    new_stock_name_symbol = input(
+                        "Enter the symbol of the new stock:\n "
+                        ).strip()
+
+                    # Validate the input against the list of valid symbols
+                    if new_stock_name_symbol in [symbol for symbol,
+                    _ in symbols_and_names]:
+                        # Update the stock portfolio sheet with the new symbol
+                        last_column = len(header)
+                        api_call_with_retry(
+                            stock_portfolio.update_cell, 3,
+                            last_column, new_stock_name_symbol
+                            )
+                        print(f"Symbol for {new_stock_name} is added.")
+                        break  # Exit the loop once a valid symbol is entered
+                    else:
+                        print(
+                            f"Invalid symbol '{new_stock_name_symbol}'."
+                            "Please choose a valid symbol from the list."
+                            )
 
         else:
             print(
