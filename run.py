@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 import datetime
 import requests
 import json
+import time
 
 # make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials
@@ -111,17 +112,19 @@ def add_stock_column():
         else:
             break
 
-    # Check the current number of columns in the sheet
-    num_columns = len(header)
-    if num_columns >= 1000:
-        print(
-            "The maximum number of columns in the googlesheet"
-            "has been reached. Cannot add more stocks."
-            "Please contact support."
-            )
-        return
-
+    # Check the current number of columns in the sheet dynamically
+    current_grid = stock_portfolio.get_all_values()  # Get all values from the sheet
+    num_columns_in_sheet = stock_portfolio.col_count  # Total number of columns in the sheet
     last_column = len(header)
+
+    # Compare the current number of columns with the length of the header
+    if num_columns_in_sheet == last_column:
+        print(
+            "The maximum number of columns in the Google Sheet has been reached. "
+            f"Cannot add more stocks. Please contact support. Googlesheet: {num_columns}, Filled: {last_column}"
+        )
+        time.sleep(3)
+        return
 
     # add the new stock to both sheets
     # Use api_call_with_retry for all update operations
@@ -173,9 +176,6 @@ def add_stock_column():
     api_call_with_retry(
         stock_portfolio.update_cell, 5, last_column + 1, purchase_price
     )
-
-    # Ensure that the calculation is done
-    time.sleep(2)
 
     # Now calculate profit/loss (this ensures data is fully updated)
     calculate_profit_loss()
@@ -484,10 +484,9 @@ def add_updated_data():
         else:
             print(
                 f"for {stock_name_symbol}. "
-                "Standard API rate limit is 25 requests per day. "
-                "Check the prices here: https://finance.yahoo.com/quote/"
+                "The symbol is invalid or API rate limit is reached if you have exceeded 25 requests per day. "
+                "You can add the prices manually. Find here the stock information: https://finance.yahoo.com/quote/"
             )
-
 
 def find_stock_symbol():
     # Define stock name. Use it for the API request
