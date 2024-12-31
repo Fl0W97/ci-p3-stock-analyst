@@ -7,7 +7,6 @@ from prettytable import PrettyTable
 import datetime
 import requests
 import json
-import time
 
 # make sure just to import relevant parts of the libary
 from google.oauth2.service_account import Credentials
@@ -39,28 +38,28 @@ def show_portfolio():
     # calculate surplus
     calculate_profit_loss()
 
-    # Get the column headers
-    header = stock_portfolio.row_values(1)
-    # Get 2. row of the sheet
-    shares_row = stock_portfolio.row_values(2)
-    # Get 4. row of the sheet
-    purchase_price = stock_portfolio.row_values(4)
-    # Get 3. row of the sheet
-    profit_loss_percentage = profit_loss_sheet.row_values(3)
-    # Get 2. row of the sheet
-    profit_loss = profit_loss_sheet.row_values(2)
-    # Get 5. row of sheet
-    current_price = stock_portfolio.row_values(5)
+    # Retrieve all relevant rows from both sheets
+    stock_data = stock_portfolio.get_all_values()  # Get all rows from stock portfolio
+    profit_loss_data = profit_loss_sheet.get_all_values()  # Get all rows from profit/loss sheet
+
+    # Extract relevant data from tables above
+    header = stock_data[0]  # stock name, row 1
+    shares_row = stock_data[1]  # stock shares, row 2
+    purchase_price = stock_data[3]  # stock pu price, row 4
+    current_price = stock_data[3]  # stock cu price, row 5
+    profit_loss_percentage = profit_loss_data[2]  # surplus, row 3
+    profit_loss = profit_loss_data[1] # surplus, row 3
+
 
     x = PrettyTable()
 
     x.field_names = [
-        "stock name",
-        "shares",
-        "purch. price $",
-        "current price $",
-        "surplus %",
-        "surplus total $"
+        "Stock name",
+        "Shares",
+        "Purch. price $",
+        "Current price $",
+        "Surplus %",
+        "Surplus total $"
     ]
 
     for col_index in range(1, len(header) + 1):
@@ -86,13 +85,14 @@ def show_portfolio():
             # Default value if percentage data is missing
             profloss_percentage = "N/A"
 
+        # Add row to the table
         x.add_row([stock_name, shares, purchase, current,
                    profloss_percentage, profloss])
 
+    # Print the table
     print(x)
 
     # Display the update time
-    update_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"Table values based on the data in google spreadsheet. \n")
 
 
@@ -291,67 +291,6 @@ def add_current_price():
     update_stock_value('current_price')
 
 
-""" def adjust_multiplicator():
-    stock_name = get_valid_input(
-        "Enter the name of the stock to adjust the number of shares:\n ", input_type=str)
-
-    cell = stock_portfolio.find(stock_name)
-    if cell:
-        new_multiplicator = get_valid_input(
-            f"Enter the no. of shares for {stock_name} (integer):\n ", input_type=int
-        )
-
-        # Update the stock portfolio with the new multiplicator
-        api_call_with_retry(stock_portfolio.update_cell, 2, cell.col, new_multiplicator)
-        
-        print(
-                f"Current price updated to {input} "
-                f"for {stock_name}."
-            )
-    else:
-        print(f"Stock '{stock_name}' not found.")
-
-
-def add_purchase_price():
-    stock_name = get_valid_input(
-        "Enter the name of the stock to adjust the purchase stock price:\n ", input_type=str)
-
-    cell = stock_portfolio.find(stock_name)
-    if cell:
-        purchase_price = get_valid_input(
-            f"Enter the purchase stock price of {stock_name} (integer):\n ", input_type=float)
-
-        # Update the stock portfolio with the new current price
-        api_call_with_retry(stock_portfolio.update_cell, 4, cell.col, purchase_price)
-        
-        print(
-                f"Price updated to {purchase_price} "
-                f"for {stock_name}."
-            )
-    else:
-        print(f"Stock '{stock_name}' not found.")
-
-
-def add_current_price():
-    stock_name = get_valid_input(
-        "Enter the name of the stock to adjust the current stock price:\n ", input_type=str)
-
-    cell = stock_portfolio.find(stock_name)
-    if cell:
-        current_price = get_valid_input(
-            f"Enter the current stock price of {stock_name} (integer):\n ", input_type=float)
-
-        # Update the stock portfolio with the new current price
-        api_call_with_retry(stock_portfolio.update_cell, 5, cell.col, current_price)
-        
-        print(
-                f"Price updated to {current_price} "
-                f"for {stock_name}."
-            )
-    else:
-        print(f"Stock '{stock_name}' not found.") """
-
-
 def calculate_profit_loss():
     header = stock_portfolio.row_values(1)  # Get the column headers
     rows = stock_portfolio.get_all_values()  # Fetch all rows in one call
@@ -497,8 +436,8 @@ def provide_updated_data():
         else:
             print(
                 f"for {stock_name_symbol}. "
-                "Standard API rate limit is 25 requests per day. "
-                "Check the prices here: https://finance.yahoo.com/quote/"
+                "The symbol is invalid or API rate limit is reached if you have exceeded 25 requests per day. "
+                "You can add the prices manually. Find here the stock information: https://finance.yahoo.com/quote/"
             )
 
 
