@@ -76,7 +76,11 @@ def show_portfolio():
 
         current = current_price[col_index - 1]  # Get current price
 
-        profloss = profit_loss[col_index - 1]  # Get total profit or loss
+        # Check if col_index - 1 is within the bounds of profit_loss
+        if col_index - 1 < len(profit_loss):
+            profloss = profit_loss[col_index - 1]  # Get total profit or loss
+        else:
+            profloss = 0  # Default to 0 if no profit/loss data
 
         # Check if col_index - 1 is within the bounds of profit_loss_percentage
         if col_index - 1 < len(profit_loss_percentage):
@@ -121,7 +125,7 @@ def add_stock_column():
     if num_columns_in_sheet == last_column:
         print(
             "The maximum number of columns in the Google Sheet has been reached. "
-            f"Cannot add more stocks. Please contact support. Googlesheet: {num_columns}, Filled: {last_column}"
+            f"Cannot add more stocks. Please contact support."
         )
         time.sleep(3)
         return
@@ -193,7 +197,7 @@ def delete_stock_column():
     cell = stock_portfolio.find(stock_name)
     cell2 = profit_loss_sheet.find(stock_name)
 
-    # If stock is found in both sheets, delete columns
+    # If stock is found in one or both sheets, delete column(s)
     if cell:
         stock_portfolio.delete_columns(cell.col)
         profit_loss_sheet.delete_columns(cell2.col)
@@ -328,8 +332,10 @@ def calculate_profit_loss():
             last_value = float(current_price)
         except ValueError:
             print(
-                f"Non-numeric data found in column: {header[col_index - 1]}"
+                f"Non-numeric data found in column: {header[col_index - 1]}. "
+                "Check the googlesheet."
                 )
+            time.sleep(3)
             continue
 
         # Calculate profit/loss
@@ -366,37 +372,53 @@ def calculate_profit_loss():
 
 
 def column_check():
-    # check stock_portfolio
-    header = stock_portfolio.row_values(1)
-    shares = stock_portfolio.row_values(2)
-    symbols = stock_portfolio.row_values(3)
-    purchase_price = stock_portfolio.row_values(4)
+    # Fetch entire sheet data once
+    stock_portfolio_data = stock_portfolio.get_all_values()
+    profit_loss_sheet_data = profit_loss_sheet.get_all_values()
 
-    if len(header) == len(shares) == len(symbols) == len(purchase_price):
-        return True
+    # check stock_portfolio
+    if len(stock_portfolio_data) > 1:  # Ensure at least 2 rows of data
+        header = stock_portfolio_data[0]  # First row is header
+        shares = stock_portfolio_data[1]  # Second row is shares
+        symbols = stock_portfolio_data[2]  # Third row is symbols
+        purchase_price = stock_portfolio_data[3]  # Fourth row is purchase price
+
+        if len(header) == len(shares) == len(symbols) == len(purchase_price):
+            # All rows match in length
+            portfolio_check = True
+
+        else:
+            print(
+                "Check sheet stock_portfolio. Data is missing. "
+                "Adjust it manually in the sheet stock_portfolio."
+            )
+            portfolio_check = False
 
     else:
-        print(
-            "Check sheet stock_portfolio. Data are missing. "
-            "Adjust it manually in the sheet stock_portfolio ."
-            "If you haven't defined a symbol for a stock that might be the reason. "
-        )
-        return False
+        print("Check sheet stock_portfolio. Data is missing.")
+        portfolio_check = False
 
     # check profit_loss_sheet
-    header = profit_loss_sheet.row_values(1)
-    surplus = profit_loss_sheet.row_values(2)
+    if len(profit_loss_sheet_data) > 1:  # Ensure at least 2 rows of data
+        header = profit_loss_sheet_data[0]  # First row is header
+        surplus = profit_loss_sheet_data[1]  # Second row is surplus
 
-    if len(header) == len(surplus):
-        return True
+        if len(header) == len(surplus):
+            # All rows match in length
+            profit_loss_check = True
+
+        else:
+            print(
+                f"Check sheet profit_loss. Data is missing. "
+                "Adjust it manually in the sheet profit_loss."
+            )
+            profit_loss_check = False
 
     else:
-        print(
-            f"Check sheet profit_loss. The lenght of the rows "
-            "are not equal. Data is missing. "
-            "Adjust it manually in the sheet profit_loss."
-        )
-        return False
+        print("Check sheet profit_loss. Data is missing.")
+        profit_loss_check = False
+
+    return portfolio_check and profit_loss_check
 
 
 def provide_updated_data():
