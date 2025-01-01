@@ -47,7 +47,7 @@ def show_portfolio():
     header = stock_data[0]  # stock name, row 1
     shares_row = stock_data[1]  # stock shares, row 2
     purchase_price = stock_data[3]  # stock pu price, row 4
-    current_price = stock_data[3]  # stock cu price, row 5
+    current_price = stock_data[4]  # stock cu price, row 5
     profit_loss_percentage = profit_loss_data[2]  # surplus, row 3
     profit_loss = profit_loss_data[1] # surplus, row 3
 
