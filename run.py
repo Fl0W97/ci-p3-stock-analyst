@@ -1,5 +1,3 @@
-# terminal of 80 characters wide and 50 rows high
-
 # imports the whole libaries
 import gspread
 import os
@@ -296,8 +294,8 @@ def add_current_price():
 
 
 def calculate_profit_loss():
-    header = stock_portfolio.row_values(1)  # Get the column headers
     rows = stock_portfolio.get_all_values()  # Fetch all rows in one call
+    header = rows[0]  # Get the column headers
     purchase_price_column = rows[3]  # Row for purchase prices
     current_price_column = rows[4]  # Row for current prices
     multiplicator_row = rows[1]  # Row for shares
@@ -333,7 +331,7 @@ def calculate_profit_loss():
         except ValueError:
             print(
                 f"Non-numeric data found in column: {header[col_index - 1]}. "
-                "Check the googlesheet."
+                "Check the data in the googlesheet."
                 )
             time.sleep(3)
             continue
@@ -620,7 +618,7 @@ def find_stock_symbol():
 def api_call_with_retry(api_method, *args, **kwargs):
     """
     This function wraps an API call with retry logic.
-    It will retry up to  times in case of a 500 or 503 error
+    It will retry up to times in case of a 500 or 503 error
     or any other recoverable error.
     """
     max_retries = 5
