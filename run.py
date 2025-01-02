@@ -305,36 +305,34 @@ def calculate_profit_loss():
     percentage_data = []
 
     for col_index in range(1, len(header) + 1):
-        # Access the purchase price safely
-        try:
-            purchase_price = purchase_price_column[col_index - 1]
-        except IndexError:
-            print(
-                f"Error: Purchase price missing "
-                "for column {header[col_index - 1]}"
-                )
-            continue
+        purchase_price = purchase_price_column[col_index - 1]
+        current_price = current_price_column[col_index - 1]
+        multiplicator = multiplicator_row[col_index - 1]
 
-        # Access the current price safely
-        try:
-            current_price = current_price_column[col_index - 1]
-        except IndexError:
-            print(
-                f"Error: Purchase price missing "
-                "for column {header[col_index - 1]}"
-                )
-            continue
+        # Check if any of the required data is missing or in the wrong format
+        if not purchase_price or purchase_price == '' or not float_format_check(purchase_price):
+            print(f"Error: Purchase price missing or wrong format used for stock {header[col_index - 1]}"
+                  "Please correct data.")
+            continue  # Skip this column and move to the next one
 
+        if not current_price or current_price == '' or not float_format_check(current_price):
+            print(f"Error: Current price missing or wrong format used for stock {header[col_index - 1]}"
+                  "Please correct data.")
+            continue  # Skip this column and move to the next one
+
+        if not multiplicator or multiplicator == '' or not integer_format_check(multiplicator):
+            print(f"Error: Number of shares missing or wrong format used for stock {header[col_index - 1]}"
+                  "Please correct data.")
+            continue  # Skip this column and move to the next one
+
+        # Only proceed if all data is valid
         try:
             first_value = float(purchase_price)
             last_value = float(current_price)
+            multiplicator_int = int(multiplicator)
         except ValueError:
-            print(
-                f"Non-numeric data found in column: {header[col_index - 1]}. "
-                "Check the data in the googlesheet."
-                )
-            time.sleep(3)
-            continue
+            print(f"Error: Invalid value format for stock {header[col_index - 1]}")
+            continue  # Skip this column and move to the next one
 
         # Calculate profit/loss
         profit_loss_value = last_value - first_value
@@ -345,18 +343,8 @@ def calculate_profit_loss():
         else:
             rounded_profit_loss_value_p = 0
 
-        # Fetch multiplicator safely
-        try:
-            multiplicator = float(multiplicator_row[col_index - 1])
-        except IndexError:
-            print(
-                f"Error: Number of shares missing for"
-                "column {header[col_index - 1]}"
-                )
-            continue
-
         # Calculate surplus based on multiplicator
-        surplus = multiplicator * rounded_profit_loss_value
+        surplus = multiplicator_int * rounded_profit_loss_value
 
         # Append results
         surplus_data.append(surplus)
@@ -374,7 +362,7 @@ def column_check():
     stock_portfolio_data = stock_portfolio.get_all_values()
     profit_loss_sheet_data = profit_loss_sheet.get_all_values()
 
-    # check stock_portfolio
+    # check rows in stock_portfolio
     if len(stock_portfolio_data) > 1:  # Ensure at least 2 rows of data
         header = stock_portfolio_data[0]  # First row is header
         shares = stock_portfolio_data[1]  # Second row is shares
@@ -396,7 +384,7 @@ def column_check():
         print("Check sheet stock_portfolio. Data is missing.")
         portfolio_check = False
 
-    # check profit_loss_sheet
+    # check rows in profit_loss_sheet
     if len(profit_loss_sheet_data) > 1:  # Ensure at least 2 rows of data
         header = profit_loss_sheet_data[0]  # First row is header
         surplus = profit_loss_sheet_data[1]  # Second row is surplus
@@ -417,6 +405,23 @@ def column_check():
         profit_loss_check = False
 
     return portfolio_check and profit_loss_check
+
+
+# Validation for float format
+def float_format_check(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+# Validation for integer format
+def integer_format_check(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
 
 
 def provide_updated_data():
@@ -713,7 +718,6 @@ def main():
     column_check()
 
     while True:
-
         show_portfolio()
         print("\nOptions:")
         print("1: Add a new stock")
