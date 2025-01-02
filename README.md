@@ -2,7 +2,7 @@
 
 Welcome to my third project, 'stock analyst'. It is a script that supports people in analyzing their stock portfolio by using a Google Spreadsheet to store stock information and an additional API to receive updated stock information. The focus is on the terminal screen. Since there are currently just basic checks implemented, this is a portfolio manager tool for leisure brokers. However, by adding more functions based on the input data, the tool can be used for more extensive analyses of the stock information.
 
-<img src="README.images/AmIresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
+<img src="README.images/amiresponsive.PNG" alt="image shows responisveness by presenting preview on different devices">
 
 The project provides an overview table for the user to see their portfolio - stock names and further details such as the number of shares, stock prices, and profit/loss.
 The overview is displayed at the beginning together with all options such as 'add stock', 'delete stock', 'adjust number of shares', ... (see image).
@@ -87,25 +87,25 @@ The portfolio should be displayed as often as possible, nefore and afte reach fu
 
 **Error message in terminal**
 
-<img src="README.images/Google_APIError.PNG" alt="image shows Error message" width="800">
+<img src="README.images/google_api_error.PNG" alt="image shows Error message" width="800">
 
 
 
 
 **Suggestion for fixation. However, implementation was not successful**
 
-<img src="README.images/Google_APIError_fix_idea.PNG" alt="image shows fixing approach/idea" width="600"> 
+<img src="README.images/google_api_error_fix_idea.PNG" alt="image shows fixing approach/idea" width="600"> 
 
 
 ### Bugs (fixed)
 
 | Bug | Description  | images (optional) | Correction |
 | --- |------------- | ----------------- | -----------|
-| Error_list_index_out_of_range | The worksheet does not contain a reference. A new stock was added, but a value is missing in the column. | <img src="README.images/Error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
-| TypeError_unsupported_operand_type_for_str | Using string values for calculations results in an error. | <img src="README.images/TypeError_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
-| IndexError_list_index_out_of_range | This IndexError indicates a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa. |<img src="README.images/IndexError_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock| 
-| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update()` has changed. | <img src="README.images/DeprecationWarning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading  ([stackflow.com](https://stackoverflow.com/questions/72562988/))how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
-| NameError_name not defined | The variable was missing. | <img src="README.images/NameError_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
+| IndexError_list_index_out_of_range | The worksheet does not contain a reference. A new stock was added, but a value is missing in the column. | <img src="README.images/error_list_index_out_of_range.PNG" alt="image shows Error message"> | Adding a validation when a new stock name is added to stock_portfolio sheet. |
+| TypeError_unsupported_operand_type_for_str | Using string values for calculations results in an error. | <img src="README.images/type_error_unsupported_operand_type_for_str.PNG" alt="image shows Error message"> | adding float() to the variabels: rounded_profit_loss_value_percentage = ((float(first_column_value) - float(last_column_value)) / float(first_column_value))* 100 |
+| IndexError_list_index_out_of_range | This IndexError indicates a mismatch in the lengths of the header and shares_row lists. This mismatch can occur if there are fewer elements in shares_row than in header, or vice versa. |<img src="README.images/index_error_list_index_out_of_range.PNG" alt="image shows Error message">| Consequently, it is necessary to make sure that there is no mismatch by adding or deleting a stock. Column_check() is added. | 
+| DeprecationWarning | DeprecationWarning: The order of arguments in worksheet.update()` has changed. | <img src="README.images/deprecation_warning_range_name.PNG" alt="image shows Error message | Trying different ways of range requests and reading  ([stackflow.com](https://stackoverflow.com/questions/72562988/))how-to-update-multiple-distant-rows-in-google-sheets-using-api the issue was fixed. Original code: profit_loss_sheet.update('A2', [surplus_data]). FIxing the order of the argunments by range "2:2" |
+| NameError_name not defined | The variable was missing. | <img src="README.images/name_error_name_is_not_defined.PNG" alt="image shows Error message"> | code snipped was not valid anymore. variable was deleted |
 | IncorrectCellLabel | The issue occured deu to a mix of 0-based indexing and 1-based indexing. By ensuring the column indices passed to update_cell() are 1-based (required by Googel Sheets). | <img src="README.images/error_col_index1_message.PNG" alt="image shows Error message"> | In function 'add_updated_data' instead of passing 'col_index' directy, 'col_index + 1' is passed. This ensures that the column index starts from 1. |
 | APIError [429] | The issue occured due to a limitation of the free version of the googel API. There is a maximal number of requests which can be started.  | <img src="README.images/error_limited_google_api.PNG" alt="image shows Error message"> | First it is ensured that the program is not breaking again, so a retry logic is implemented. The libary googleapiclient.errors is added and handled in function api_call_with_retry(). THe function contains a backoff/ delay mechansim before retrying the request if you hit the rate limit. Once an error appears a few seconds are waited and the program tries it again. Second, the likelyhood of the event is minimalized by code refactoring. The number of API calls is reduced by reading data in a bulk (get_all_values()). Especially, functions with multiple updates to cells are refactored such as show_portfolio(), calculate_profit_loss(). Applying for a higher API quatoa is another option which hasn't been followed. |
 | ValueError: could not convert string to float: '' | The existing try-except block doesn't adequately handle missing values in a way that catches the case when the cell is empty (''). The approach checks for IndexError and ValueError, but doesn't specifically handle empty strings before trying to convert them to float. | <img src="README.images/error_valueError_multiplicator.PNG" alt="image shows Error message"> | The code is modified the columns are being accessed, so that if it's an empty string or None, the error message will be triggered, and the function will skip that column. |
@@ -117,7 +117,7 @@ Validator testing has been done on:
 #### [CI Python validator](https://pep8ci.herokuapp.com/)
 No errors were returned for run.py
 
-<img src="README.images/PI_python_linter_validation.PNG" alt="image shows preview of validator results" width="800px">
+<img src="README.images/pi_python_linter_validation.PNG" alt="image shows preview of validator results" width="800px">
 
 <details>
     <summary>further results of HTML, CSS Validator</summary>
@@ -129,13 +129,13 @@ No errors were returned for run.py
 #### [HTML validator](https://validator.w3.org/)
 No errors were returned
 
-<img src="README.images/HTML_validation.PNG" alt="image shows preview of validator results" width="500px">
+<img src="README.images/html_validation.PNG" alt="image shows preview of validator results" width="500px">
 
 
 #### [CSS validator](https://jigsaw.w3.org/css-validator/)
 No errors were returned
 
-<img src="README.images/CSS_validation.PNG" alt="image shows preview of validator results" width="500px">
+<img src="README.images/css_validation.PNG" alt="image shows preview of validator results" width="500px">
 
 
 #### [JS Validator] (https://jshint.com/)
@@ -144,7 +144,7 @@ Errors occured. However, since I reused the suggested template from Code Institu
 Code from index.js and defaul.js checked. 
 
 Here an example of index.js
-<img src="README.images/JS_validation.PNG" alt="image shows preview of validator results" width="500px">
+<img src="README.images/js_validation.PNG" alt="image shows preview of validator results" width="500px">
 
 </details>
 
@@ -152,7 +152,7 @@ Here an example of index.js
 #### Accessability
 I confirm that the selected colors and fonts are easy to read and accessible by using Lighthouse in devtools (Chrome).
 
-<img src="README.images/GoogleLighthouse.PNG" alt="image shows GoogleLighthouse analysis"> 
+<img src="README.images/googlelighthouse.PNG" alt="image shows GoogleLighthouse analysis"> 
 
 
 ## Tools & Technologies used
@@ -305,7 +305,7 @@ Now you can start using formulars of Alphavantage to enter those in the spreadsh
 The API Key shouldn't be accessable for the public. It is stored in Heroku in Config Vars. Path: Settings --> Config Vars.
 Here the variable **alphaventage-api** is defined.
 
-<img src="README.images/Config_vars_heroku.PNG" alt="image shows infos about heroku set up" width="600">
+<img src="README.images/config_vars_heroku.PNG" alt="image shows infos about heroku set up" width="600">
 
 Use the following apikey format in your python code to redirect to the Heroku config vars.
 
@@ -343,7 +343,7 @@ Open an IDE such as Gitpod.
 Drag & drop the credential file to your new project and rename it to creds.json
 copy the email address from the creds.json file to Googel sheet project.
 
-<img src="README.images/set_up_Google_api.PNG" alt="shows how to connect Googel API with python" width="600">
+<img src="README.images/set_up_google_api.PNG" alt="shows how to connect Googel API with python" width="600">
 
 List sensitive information in the gitignore file so that those will be not shared on GitHUb and other plattforms.
 
@@ -372,21 +372,21 @@ The documentation shows a standard API documentation including request urls, par
 
 The API function TIME_SERIES_DAILY is used in this project.
 
-<img src="README.images/API_daily_time_series.PNG" alt="image shows example of data provided from time_series_daily function">
+<img src="README.images/api_daily_time_series.PNG" alt="image shows example of data provided from time_series_daily function">
 
 It shows the stock price of one single stock of the last 100 days. This colums contain the parameters timestamp, open, high, low, close and volume
 
-<img src="README.images/API_daily_time_series_example.PNG" alt="image shows example of data provided from time_series_daily function">
+<img src="README.images/api_daily_time_series_example.PNG" alt="image shows example of data provided from time_series_daily function">
 
 https://www.alphavantage.co/documentation/#time-series-data
 
 THe API function SYMBOL_SEARCH is used in this project.
 
-<img src="README.images/API_search_symbols.PNG" alt="image shows example of data provided from time_series_daily function">
+<img src="README.images/api_search_symbols.PNG" alt="image shows example of data provided from time_series_daily function">
 
 It enables the user to find the exact stock symbol as reference to get the correct stock price values. As search input usually the company name can be used. It provides a list of symbol codes which are used for the time_series_day function. This colums contain the parameters symbol, name, type, region, marketOpen, marketClose, timezone, currency, matchScore.
 
-<img src="README.images/API_search_symbols_example.PNG" alt="image shows example of data provided from time_series_daily function">
+<img src="README.images/api_search_symbols_example.PNG" alt="image shows example of data provided from time_series_daily function">
 
 https://www.alphavantage.co/documentation/#symbolsearch
 

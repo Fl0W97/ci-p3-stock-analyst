@@ -38,8 +38,8 @@ def show_portfolio():
     calculate_profit_loss()
 
     # Retrieve all relevant rows from both sheets
-    stock_data = stock_portfolio.get_all_values()  # Get all rows from stock portfolio
-    profit_loss_data = profit_loss_sheet.get_all_values()  # Get all rows from profit/loss sheet
+    stock_data = stock_portfolio.get_all_values()  # Get all rows
+    profit_loss_data = profit_loss_sheet.get_all_values()  # Get all rows
 
     # Extract relevant data from tables above
     header = stock_data[0]  # stock name, row 1
@@ -47,8 +47,7 @@ def show_portfolio():
     purchase_price = stock_data[3]  # stock pu price, row 4
     current_price = stock_data[4]  # stock cu price, row 5
     profit_loss_percentage = profit_loss_data[2]  # surplus, row 3
-    profit_loss = profit_loss_data[1] # surplus, row 3
-
+    profit_loss = profit_loss_data[1]  # surplus, row 3
 
     x = PrettyTable()
 
@@ -115,21 +114,23 @@ def add_stock_column():
             break
 
     # Check the current number of columns in the sheet dynamically
-    current_grid = stock_portfolio.get_all_values()  # Get all values from the sheet
-    num_columns_in_sheet = stock_portfolio.col_count  # Total number of columns in the sheet
+    # Get all values from the sheet
+    current_grid = stock_portfolio.get_all_values()
+    # Total number of columns in the sheet
+    num_columns_in_sheet = stock_portfolio.col_count 
     last_column = len(header)
 
     # Compare the current number of columns with the length of the header
     if num_columns_in_sheet == last_column:
         print(
-            "The maximum number of columns in the Google Sheet has been reached. "
+            "The maximum number of columns in Google Sheet has been reached. "
             f"Cannot add more stocks. Please contact support."
         )
         time.sleep(3)
         return
 
-    # add the new stock to both sheets
-    # Use api_call_with_retry for all update operations
+    """ add the new stock to both sheets
+        Use api_call_with_retry for all update operations """
     api_call_with_retry(
         stock_portfolio.update_cell, 1, last_column + 1, new_stock_name
     )
@@ -311,19 +312,19 @@ def calculate_profit_loss():
 
         # Check if any of the required data is missing or in the wrong format
         if not purchase_price or purchase_price == '' or not float_format_check(purchase_price):
-            print(f"Error: Purchase price missing or wrong format used for stock {header[col_index - 1]}"
-                  "Please correct data.")
-            continue  # Skip this column and move to the next one
+            print(f"Error: Purchase price missing or wrong format used "
+                  "for stock {header[col_index - 1]}. Please correct data.")
+            continue
 
         if not current_price or current_price == '' or not float_format_check(current_price):
-            print(f"Error: Current price missing or wrong format used for stock {header[col_index - 1]}"
-                  "Please correct data.")
-            continue  # Skip this column and move to the next one
+            print(f"Error: Current price missing or wrong format used "
+                  "for stock {header[col_index - 1]}. Please correct data.")
+            continue
 
         if not multiplicator or multiplicator == '' or not integer_format_check(multiplicator):
-            print(f"Error: Number of shares missing or wrong format used for stock {header[col_index - 1]}"
-                  "Please correct data.")
-            continue  # Skip this column and move to the next one
+            print(f"Error: Number of shares missing or wrong format used "
+                  "for stock {header[col_index - 1]}. Please correct data.")
+            continue
 
         # Only proceed if all data is valid
         try:
@@ -331,8 +332,11 @@ def calculate_profit_loss():
             last_value = float(current_price)
             multiplicator_int = int(multiplicator)
         except ValueError:
-            print(f"Error: Invalid value format for stock {header[col_index - 1]}")
-            continue  # Skip this column and move to the next one
+            print(
+                f"Error: Invalid value format for stock "
+                "{header[col_index - 1]}"
+            )
+            continue
 
         # Calculate profit/loss
         profit_loss_value = last_value - first_value
@@ -357,6 +361,24 @@ def calculate_profit_loss():
     return surplus_data
 
 
+# Validation for float format
+def float_format_check(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+
+# Validation for integer format
+def integer_format_check(value):
+    try:
+        int(value)
+        return True
+    except ValueError:
+        return False
+
+
 def column_check():
     # Fetch entire sheet data once
     stock_portfolio_data = stock_portfolio.get_all_values()
@@ -364,10 +386,10 @@ def column_check():
 
     # check rows in stock_portfolio
     if len(stock_portfolio_data) > 1:  # Ensure at least 2 rows of data
-        header = stock_portfolio_data[0]  # First row is header
-        shares = stock_portfolio_data[1]  # Second row is shares
-        symbols = stock_portfolio_data[2]  # Third row is symbols
-        purchase_price = stock_portfolio_data[3]  # Fourth row is purchase price
+        header = stock_portfolio_data[0]  # First row header
+        shares = stock_portfolio_data[1]  # Second row shares
+        symbols = stock_portfolio_data[2]  # Third row symbols
+        purchase_price = stock_portfolio_data[3]  # Fourth row purchase price
 
         if len(header) == len(shares) == len(symbols) == len(purchase_price):
             # All rows match in length
@@ -407,23 +429,6 @@ def column_check():
     return portfolio_check and profit_loss_check
 
 
-# Validation for float format
-def float_format_check(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-
-# Validation for integer format
-def integer_format_check(value):
-    try:
-        int(value)
-        return True
-    except ValueError:
-        return False
-
-
 def provide_updated_data():
     # show data stock in the terminal
     symbol = stock_portfolio.row_values(3)  # Get the abbrevation of the stocks
@@ -461,8 +466,10 @@ def provide_updated_data():
         else:
             print(
                 f"for {stock_name_symbol}. "
-                "The symbol is invalid or API rate limit is reached if you have exceeded 25 requests per day. "
-                "You can add the prices manually. Find here the stock information: https://finance.yahoo.com/quote/"
+                "The symbol is invalid or API rate limit is reached if you "
+                "have exceeded 25 requests per day. You can add the prices "
+                "manually. Find here the stock information: "
+                "https://finance.yahoo.com/quote/"
             )
 
 
@@ -509,9 +516,12 @@ def add_updated_data():
         else:
             print(
                 f"for {stock_name_symbol}. "
-                "The symbol is invalid or API rate limit is reached if you have exceeded 25 requests per day. "
-                "You can add the prices manually. Find here the stock information: https://finance.yahoo.com/quote/"
+                "The symbol is invalid or API rate limit is reached if you "
+                "have exceeded 25 requests per day. You can add the prices "
+                "manually. Find here the stock information: "
+                "https://finance.yahoo.com/quote/"
             )
+
 
 def find_stock_symbol():
     # Define stock name. Use it for the API request
@@ -564,7 +574,8 @@ def find_stock_symbol():
                     print(f"Symbol for {new_stock_name} is added.")
                 else:
                     # Find the column to delete based on the `new_stock_name`
-                    column_to_delete = header.index(new_stock_name) + 1  # +1 because columns are 1-based
+                    # columns are 1-based
+                    column_to_delete = header.index(new_stock_name) + 1
                     api_call_with_retry(
                         stock_portfolio.delete_columns, column_to_delete
                     )
@@ -590,8 +601,7 @@ def find_stock_symbol():
                         ).strip()
 
                     # Validate the input against the list of valid symbols
-                    if new_stock_name_symbol in [symbol for symbol,
-                    _ in symbols_and_names]:
+                    if new_stock_name_symbol in [symbol for symbol, _ in symbols_and_names]:
                         # Update the stock portfolio sheet with the new symbol
                         last_column = len(header)
                         api_call_with_retry(
@@ -681,8 +691,7 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
         elif input_type == int:
             try:
                 value = int(user_input)
-                if valid_range and (value < valid_range[0]
-                or value > valid_range[1]):
+                if valid_range and (value < valid_range[0] or value > valid_range[1]):
                     print(
                         f"Please enter an integer between {valid_range[0]} "
                         "and {valid_range[1]}."
@@ -695,8 +704,7 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
         elif input_type == float:
             try:
                 value = float(user_input)
-                if valid_range and (value < valid_range[0]
-                or value > valid_range[1]):
+                if valid_range and (value < valid_range[0] or value > valid_range[1]):
                     print(
                         f"Please enter a float between {valid_range[0]} "
                         "and {valid_range[1]}."
