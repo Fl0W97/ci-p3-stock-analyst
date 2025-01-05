@@ -507,8 +507,8 @@ def add_updated_data():
                 second_date_data = time_series[second_date]
                 desired_value = second_date_data['4. close']
 
-                # Update the sheet with the new stock price
-                # Adjust col_index to 1-based index for update_cell
+                """ Update the sheet with the new stock price
+                   Adjust col_index to 1-based index for update_cell """
                 api_call_with_retry(
                     stock_portfolio.update_cell, 5, col_index + 1,
                     desired_value
@@ -582,8 +582,8 @@ def find_stock_symbol():
                     )
                     print(f"Symbol for {new_stock_name} is added.")
                 else:
-                    # Find the column to delete based on the `new_stock_name`
-                    # columns are 1-based
+                    """ Find the column to delete based on the `new_stock_name`
+                        columns are 1-based """
                     column_to_delete = header.index(new_stock_name) + 1
                     api_call_with_retry(
                         stock_portfolio.delete_columns, column_to_delete
@@ -592,8 +592,8 @@ def find_stock_symbol():
                 return  # Exit the function as the process is complete
 
             else:
-                # Extract symbols and names
-                # Store both in a list for validation
+                """ Extract symbols and names
+                    Store both in a list for validation """
                 symbols_and_names = [
                     (match['1. symbol'], match['2. name'])
                     for match in best_matches
