@@ -313,17 +313,17 @@ def calculate_profit_loss():
         # Check if any of the required data is missing or in the wrong format
         if not purchase_price or purchase_price == '' or not float_format_check(purchase_price):
             print(f"Error: Purchase price missing or wrong format used "
-                  "for stock {header[col_index - 1]}. Please correct data.")
+                  f"for stock {header[col_index - 1]}. Please correct data.")
             continue
 
         if not current_price or current_price == '' or not float_format_check(current_price):
             print(f"Error: Current price missing or wrong format used "
-                  "for stock {header[col_index - 1]}. Please correct data.")
+                  f"for stock {header[col_index - 1]}. Please correct data.")
             continue
 
         if not multiplicator or multiplicator == '' or not integer_format_check(multiplicator):
             print(f"Error: Number of shares missing or wrong format used "
-                  "for stock {header[col_index - 1]}. Please correct data.")
+                  f"for stock {header[col_index - 1]}. Please correct data.")
             continue
 
         # Only proceed if all data is valid
@@ -386,12 +386,12 @@ def column_check():
 
     # check rows in stock_portfolio
     if len(stock_portfolio_data) > 1:  # Ensure at least 2 rows of data
-        header = stock_portfolio_data[0]  # First row header
+        header_stock = stock_portfolio_data[0]  # First row header
         shares = stock_portfolio_data[1]  # Second row shares
         symbols = stock_portfolio_data[2]  # Third row symbols
         purchase_price = stock_portfolio_data[3]  # Fourth row purchase price
 
-        if len(header) == len(shares) == len(symbols) == len(purchase_price):
+        if len(header_stock) == len(shares) == len(symbols) == len(purchase_price):
             # All rows match in length
             portfolio_check = True
 
@@ -402,16 +402,24 @@ def column_check():
             )
             portfolio_check = False
 
+        # Check if stock names in stock_portfolio are also in profit_loss_sheet
+        header_profit_loss = profit_loss_sheet_data[0] # First row is heade
+
+        missing_stocks = [stock for stock in header_stock if stock not in header_profit_loss]
+        if missing_stocks:
+            print(f"Error: The following stock (names) are missing from profit_loss: {', '.join(missing_stocks)}")
+            portfolio_check = False
+
     else:
         print("Check sheet stock_portfolio. Data is missing.")
         portfolio_check = False
 
     # check rows in profit_loss_sheet
     if len(profit_loss_sheet_data) > 1:  # Ensure at least 2 rows of data
-        header = profit_loss_sheet_data[0]  # First row is header
+        header_profit_loss = profit_loss_sheet_data[0]  # First row is header
         surplus = profit_loss_sheet_data[1]  # Second row is surplus
 
-        if len(header) == len(surplus):
+        if len(header_profit_loss) == len(surplus):
             # All rows match in length
             profit_loss_check = True
 
