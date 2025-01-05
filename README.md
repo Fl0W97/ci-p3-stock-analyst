@@ -240,7 +240,7 @@ Next, add a Heroku buildpack to your app. Click add a buildpack to your app and 
 <details>
 
 <summary>details</summary>
-First create a ([google account](https://myaccount.google.com/))
+First create a ([google account](https://accounts.google.com)
 
 Sign in to Google Account:
 Go to Google Sheets and sign in with your Google account.
@@ -268,7 +268,7 @@ Google Sheets automatically saves your work as you go. However, it’s good prac
 
 </details>
 
-#### Step 3: Add Alphavantage Google Add-on
+#### Step 3: Add Alphavantage Google Add-on (optional)
 <details>
 
 <summary>details</summary>
@@ -329,7 +329,7 @@ Steps to get your credentials file for users with the "new" form UI:
 2. For the "What data will you be accessing?" question, select Application Data
 3. For the "Are you planning to use this API with Compute Engine, Kubernetes Engine, App Engine, or Cloud Functions?" question, select No, I'm not using them
 4. Click Next
-5. Enter a Service Account name, you can call it anything you like - I will call mine "LoveSandwiches" - then click Create
+5. Enter a Service Account name, you can call it anything you like - then click Create
 6. In the Role Dropdown box choose Basic > Editor then press Continue
 7. These options can be left blank, click Done
 8. On the next page, click on the Service Account that has been created

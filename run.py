@@ -384,6 +384,9 @@ def column_check():
     stock_portfolio_data = stock_portfolio.get_all_values()
     profit_loss_sheet_data = profit_loss_sheet.get_all_values()
 
+    portfolio_check = True
+    profit_loss_check = True
+
     # check rows in stock_portfolio
     if len(stock_portfolio_data) > 1:  # Ensure at least 2 rows of data
         header_stock = stock_portfolio_data[0]  # First row header
@@ -396,22 +399,16 @@ def column_check():
             portfolio_check = True
 
         else:
-            print(
-                "Check sheet stock_portfolio. Data is missing. "
-                "Adjust it manually in the sheet stock_portfolio."
-            )
             portfolio_check = False
 
         # Check if stock names in stock_portfolio are also in profit_loss_sheet
-        header_profit_loss = profit_loss_sheet_data[0] # First row is heade
+        header_profit_loss = profit_loss_sheet_data[0]  # First row is header
 
-        missing_stocks = [stock for stock in header_stock if stock not in header_profit_loss]
-        if missing_stocks:
-            print(f"Error: The following stock (names) are missing from profit_loss: {', '.join(missing_stocks)}")
+        missing_stocks_in_profit_loss = [stock for stock in header_stock if stock not in header_profit_loss]
+        if missing_stocks_in_profit_loss:
             portfolio_check = False
 
     else:
-        print("Check sheet stock_portfolio. Data is missing.")
         portfolio_check = False
 
     # check rows in profit_loss_sheet
@@ -424,15 +421,19 @@ def column_check():
             profit_loss_check = True
 
         else:
-            print(
-                f"Check sheet profit_loss. Data is missing. "
-                "Adjust it manually in the sheet profit_loss."
-            )
+            profit_loss_check = False
+
+     # Check if stock names in profit_loss_sheet are also stock_portfolio
+        missing_stocks_in_stock_portfolio = [stock for stock in header_profit_loss if stock not in header_stock]
+        if missing_stocks_in_stock_portfolio:
             profit_loss_check = False
 
     else:
-        print("Check sheet profit_loss. Data is missing.")
         profit_loss_check = False
+
+    # Print a general error message if any data is missing
+    if not portfolio_check or not profit_loss_check:
+        print("Check google spreadsheets. Data is missing.")
 
     return portfolio_check and profit_loss_check
 
