@@ -669,7 +669,7 @@ def api_call_with_retry(api_method, *args, **kwargs):
     raise Exception("API call failed after multiple attempts.")
 
 
-def get_valid_input(prompt, input_type=str, valid_range=None):
+def get_valid_input(prompt, input_type=str, valid_range=(0, 500000)):
     """
     Repeatedly requests input from the user until valid input is provided.
     :param prompt: The message to display to the user
@@ -694,7 +694,7 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
                 if valid_range and (value < valid_range[0] or value > valid_range[1]):
                     print(
                         f"Please enter an integer between {valid_range[0]} "
-                        "and {valid_range[1]}."
+                        f"and {valid_range[1]}."
                         )
                 else:
                     return value
@@ -707,7 +707,7 @@ def get_valid_input(prompt, input_type=str, valid_range=None):
                 if valid_range and (value < valid_range[0] or value > valid_range[1]):
                     print(
                         f"Please enter a float between {valid_range[0]} "
-                        "and {valid_range[1]}."
+                        f"and {valid_range[1]}."
                         )
                 else:
                     return value
