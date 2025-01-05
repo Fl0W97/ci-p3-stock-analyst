@@ -115,9 +115,10 @@ The portfolio should be displayed as often as possible, nefore and afte reach fu
 Validator testing has been done on:
 
 #### [CI Python validator](https://pep8ci.herokuapp.com/)
-No errors were returned for run.py
+No errors were returned for run.py except "lines to long" within if clauses. 
+Here I couldn't find a working split since other splits revealed different errors.
 
-<img src="README.images/pi_python_linter_validation.PNG" alt="image shows preview of validator results" width="800px">
+<img src="README.images/pi_python_linter_validation_lines_too_long2.PNG" alt="image shows preview of validator results" width="800px">
 
 <details>
     <summary>further results of HTML, CSS Validator</summary>

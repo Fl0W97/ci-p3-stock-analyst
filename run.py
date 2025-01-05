@@ -117,7 +117,7 @@ def add_stock_column():
     # Get all values from the sheet
     current_grid = stock_portfolio.get_all_values()
     # Total number of columns in the sheet
-    num_columns_in_sheet = stock_portfolio.col_count 
+    num_columns_in_sheet = stock_portfolio.col_count
     last_column = len(header)
 
     # Compare the current number of columns with the length of the header
