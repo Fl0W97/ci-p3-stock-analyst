@@ -633,7 +633,7 @@ def find_stock_symbol():
 def api_call_with_retry(api_method, *args, **kwargs):
     """
     This function wraps an API call with retry logic.
-    It will retry up to times in case of a 500 or 503 error
+    It will retry in case of a 500 or 503 error
     or any other recoverable error.
     """
     max_retries = 5
